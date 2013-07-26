@@ -19,7 +19,7 @@
 
     this.$input = $(element)
     this.$element = $('<div class="tokenfield" />')
-    this.$helper = $('<textarea tabindex="-1" style="position: absolute; left: -10000px; />').appendTo(this.$element)
+    this.$helper = $('<textarea tabindex="-1" style="position: absolute; left: -10000px;" />').appendTo(this.$element)
 
     this.$element.insertBefore( this.$input )
     this.$input.appendTo( this.$element )
