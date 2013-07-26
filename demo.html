@@ -5,7 +5,7 @@
   <title>Bootstrap Tokenfield plugin</title>
 
   <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="src/bootstrap-tokenfield.css" type="text/css" />
+  <link rel="stylesheet" href="css/bootstrap-tokenfield.css" type="text/css" />
   <style type="text/css">
     body {
       margin: 20px;
@@ -13,11 +13,11 @@
   </style>
 
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-  <script src="src/bootstrap-tokenfield.js"></script>
+  <script src="js/bootstrap-tokenfield.js"></script>
   <script type="text/javascript">
     jQuery(document).ready(function($) {
-      $('#first, #second').tokenField();
-      $('#third').tokenField({
+      $('#first, #second').tokenfield();
+      $('#third').tokenfield({
         tokens: ['brown', { label: "Yellow-ish color", value: "lemonchiffon" }]
       });
     });

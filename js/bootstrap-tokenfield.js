@@ -13,7 +13,7 @@
  /* TOKENFIELD PUBLIC CLASS DEFINITION
   * ============================== */
 
-  var TokenField = function (element, options) {
+  var Tokenfield = function (element, options) {
     var _self = this
 
     this.$input = $(element)
@@ -23,75 +23,57 @@
     this.$element.insertBefore( this.$input )
     this.$input.appendTo( this.$element )
 
-    this.options = $.extend({}, $.fn.tokenField.defaults, { tokens: this.$input.data('tokens') }, options)
+    this.options = $.extend({}, $.fn.tokenfield.defaults, { tokens: this.$input.data('tokens') }, options)
     
-    if (typeof this.options.tokens === 'string') {
-      this.options.tokens = this.options.tokens.split(',')
-    }
-
-    if (this.options.tokens) {
-      $.each(this.options.tokens, function (i, token) {
-        _self.createToken(token)
-      })
-    }
+    this.setTokens(this.options.tokens)
 
     this.listen()
   }
 
-  TokenField.prototype = {
+  Tokenfield.prototype = {
 
-    constructor: TokenField
+    constructor: Tokenfield
 
-  , next: function () {
-      var active = this.$element.find('.active').removeClass('active')
-        , next = active.next('.token')
-
-      if (next.length) {
-        next.addClass('active')
-      }
-      else {
-        this.$input.focus()
+  , createToken: function (attrs) {
+      if (typeof attrs === 'string') {
+        attrs = { value: attrs, label: attrs }
       }
 
-    }
+      var value = $.trim(attrs.value)
+        , label = attrs.label.length ? $.trim(attrs.label) : value
 
-  , prev: function (tryFirst) {
-      if (typeof tryFirst === 'undefined') var tryFirst = true
+      if (!value.length || !label.length) return
 
-      var active = this.$element.find('.active').removeClass('active')
-        , prev = active.prev('.token')
+      var token = $('<div class="token" />')
+            .attr('data-value', value)
+            .append('<span class="token-label" />')
+            .append('<a href="#" class="close" tabindex="-1">&times;</a>')
 
-      if (!prev.length) {
-        prev = this.$element.find('.token:first')
+      token.find('.token-label').text(label)
+      this.$input.before( token )
+    }    
+
+  , setTokens: function (tokens, add) {
+      if (!tokens) return
+
+      if (!add) this.$element.find('.token').remove()
+
+      if (typeof tokens === 'string') {
+        tokens = tokens.split(',')
       }
 
-      prev.addClass('active')
-
-      if (!prev.length) {
-        this.$input.focus()
-      }
-      
-    }
-
-  , activate: function (token) {
-      this.$helper.focus()
-      this.$element.find('.active').removeClass('active')
-      token.addClass('active')
-    }
-
-  , activateAll: function() {
-      this.focused = true
-      this.$element.addClass('focus')
-      this.$element.find('.token').addClass('active')
-      this.$helper.val(this.getTokensList()).select()
+      var _self = this
+      $.each(tokens, function (i, token) {
+        _self.createToken(token)
+      })
     }
 
   , getTokens: function() {
       var tokens = []
       this.$element.find('.token').each( function() {
         tokens.push({
-          value: $(this).data('value') || $(this).find('.token-label').html(),
-          label: $(this).find('.token-label').html()
+          value: $(this).data('value') || $(this).find('.token-label').text(),
+          label: $(this).find('.token-label').text()
         })
       })
       return tokens
@@ -108,127 +90,57 @@
         .on('focus',    $.proxy(this.focus, this))
         .on('blur',     $.proxy(this.blur, this))
         .on('paste',    $.proxy(this.paste, this))
+        .on('keydown',  $.proxy(this.keydown, this))
+        .on('keyup',    $.proxy(this.keyup, this))
 
       this.$helper
         .on('focus',    $.proxy(this.focus, this))
         .on('blur',     $.proxy(this.blur, this))        
+        .on('keydown',  $.proxy(this.keydown, this))
+        .on('keyup',    $.proxy(this.keyup, this))
 
       $(document)
         .on('click',    $.proxy(this.handleDocumentClick, this))
-        .on('keydown',  $.proxy(this.keydown, this))
-        .on('keyup',    $.proxy(this.keyup, this))
     }
 
-  , paste: function () {
-      var tokenField = this
-        , input = this.$element.find('input')
-      setTimeout(function () {
-        var text = input.val()
-          , tokens = text.split(',')
-        
-        $.each(tokens, function (i, token) {
-          tokenField.createToken( token )
-        })
-        input.val('')
-      }, 1)
-    }
-
-  , move: function (e) {
+  , keydown: function (e) {
       if (!this.focused) return
-      var input = this.$element.find('input')
+
+      this.lastKeyDown = e.keyCode
 
       switch(e.keyCode) {
-        case 9: // tab
-        case 13: // enter
-        case 27: // escape
+        case 8: // backspace
+          if (!this.$input.is(':focus')) return
+          this.lastInputValue = this.$input.val()
           break
 
         case 37: // left arrow
-          if (input.is(':focus') && input.val().length > 0) return
-          e.preventDefault()
-          if (input.is(':focus')) {
-            this.handleInputBackspace()
+          if (this.$input.is(':focus')) {
+            if (this.$input.val().length > 0) return
+            this.last()
+            e.preventDefault()
           } else {
             this.prev()
+            e.preventDefault()
           }
           break
 
         case 39: // right arrow
-          if (input.is(':focus')) return
-          e.preventDefault()
+          if (this.$input.is(':focus')) return
           this.next()
+          e.preventDefault()
           break
-      }
 
-      e.stopPropagation()
-    }
-
-  , createTokenFromInput: function (e) {
-      if (!this.focused || !this.$input.is(':focus') || !this.$input.val()) return
-      this.createToken(this.$input.val()) 
-      this.$input.val('').focus()
-      e.preventDefault()
-      e.stopPropagation()
-    }
-
-  , createToken: function (attrs) {
-      if (typeof attrs === 'string') {
-        attrs = { value: attrs, label: attrs }
-      }
-
-      var value = $.trim(attrs.value)
-        , label = attrs.label.length ? $.trim(attrs.label) : value
-
-      if (!value.length || !label.length) return
-
-      var token = $('<div class="token" />')
-                    .attr('data-value', value)
-                    .append('<span class="token-label" />')
-                    .append('<a href="#" class="close" tabindex="-1">&times;</a>')
-
-      token.find('.token-label').text(label)
-      this.$input.before( token )
-    }
-
-  , handleInputBackspace: function () {
-      var input = this.$element.find('input');
-      this.surpressRemove = false
-
-      if (!input.is(':focus') || input.val().length > 0 || !this.$element.find('.token').length) return
-      
-      input.blur()
-      this.activate(this.$element.find('.token:last'))
-      this.surpressRemove = true
-    }
-
-  , remove: function (e, direction) {
-      if (this.$input.is(':focus') || this.surpressRemove) return
-
-      var token = (e.type === 'click') ? $(e.target).closest('.token') : this.$element.find('.token.active')
-      if (!direction) direction = 'prev'
-
-      this[direction]()
-      token.remove()
-
-      if (!this.$element.find('.token').length || e.type === 'click') this.$input.focus()
-    }
-
-  , keydown: function (e) {
-      if (~$.inArray(e.keyCode, [37,39])) this.move(e)
-      if (~$.inArray(e.keyCode, [9,13,188])) this.createTokenFromInput(e)
-      
-      switch(e.keyCode) {
-        case 65: // a
-          if (!this.focused || this.$element.find('input').is(':focus') || !(e.ctrlKey || e.metaKey)) return
+        case 65: // a (to handle ctrl + a)
+          if (!this.$helper.is(':focus') || !(e.ctrlKey || e.metaKey)) return
           this.activateAll()
           e.preventDefault()
           break
 
-        // case 86: // v
-        //   if (!this.$element.find('input').is(':focus') || !(e.ctrlKey || e.metaKey)) return
-
-        //   e.preventDefault()
-        //   break
+        case 9: // tab
+        case 13: // enter
+        case 188: // comma
+          this.createTokensFromInput(e)
       }
     }
 
@@ -236,18 +148,16 @@
       if (!this.focused) return
       switch(e.keyCode) {
         case 8: // backspace
-          this.handleInputBackspace()
-          this.remove(e)
+          if (this.$input.is(':focus')) {
+            if (this.$input.val().length || this.lastInputValue.length && e.lastKeyDown === 8) return
+            this.last()
+          } else {
+            this.remove(e)
+          }
           break
 
         case 46: // delete
-          this.surpressRemove = false
           this.remove(e, 'next')
-          break
-
-        case 9: // tab
-        case 13: // enter
-        case 188: // comma
           break
       }
 
@@ -270,81 +180,125 @@
   , handleDocumentClick: function (e) {
       // Click was on a close icon
       if ($(e.target).closest(this.$element.find('.close')).length) {
-        this.surpressRemove = false
         this.remove(e)
         return false;
       }
       // Click was on a token
       if ($(e.target).closest(this.$element.find('.token')).length) {
-        this.surpressRemove = false
         this.activate($(e.target).closest(this.$element.find('.token')))
         return false;
       }
-      // Click was outside of tokenField
+      // Click was outside of tokenfield
       if ($(e.target).closest(this.$element).length === 0) {
-        this.surpressRemove = false
         this.blur()
       } 
     }
 
+  , paste: function (e) {
+      var _self = this
+      
+      // Add tokens to existing ones
+      setTimeout(function () {
+        _self.createTokensFromInput(e)
+      }, 1)
+    }
+
+  , createTokensFromInput: function (e) {
+      if (!this.focused || !this.$input.is(':focus') || !this.$input.val()) return
+      
+      this.setTokens( this.$input.val(), true )
+      this.$input.val('')
+
+      e.preventDefault()
+      e.stopPropagation()
+    }  
+
+  , next: function () {
+      var active = this.$element.find('.active:last')
+        , next = active.next('.token')
+
+      if (!next.length) {
+        this.$input.focus()
+        return
+      }
+
+      this.activate(next)
+    }
+
+  , prev: function () {
+      var active = this.$element.find('.active:first')
+        , prev = active.prev('.token')
+
+      if (!prev.length) {
+        prev = this.$element.find('.token:first')
+      }
+
+      if (!prev.length) {
+        this.$input.focus()
+        return
+      }
+
+      this.activate( prev )
+    }
+
+  , last: function () {
+      this.activate(this.$element.find('.token:last'))
+    }
+
+  , activate: function (token) {
+      if (!token) return
+
+      this.$helper.focus()
+
+      this.$element.find('.active').removeClass('active')
+      token.addClass('active')
+      this.$helper.val( token.data('value') ).select()
+    }
+
+  , activateAll: function() {
+      this.$helper.focus()
+
+      this.$element.find('.token').addClass('active')
+      this.$helper.val( this.getTokensList() ).select()
+    }
+
+  , remove: function (e, direction) {
+      if (this.$input.is(':focus')) return
+
+      var token = (e.type === 'click') ? $(e.target).closest('.token') : this.$element.find('.token.active')
+      if (!direction) direction = 'prev'
+
+      this[direction]()
+      token.remove()
+
+      if (!this.$element.find('.token').length || e.type === 'click') this.$input.focus()
+    }
+
   }
 
-  // TokenField.prototype.setState = function (state) {
-  //   var d = 'disabled'
-  //     , $el = this.$element
-  //     , data = $el.data()
-  //     , val = $el.is('input') ? 'val' : 'html'
 
-  //   state = state + 'Text'
-  //   data.resetText || $el.data('resetText', $el[val]())
-
-  //   $el[val](data[state] || this.options[state])
-
-  //   // push to event loop to allow forms to submit
-  //   setTimeout(function () {
-  //     state == 'loadingText' ?
-  //       $el.addClass(d).attr(d, d) :
-  //       $el.removeClass(d).removeAttr(d)
-  //   }, 0)
-  // }
-
-  // Button.prototype.toggle = function () {
-  //   var $parent = this.$element.closest('[data-toggle="buttons-radio"]')
-
-  //   $parent && $parent
-  //     .find('.active')
-  //     .removeClass('active')
-
-  //   this.$element.toggleClass('active')
-  // }
-
-
- /* TAGINPUT PLUGIN DEFINITION
+ /* TOKENFIELD PLUGIN DEFINITION
   * ======================== */
 
-  var old = $.fn.tokenField
+  var old = $.fn.tokenfield
 
-  $.fn.tokenField = function (option) {
+  $.fn.tokenfield = function (option) {
     return this.each(function () {
       var $this = $(this)
-        , data = $this.data('tokenField')
+        , data = $this.data('tokenfield')
         , options = typeof option == 'object' && option
-      if (!data) $this.data('tokenField', (data = new TokenField(this, options)))
+      if (!data) $this.data('tokenfield', (data = new Tokenfield(this, options)))
     })
   }
 
-  // $.fn.button.defaults = {
-  //   tokens: this.$input.tokens
-  // }
-
-  $.fn.tokenField.Constructor = TokenField
+  $.fn.tokenfield.Constructor = Tokenfield
 
 
- /* TAGINPUT NO CONFLICT
+ /* TOKENFIELD NO CONFLICT
   * ================== */
 
-  $.fn.tokenField.noConflict = function () {
-    $.fn.tokenField = old
+  $.fn.tokenfield.noConflict = function () {
+    $.fn.tokenfield = old
     return this
   }
 
