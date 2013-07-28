@@ -58,6 +58,7 @@
 }
 
 .tokenfield input {
+  width: auto;
   border: 0;
   -webkit-box-shadow: none;
   -moz-box-shadow: none;

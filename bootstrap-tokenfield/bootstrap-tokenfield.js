@@ -17,9 +17,9 @@
   var Tokenfield = function (element, options) {
     var _self = this
 
-    this.$input = $(element)
+    this.$input = $(element).addClass('token-input')
     this.$element = $('<div class="tokenfield" />')
-    this.$helper = $('<textarea tabindex="-1" style="position: absolute; left: -10000px;" />').appendTo(this.$element)
+    this.$helper = $('<textarea class="token-helper" tabindex="-1" style="position: absolute; left: -10000px;" />').appendTo(this.$element)
 
     this.$element.insertBefore( this.$input )
     this.$input.appendTo( this.$element )
@@ -115,6 +115,7 @@
     }
 
   , keydown: function (e) {
+
       if (!this.focused) return
 
       this.lastKeyDown = e.keyCode
@@ -143,7 +144,7 @@
           break
 
         case 65: // a (to handle ctrl + a)
-          if (!this.$helper.is(':focus') || !(e.ctrlKey || e.metaKey)) return
+          if (this.$input.val().length > 0 || !(e.ctrlKey || e.metaKey)) return
           this.activateAll()
           e.preventDefault()
           break
@@ -154,7 +155,8 @@
           if (this.$input.is(':focus') && this.$input.val()) {
             this.createTokensFromInput(e)
           }
-          else if (this.$helper.is(':focus')) {
+          if (e.keyCode === 13) {
+            if (!this.$helper.is(':focus') || this.$element.find('.token.active').length !== 1) return
             this.edit( this.$element.find('.token.active') )
           }
       }
@@ -208,7 +210,13 @@
       this.$input.val('')
 
       if (this.$input.data( 'edit' )) {
-        this.$input.appendTo( this.$element ).data( 'edit', false ).focus()
+        this.$input
+          .appendTo( this.$element )
+          .data( 'edit', false )
+          .css( 'width', 'auto' )
+          .focus()
+
+        this.$element.css( 'width', this.$element.data('prev-width') )
       }
 
       e.preventDefault()
@@ -266,6 +274,10 @@
       var value = token.data('value')
         , label = token.find('.token-label').text()
         , tokenWidth = token.outerWidth()
+
+      this.$element
+        .data( 'prev-width', this.$element.get(0).style.width )
+        .width( this.$element.width() )
 
       token.replaceWith( this.$input )
       this.$input.focus()
