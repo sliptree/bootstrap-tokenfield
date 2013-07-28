@@ -39,8 +39,9 @@
       if (typeof attrs === 'string') {
         attrs = { value: attrs, label: attrs }
       }
-
-      var value = $.trim(attrs.value)
+      
+      var _self = this
+        , value = $.trim(attrs.value)
         , label = attrs.label.length ? $.trim(attrs.label) : value
 
       if (!value.length || !label.length) return
@@ -49,9 +50,21 @@
             .attr('data-value', value)
             .append('<span class="token-label" />')
             .append('<a href="#" class="close" tabindex="-1">&times;</a>')
-
+      
       token.find('.token-label').text(label)
       this.$input.before( token )
+
+      // Listen to events
+      token
+        .on('click',    function() {
+          _self.activate( token )
+        })
+        .on('dblclick', function() {
+          _self.edit( token )
+        })
+
+      token.find('.close')
+          .on('click',  $.proxy(this.remove, this))
     }    
 
   , setTokens: function (tokens, add) {
@@ -99,9 +112,6 @@
         .on('blur',     $.proxy(this.blur, this))        
         .on('keydown',  $.proxy(this.keydown, this))
         .on('keyup',    $.proxy(this.keyup, this))
-
-      $(document)
-        .on('click',    $.proxy(this.handleDocumentClick, this))
     }
 
   , keydown: function (e) {
@@ -118,7 +128,7 @@
         case 37: // left arrow
           if (this.$input.is(':focus')) {
             if (this.$input.val().length > 0) return
-            this.last()
+            this.activate( this.$input.prev('.token') )
             e.preventDefault()
           } else {
             this.prev()
@@ -141,7 +151,12 @@
         case 9: // tab
         case 13: // enter
         case 188: // comma
-          this.createTokensFromInput(e)
+          if (this.$input.is(':focus') && this.$input.val()) {
+            this.createTokensFromInput(e)
+          }
+          else if (this.$helper.is(':focus')) {
+            this.edit( this.$element.find('.token.active') )
+          }
       }
     }
 
@@ -150,8 +165,8 @@
       switch(e.keyCode) {
         case 8: // backspace
           if (this.$input.is(':focus')) {
-            if (this.$input.val().length || this.lastInputValue.length && e.lastKeyDown === 8) return
-            this.last()
+            if (this.$input.val().length || this.lastInputValue.length && this.lastKeyDown === 8) return
+            this.activate( this.$input.prev('.token') )
           } else {
             this.remove(e)
           }
@@ -161,9 +176,6 @@
           this.remove(e, 'next')
           break
       }
-
-      e.stopPropagation()
-      e.preventDefault()
     }
 
   , focus: function (e) {
@@ -176,23 +188,10 @@
       this.focused = false
       this.$element.removeClass('focus')
       this.$element.find('.active').removeClass('active')
-    }
 
-  , handleDocumentClick: function (e) {
-      // Click was on a close icon
-      if ($(e.target).closest(this.$element.find('.close')).length) {
-        this.remove(e)
-        return false;
+      if (this.$input.data('edit')) {
+        this.createTokensFromInput(e)
       }
-      // Click was on a token
-      if ($(e.target).closest(this.$element.find('.token')).length) {
-        this.activate($(e.target).closest(this.$element.find('.token')))
-        return false;
-      }
-      // Click was outside of tokenfield
-      if ($(e.target).closest(this.$element).length === 0) {
-        this.blur()
-      } 
     }
 
   , paste: function (e) {
@@ -205,10 +204,12 @@
     }
 
   , createTokensFromInput: function (e) {
-      if (!this.focused || !this.$input.is(':focus') || !this.$input.val()) return
-      
       this.setTokens( this.$input.val(), true )
       this.$input.val('')
+
+      if (this.$input.data( 'edit' )) {
+        this.$input.appendTo( this.$element ).data( 'edit', false ).focus()
+      }
 
       e.preventDefault()
       e.stopPropagation()
@@ -242,10 +243,6 @@
       this.activate( prev )
     }
 
-  , last: function () {
-      this.activate(this.$element.find('.token:last'))
-    }
-
   , activate: function (token) {
       if (!token) return
 
@@ -263,6 +260,19 @@
       this.$helper.val( this.getTokensList() ).select()
     }
 
+  , edit: function (token) {
+      if (!token) return
+
+      var value = token.data('value')
+        , label = token.find('.token-label').text()
+
+      token.replaceWith( this.$input )
+      this.$input.focus()
+                .val( value )
+                .select()
+                .data( 'edit', true )
+    }
+
   , remove: function (e, direction) {
       if (this.$input.is(':focus')) return
 
@@ -273,6 +283,9 @@
       token.remove()
 
       if (!this.$element.find('.token').length || e.type === 'click') this.$input.focus()
+
+      e.preventDefault()
+      e.stopPropagation()
     }
 
   }
