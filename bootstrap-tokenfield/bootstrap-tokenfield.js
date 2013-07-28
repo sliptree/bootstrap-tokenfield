@@ -265,12 +265,14 @@
 
       var value = token.data('value')
         , label = token.find('.token-label').text()
+        , tokenWidth = token.outerWidth()
 
       token.replaceWith( this.$input )
       this.$input.focus()
                 .val( value )
                 .select()
                 .data( 'edit', true )
+                .width( tokenWidth )
     }
 
   , remove: function (e, direction) {

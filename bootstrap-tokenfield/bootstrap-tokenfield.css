@@ -58,7 +58,7 @@
 }
 
 .tokenfield input {
-  border-color: transparent;
+  border: 0;
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
