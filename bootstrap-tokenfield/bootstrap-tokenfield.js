@@ -94,18 +94,18 @@
       if (!this.maxTokenWidth) {
         this.maxTokenWidth =
           this.$element.width() - closeButton.outerWidth() - 
-          parseInt(closeButton.css('margin-left')) -
-          parseInt(closeButton.css('margin-right')) -
-          parseInt(token.css('border-left-width')) -
-          parseInt(token.css('border-right-width')) -
-          parseInt(token.css('padding-left')) -
-          parseInt(token.css('padding-right'))
-          parseInt(tokenLabel.css('border-left-width')) -
-          parseInt(tokenLabel.css('border-right-width')) -
-          parseInt(tokenLabel.css('padding-left')) -
-          parseInt(tokenLabel.css('padding-right'))
-          parseInt(tokenLabel.css('margin-left')) -
-          parseInt(tokenLabel.css('margin-right'))
+          Number(closeButton.css('margin-left')) -
+          Number(closeButton.css('margin-right')) -
+          Number(token.css('border-left-width')) -
+          Number(token.css('border-right-width')) -
+          Number(token.css('padding-left')) -
+          Number(token.css('padding-right'))
+          Number(tokenLabel.css('border-left-width')) -
+          Number(tokenLabel.css('border-right-width')) -
+          Number(tokenLabel.css('padding-left')) -
+          Number(tokenLabel.css('padding-right'))
+          Number(tokenLabel.css('margin-left')) -
+          Number(tokenLabel.css('margin-right'))
       }
 
       tokenLabel
