@@ -145,11 +145,29 @@
               </thead>
               <tbody>
                 <tr>
-                 <td>tokens</td>
-                 <td>striung, array</td>
-                 <td>[ ]</td>
-                 <td>Tokens (or tags). Can be a string with comma-separated values (<code>"one,two,three"</code>), an array of strings (<code>["one","two","three"]</code>), or an array of objects (<code>[{ value: "one", label: "Einz" }, { value: "two", label: "Zwei" }]</code>)</td>
-               </tr>
+                  <td>tokens</td>
+                  <td>string, array</td>
+                  <td>[ ]</td>
+                  <td>Tokens (or tags). Can be a string with comma-separated values (<code>"one,two,three"</code>), an array of strings (<code>["one","two","three"]</code>), or an array of objects (<code>[{ value: "one", label: "Einz" }, { value: "two", label: "Zwei" }]</code>)</td>
+                </tr>
+                <tr>
+                  <td>allowDuplicates</td>
+                  <td>boolean</td>
+                  <td>false</td>
+                  <td>Whether to allow duplicate tokens or not. A token is considered a duplicated if it's value matches an existing token's value. Therefore, it is possible to enter multiple tokens with the same label, if their values are diefferent.</td>
+                </tr>
+                <tr>
+                  <td>minLength</td>
+                  <td>int</td>
+                  <td>0</td>
+                  <td>Minimum length required for token value.</td>
+                </tr>
+                <tr>
+                  <td>minWidth</td>
+                  <td>int</td>
+                  <td>60</td>
+                  <td>Minimum input field width. In pixels.</td>
+                </tr>
               </tbody>
             </table>
 

@@ -268,6 +268,8 @@
     }
 
   , createTokensFromInput: function (e) {
+      if (this.$input.val().length < this.options.minLength) return
+      
       this.setTokens( this.$input.val(), true )
       this.$input.val('')
 
