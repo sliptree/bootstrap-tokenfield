@@ -22,6 +22,11 @@
   font-weight: normal;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
+
+.tokenfield {
+  display: inline-block;
+  vertical-align: middle;
+}
 .tokenfield.focus {
   border-color: rgba(82, 168, 236, 0.8);
   outline: 0;
@@ -35,7 +40,7 @@
 
 .tokenfield .token {
   display: inline-block;
-  padding: 2px 4px;
+  padding: 1px 4px;
   font-size: 14px;
   line-height: 16px;
   white-space: nowrap;
@@ -73,4 +78,59 @@
   -webkit-box-shadow: none;
      -moz-box-shadow: none;
           box-shadow: none;
+}
+
+/* Validation states */
+.control-group.warning .tokenfield input,
+.control-group.error .tokenfield input,
+.control-group.info .tokenfield input,
+.control-group.success .tokenfield input {
+  -webkit-box-shadow: none;
+     -moz-box-shadow: none;
+          box-shadow: none;  
+}
+
+.control-group.warning .tokenfield {
+  border-color: #c09853;
+}
+.control-group.warning .tokenfield.focus {
+  border-color: #a47e3c;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),0 0 6px #dbc59e;
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),0 0 6px #dbc59e;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),0 0 6px #dbc59e;  
+}
+
+.control-group.error .tokenfield {
+  border-color: #953b39;
+}
+.control-group.error .tokenfield.focus {
+  border-color: #b94a48;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),0 0 6px #d59392;
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),0 0 6px #d59392;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),0 0 6px #d59392;  
+}
+
+.control-group.info .tokenfield {
+  border-color: #3a87ad;
+}
+.control-group.info .tokenfield.focus {
+  border-color: #2d6987;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),0 0 6px #7ab5d3;
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),0 0 6px #7ab5d3;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),0 0 6px #7ab5d3; 
+}
+
+.control-group.success .tokenfield {
+  border-color: #468847;
+}
+.control-group.success .tokenfield.focus {
+  border-color: #356635;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),0 0 6px #7aba7b;
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),0 0 6px #7aba7b;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),0 0 6px #7aba7b;  
+}
+
+/* Form styles support */
+.form-horizontal .tokenfield {
+  margin-bottom: 0;
 }

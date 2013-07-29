@@ -1090,3 +1090,8 @@ form.bs-docs-example {
     padding-bottom: 20px;
   }
 }
+
+/* Initial input width */
+.token-example-field {
+  width: 514px;
+}
