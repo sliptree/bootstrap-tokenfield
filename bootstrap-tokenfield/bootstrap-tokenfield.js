@@ -49,8 +49,6 @@
     
     this.setTokens(this.options.tokens)
 
-    this.update()
-
     this.listen()
   }
 
@@ -75,6 +73,7 @@
             .append('<a href="#" class="close" tabindex="-1">&times;</a>')
         
       this.$input.before( token )
+      this.$input.css('width', this.options.minWidth + 'px')
 
       var tokenLabel = token.find('.token-label')
         , closeButton = token.find('.close')
@@ -112,6 +111,10 @@
 
       closeButton
           .on('click',  $.proxy(this.remove, this))
+
+      this.update()
+
+      return this.$input.get(0)
     }    
 
   , setTokens: function (tokens, add) {
@@ -127,6 +130,8 @@
       $.each(tokens, function (i, token) {
         _self.createToken(token)
       })
+
+      return this.$input.get(0)
     }
 
   , getTokens: function() {
@@ -269,8 +274,6 @@
         this.$element.css( 'width', this.$element.data('prev-width') )
       }
 
-      this.$input.css('width', this.options.minWidth + 'px')
-
       e.preventDefault()
       e.stopPropagation()
     }  
@@ -383,12 +386,16 @@
 
   var old = $.fn.tokenfield
 
-  $.fn.tokenfield = function (option) {
-    return this.each(function () {
+  $.fn.tokenfield = function (option, param) {
+    return this.map(function () {
       var $this = $(this)
         , data = $this.data('tokenfield')
         , options = typeof option == 'object' && option
       if (!data) $this.data('tokenfield', (data = new Tokenfield(this, options)))
+      if (typeof option == 'string') {
+        return data[option](param)
+      }
+      return this
     })
   }
 
