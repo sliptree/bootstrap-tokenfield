@@ -20,13 +20,36 @@
     this.$input = $(element).addClass('token-input')
     this.$element = $('<div class="tokenfield" />')
     this.$helper = $('<textarea class="token-helper" tabindex="-1" style="position: absolute; left: -10000px;" />').appendTo(this.$element)
-
-    this.$element.insertBefore( this.$input )
-    this.$input.appendTo( this.$element )
+    this.$mirror = $('<span style="position:absolute; top:-999px; left:0; white-space:pre;"/>');
 
     this.options = $.extend({}, $.fn.tokenfield.defaults, { tokens: this.$input.data('tokens') }, options)
     
+    // Copy some styles
+    this.$element.width( this.$input.width() )
+
+    // Set up mirror for input auto-sizing
+    this.$input.css('min-width', this.options.minWidth + 'px')
+    $.each([
+        'fontFamily', 
+        'fontSize', 
+        'fontWeight', 
+        'fontStyle', 
+        'letterSpacing', 
+        'textTransform', 
+        'wordSpacing', 
+        'textIndent'
+    ], function (i, val) {
+        _self.$mirror[0].style[val] = _self.$input.css(val);
+    });
+    this.$mirror.appendTo( 'body' )
+
+    // Insert tokenfield to HTML
+    this.$element.insertBefore( this.$input )
+    this.$input.appendTo( this.$element )
+    
     this.setTokens(this.options.tokens)
+
+    this.update()
 
     this.listen()
   }
@@ -44,26 +67,50 @@
         , value = $.trim(attrs.value)
         , label = attrs.label.length ? $.trim(attrs.label) : value
 
-      if (!value.length || !label.length) return
+      if (!value.length || !label.length || value.length < this.options.minLength) return
 
       var token = $('<div class="token" />')
             .attr('data-value', value)
             .append('<span class="token-label" />')
             .append('<a href="#" class="close" tabindex="-1">&times;</a>')
-      
-      token.find('.token-label').text(label)
+        
       this.$input.before( token )
+
+      var tokenLabel = token.find('.token-label')
+        , closeButton = token.find('.close')
+
+      // Determine maximum possible token label width
+      if (!this.maxTokenWidth) {
+        this.maxTokenWidth =
+          this.$element.width() - closeButton.outerWidth() - 
+          parseInt(closeButton.css('margin-left')) -
+          parseInt(closeButton.css('margin-right')) -
+          parseInt(token.css('border-left-width')) -
+          parseInt(token.css('border-right-width')) -
+          parseInt(token.css('padding-left')) -
+          parseInt(token.css('padding-right'))
+          parseInt(tokenLabel.css('border-left-width')) -
+          parseInt(tokenLabel.css('border-right-width')) -
+          parseInt(tokenLabel.css('padding-left')) -
+          parseInt(tokenLabel.css('padding-right'))
+          parseInt(tokenLabel.css('margin-left')) -
+          parseInt(tokenLabel.css('margin-right'))
+      }
+
+      tokenLabel
+        .text(label)
+        .css('max-width', this.maxTokenWidth)
 
       // Listen to events
       token
-        .on('click',    function() {
+        .on('click',    function (e) {
           _self.activate( token )
         })
-        .on('dblclick', function() {
+        .on('dblclick', function (e) {
           _self.edit( token )
         })
 
-      token.find('.close')
+      closeButton
           .on('click',  $.proxy(this.remove, this))
     }    
 
@@ -112,6 +159,9 @@
         .on('blur',     $.proxy(this.blur, this))        
         .on('keydown',  $.proxy(this.keydown, this))
         .on('keyup',    $.proxy(this.keyup, this))
+
+      // Secondary listeners for input width calculation
+      this.$input.on('keydown, keypress, keyup',  $.proxy(this.update, this))
     }
 
   , keydown: function (e) {
@@ -219,6 +269,8 @@
         this.$element.css( 'width', this.$element.data('prev-width') )
       }
 
+      this.$input.css('width', this.options.minWidth + 'px')
+
       e.preventDefault()
       e.stopPropagation()
     }  
@@ -298,8 +350,29 @@
 
       if (!this.$element.find('.token').length || e.type === 'click') this.$input.focus()
 
+      this.$input.css('width', this.options.minWidth + 'px')
+      this.update()
+
       e.preventDefault()
       e.stopPropagation()
+    }
+
+  , update: function () {
+      var value = this.$input.val()
+
+      if (this.$input.data('edit')) {
+        if (!value) {
+          value = this.$input.prop("placeholder")
+        }
+        if (value === this.$mirror.text()) return
+
+        this.$mirror.text(value)
+
+        this.$input.width(this.$mirror.width() + 10)
+      }
+      else {
+        this.$input.width( this.$element.offset().left + this.$element.width() - this.$input.offset().left )
+      }
     }
 
   }
@@ -318,6 +391,11 @@
       if (!data) $this.data('tokenfield', (data = new Tokenfield(this, options)))
     })
   }
+
+  $.fn.tokenfield.defaults = {
+    minWidth: 60,
+    minLength: 0
+  }  
 
   $.fn.tokenfield.Constructor = Tokenfield
 

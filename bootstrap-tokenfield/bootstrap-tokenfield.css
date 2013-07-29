@@ -55,6 +55,11 @@
 .tokenfield .token.active {
   border-color: rgba(82, 168, 236, 0.8);
 }
+.tokenfield .token .token-label {
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .tokenfield .token .close {
   float: none;
   font-size: 16px;
@@ -63,7 +68,8 @@
 }
 
 .tokenfield input {
-  width: auto;
+  width: 60px;
+  min-width: 60px;
   border: 0;
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
