@@ -67,6 +67,10 @@
 
       if (!value.length || !label.length || value.length < this.options.minLength) return
 
+      if (!this.options.allowDuplicates && $.grep(this.getTokens(), function (token) {
+        return token.value === value
+      }).length) return
+
       var token = $('<div class="token" />')
             .attr('data-value', value)
             .append('<span class="token-label" />')
@@ -413,7 +417,8 @@
 
   $.fn.tokenfield.defaults = {
     minWidth: 60,
-    minLength: 0
+    minLength: 0,
+    allowDuplicates: false
   }  
 
   $.fn.tokenfield.Constructor = Tokenfield
