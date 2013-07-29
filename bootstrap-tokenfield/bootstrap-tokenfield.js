@@ -71,8 +71,16 @@
         return token.value === value
       }).length) return
 
+      // Allow changing token data before creating it
+      var e = $.Event('beforeCreateToken')
+      e.token = {
+        value: value,
+        label: label
+      }
+      this.$input.trigger(e)
+
       var token = $('<div class="token" />')
-            .attr('data-value', value)
+            .attr('data-value', e.token.value)
             .append('<span class="token-label" />')
             .append('<a href="#" class="close" tabindex="-1">&times;</a>')
         
@@ -101,7 +109,7 @@
       }
 
       tokenLabel
-        .text(label)
+        .text(e.token.label)
         .css('max-width', this.maxTokenWidth)
 
       // Listen to events
@@ -115,6 +123,11 @@
 
       closeButton
           .on('click',  $.proxy(this.remove, this))
+
+      var afterE = $.Event('afterCreateToken')
+      afterE.token = e.token
+      afterE.relatedTarget = token
+      this.$input.trigger(afterE)
 
       this.update()
 
@@ -164,6 +177,7 @@
         .on('blur',     $.proxy(this.blur, this))
         .on('paste',    $.proxy(this.paste, this))
         .on('keydown',  $.proxy(this.keydown, this))
+        .on('keypress', $.proxy(this.keypress, this))
         .on('keyup',    $.proxy(this.keyup, this))
 
       this.$helper
@@ -213,7 +227,6 @@
 
         case 9: // tab
         case 13: // enter
-        case 188: // comma
           if (this.$input.is(':focus') && this.$input.val()) {
             this.createTokensFromInput(e)
           }
@@ -222,6 +235,10 @@
             this.edit( this.$element.find('.token.active') )
           }
       }
+    }
+
+  , keypress: function(e) {
+      this.lastKeyPress = e.keyCode
     }
 
   , keyup: function (e) {
@@ -239,6 +256,10 @@
         case 46: // delete
           this.remove(e, 'next')
           break
+
+        case 188: // comma, hopefully (can also be angle bracket, so we need to check for keyPress code)
+          if (this.lastKeyPress !== 44 || !this.$input.is(':focus') || !this.$input.val()) return
+          this.createTokensFromInput(e)
       }
     }
 
@@ -269,7 +290,7 @@
 
   , createTokensFromInput: function (e) {
       if (this.$input.val().length < this.options.minLength) return
-      
+
       this.setTokens( this.$input.val(), true )
       this.$input.val('')
 
@@ -348,8 +369,17 @@
         .width( this.$element.width() )
 
       token.replaceWith( this.$input )
+
+      // Allow changing input value before editing
+      var e = $.Event('beforeEditToken')
+      e.token = {
+        value: value,
+        label: label
+      }
+      this.$input.trigger(e)
+
       this.$input.focus()
-                .val( value )
+                .val( e.token.value )
                 .select()
                 .data( 'edit', true )
                 .width( tokenWidth )
@@ -363,6 +393,8 @@
 
       this[direction]()
       token.remove()
+
+      this.$input.trigger('removeToken')
 
       if (!this.$element.find('.token').length || e.type === 'click') this.$input.focus()
 
