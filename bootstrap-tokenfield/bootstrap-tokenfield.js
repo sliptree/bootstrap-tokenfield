@@ -227,7 +227,7 @@
 
         case 9: // tab
         case 13: // enter
-          if (this.$input.is(':focus') && this.$input.val()) {
+          if (this.$input.is(':focus') && this.$input.val().length || this.$input.data('edit')) {
             this.createTokensFromInput(e)
           }
           if (e.keyCode === 13) {
@@ -291,7 +291,10 @@
   , createTokensFromInput: function (e) {
       if (this.$input.val().length < this.options.minLength) return
 
+      var tokensBefore = this.getTokensList()
       this.setTokens( this.$input.val(), true )
+      if (tokensBefore == this.getTokensList() && this.$input.val().length) return // No tokens were added, do nothing
+
       this.$input.val('')
 
       if (this.$input.data( 'edit' )) {
@@ -362,13 +365,6 @@
 
       var value = token.data('value')
         , label = token.find('.token-label').text()
-        , tokenWidth = token.outerWidth()
-
-      this.$element
-        .data( 'prev-width', this.$element.width() )
-        .width( this.$element.width() )
-
-      token.replaceWith( this.$input )
 
       // Allow changing input value before editing
       var e = $.Event('beforeEditToken')
@@ -377,6 +373,15 @@
         label: label
       }
       this.$input.trigger(e)
+
+      token.find('.token-label').text(e.token.value)
+      var tokenWidth = token.outerWidth()
+
+      this.$element
+        .data( 'prev-width', this.$element.width() )
+        .width( this.$element.width() )
+
+      token.replaceWith( this.$input )
 
       this.$input.focus()
                 .val( e.token.value )
@@ -387,6 +392,7 @@
 
   , remove: function (e, direction) {
       if (this.$input.is(':focus')) return
+
 
       var token = (e.type === 'click') ? $(e.target).closest('.token') : this.$element.find('.token.active')
       if (!direction) direction = 'prev'
