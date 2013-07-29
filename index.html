@@ -205,7 +205,68 @@ $('#myField').tokenfield('getTokens');</pre>
 $('#myField').tokenfield('getTokensList');</pre>
 
             <h3 id="events">Events</h3>
-            <p>Tokenfield will eventually expose a few events for you to tap in to. Until then, you can help developing :)</p>
+            <p>Tokenfield exposes a few events for hooking into it's functionality.</p>
+
+            <table class="table table-bordered table-striped">
+              <thead>
+               <tr>
+                 <th style="width: 150px;">Event</th>
+                 <th>Description</th>
+               </tr>
+              </thead>
+              <tbody>
+               <tr>
+                 <td>beforeCreateToken</td>
+                 <td>This event fires when a token is all set up to be created, but before it is inserted into the DOM and event listeners are attached. You can use this event to manipulate token value and label by changing the appropriate values of <code>token</code> property of the event. See below for an example.</td>
+               </tr>
+               <tr>
+                 <td>afterCreateToken</td>
+                 <td>This event is fired after the token has been created. Here, <code>token</code> property of the event is also available, but is basically read-only.</td>
+               </tr>
+               <tr>
+                 <td>beforeEditToken</td>
+                 <td>This event is fired just before a token is about to be edited. This allows you to manipluate the input field value before it is created. Again, to do this, manipluate the <code>token</code> property of the event.</td>
+               </tr>
+               <tr>
+                 <td>removeToken</td>
+                 <td>This event is fired after a token is removed.</td>
+               </tr>
+              </tbody>
+            </table>
+
+<pre class="prettyprint linenums">
+$('#myTokenfield').on('beforeCreateToken', function (e) {
+  e.token.label = 'Something else'
+})
+
+$('#myTokenfield').on('afterCreateToken', function (e) {
+  e.token // token object with value and label
+})
+
+$('#myTokenfield').on('beforeEditToken', function (e) {
+  e.token.value = 'Edit this instead' 
+})
+
+$('#myTokenfield').on('removeToken', function () {
+  alert('Token removed!')
+})
+</pre>
+
+            <div class="bs-docs-example" style="background-color: #f5f5f5;">
+              <input type="text" class="token-example-field" id="tokenfield-2" data-tokens="red,green,blue" />
+              <script type="text/javascript">
+                $('#tokenfield-2').tokenfield()
+                  .on('beforeCreateToken', function (e) {
+                    e.token.label = 'Something else'
+                  })
+                  .on('beforeEditToken', function (e) {
+                    e.token.value = 'Edit this instead'
+                  })
+                  .on('removeToken', function () {
+                    alert('Token removed!')
+                  })
+              </script>
+            </div>        
 
             <h3 id="keyboard">Keyboard support</h3>
             <p>Tokenfield includes support for manipulating tokens via keyboard</p>
@@ -217,9 +278,9 @@ $('#myField').tokenfield('getTokensList');</pre>
             <p>If You have one token selected, you can select all tokens with the keyboard. Then, you can copy the tokens using keyboard. You can also paste tokens to another field.</p>
 
             <div class="bs-docs-example" style="background-color: #f5f5f5;">
-              <input type="text" class="token-example-field" id="tokenfield-2" data-tokens="red,green,blue" />
+              <input type="text" class="token-example-field" id="tokenfield-3" data-tokens="red,green,blue" />
               <script type="text/javascript">
-                $('#tokenfield-2').tokenfield()
+                $('#tokenfield-3').tokenfield()
               </script>
             </div>
 
@@ -228,9 +289,9 @@ $('#myField').tokenfield('getTokensList');</pre>
             <p>Try it out, copy the following to the field below: red,green,blue</p>
 
             <div class="bs-docs-example" style="background-color: #f5f5f5;">
-              <input type="text" class="token-example-field" id="tokenfield-3" data-tokens="red,green,blue" />
+              <input type="text" class="token-example-field" id="tokenfield-4" data-tokens="red,green,blue" />
               <script type="text/javascript">
-                $('#tokenfield-3').tokenfield()
+                $('#tokenfield-4').tokenfield()
               </script>
             </div>
 
