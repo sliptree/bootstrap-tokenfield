@@ -152,6 +152,9 @@
   }
 
   , listen: function () {
+      this.$element
+        .on('click',    $.proxy(this.focusInput, this))
+
       this.$input
         .on('focus',    $.proxy(this.focus, this))
         .on('blur',     $.proxy(this.blur, this))
@@ -268,8 +271,12 @@
         this.$input
           .appendTo( this.$element )
           .data( 'edit', false )
-          .css( 'width', 'auto' )
-          .focus()
+          .css( 'width', this.options.minWidth + 'px' )
+
+        var _self = this
+        setTimeout(function () {
+          _self.$input.focus()
+        }, 1)
 
         this.$element.css( 'width', this.$element.data('prev-width') )
       }
@@ -331,7 +338,7 @@
         , tokenWidth = token.outerWidth()
 
       this.$element
-        .data( 'prev-width', this.$element.get(0).style.width )
+        .data( 'prev-width', this.$element.width() )
         .width( this.$element.width() )
 
       token.replaceWith( this.$input )
@@ -376,6 +383,11 @@
       else {
         this.$input.width( this.$element.offset().left + this.$element.width() - this.$input.offset().left )
       }
+    }
+
+  , focusInput: function (e) {
+      if ($(e.target).closest('.token').length) return
+      this.$input.focus()
     }
 
   }
