@@ -11,10 +11,17 @@ Check out the [demo and docs](http://sliptree.github.io/bootstrap-tokenfield/)
 
 ### Features
 
-* Copy & paste tokens
-* Keyboard navigation, delete tokens with keyboard
+* Copy & paste tokens with Ctrl+C and Ctrl+V
+* Keyboard navigation, delete tokens with keyboard (arrow keys, Shift + arrow keys)
+* Select specific tokens with Ctrl + click and Shift + click
 
 ### Changelog
+
+0.6.5 Shiftable
+
+* New feature: select specific tokens with Ctrl/Shift + click
+* New feature: select specific tokens with Shift + arrow keys
+* Internal API improvements
 
 0.6 Editable
 
@@ -26,7 +33,9 @@ Check out the [demo and docs](http://sliptree.github.io/bootstrap-tokenfield/)
 ### Todo
 
 * ~~Edit existing tags with double-click/enter~~ DONE!
-* Add option to disallow duplicates
+* ~~Add option to disallow duplicates~~ DONE!
+* ~~Add hooks to enable token manipulation on copy/paste~~ DONE!
+* ~~Add events~~ DONE!
+* ~~Add Shift/Ctrl + arrow keys / click support~~ DONE!
 * Add support for jQuery UI autocomplete
-* Add hooks to enable token manipulation on copy/paste
-* Add events
+* Cross-browser testing (currently tested on Chrome only)

@@ -121,11 +121,11 @@
           _self.preventDeactivation = false
 
           if (e.ctrlKey || e.metaKey) {
+            e.preventDefault()
             return _self.toggle( token )
           }
           
-          _self.activate( token, e.shiftKey, e.shiftKey )
-          
+          _self.activate( token, e.shiftKey, e.shiftKey )          
         })
         .on('dblclick', function (e) {
           _self.edit( token )
@@ -230,6 +230,27 @@
           }
           break
 
+        case 38: // up arrow
+          if (!e.shiftKey) return
+
+          if (this.$input.is(':focus')) {
+            if (this.$input.val().length > 0) break
+
+            var prev = this.$input.prev('.token:last')
+            if (!prev.length) return
+
+            this.activate( prev )
+          }
+
+          var _self = this
+          this.firstActiveToken.nextAll('.token').each(function() {
+            _self.deactivate( $(this) )
+          })
+
+          this.activate( this.$element.find('.token:first'), true, true )
+          e.preventDefault()
+          break
+
         case 39: // right arrow
           if (this.$input.is(':focus')) {
             if (this.$input.val().length > 0) break
@@ -248,6 +269,27 @@
             e.preventDefault()
           }
           break
+
+        case 40: // down arrow
+          if (!e.shiftKey) return
+
+          if (this.$input.is(':focus')) {
+            if (this.$input.val().length > 0) break
+
+            var next = this.$input.next('.token:first')
+            if (!next.length) return
+
+            this.activate( next )
+          }
+
+          var _self = this
+          this.firstActiveToken.prevAll('.token').each(function() {
+            _self.deactivate( $(this) )
+          })          
+
+          this.activate( this.$element.find('.token:last'), true, true )
+          e.preventDefault()
+          break        
 
         case 65: // a (to handle ctrl + a)
           if (this.$input.val().length > 0 || !(e.ctrlKey || e.metaKey)) break
@@ -302,7 +344,11 @@
   , focus: function (e) {
       this.focused = true
       this.$element.addClass('focus')
-      if (this.$input.is(':focus')) this.$element.find('.active').removeClass('active')
+
+      if (this.$input.is(':focus')) {
+        this.$element.find('.active').removeClass('active')
+        this.firstActiveToken = null
+      }
     }
 
   , blur: function (e) {
@@ -311,6 +357,7 @@
 
       if (!this.preventDeactivation) {
         this.$element.find('.active').removeClass('active')
+        this.firstActiveToken = null
       }
 
       if (this.$input.data('edit')) {
@@ -357,12 +404,11 @@
     }  
 
   , next: function (add) {
-      var firstActive = this.$element.find('.active:first')
-        , deactivate = firstActive && this.firstActiveToken ? firstActive.index() < this.firstActiveToken.index() : false
+      if (add) {
+        var firstActive = this.$element.find('.active:first')
+          , deactivate = firstActive && this.firstActiveToken ? firstActive.index() < this.firstActiveToken.index() : false
 
-      if (deactivate) {
-        this.deactivate( firstActive )
-        return
+        if (deactivate) return this.deactivate( firstActive )
       }
 
       var active = this.$element.find('.active:last')
@@ -377,12 +423,13 @@
     }
 
   , prev: function (add) {
-      var lastActive = this.$element.find('.active:last')
-        , deactivate = lastActive && this.firstActiveToken ? lastActive.index() > this.firstActiveToken.index() : false
+      if (this.$element.find('.token.active').length === this.$element.find('.token').length) return
 
-      if (deactivate) {
-        this.deactivate( lastActive )
-        return
+      if (add) {
+        var lastActive = this.$element.find('.active:last')
+          , deactivate = lastActive && this.firstActiveToken ? lastActive.index() > this.firstActiveToken.index() : false
+
+        if (deactivate) return this.deactivate( lastActive )
       }
 
       var active = this.$element.find('.active:first')
@@ -403,6 +450,8 @@
   , activate: function (token, add, multi, remember) {
 
       if (!token) return
+
+      if (this.$element.find('.token.active').length === this.$element.find('.token').length) return
 
       if (typeof remember === 'undefined') var remember = true
 
