@@ -19,7 +19,7 @@
 
     this.$input = $(element).addClass('token-input')
     this.$element = $('<div class="tokenfield" />')
-    this.$helper = $('<textarea class="token-helper" tabindex="-1" style="position: absolute; left: -10000px;" />').appendTo(this.$element)
+    this.$helper = $('<textarea class="token-helper" tabindex="-1" style="position: absolute; left: -10000px;" />').prependTo(this.$element)
     this.$mirror = $('<span style="position:absolute; top:-999px; left:0; white-space:pre;"/>');
 
     this.options = $.extend({}, $.fn.tokenfield.defaults, { tokens: this.$input.data('tokens') }, options)
@@ -83,7 +83,7 @@
             .attr('data-value', e.token.value)
             .append('<span class="token-label" />')
             .append('<a href="#" class="close" tabindex="-1">&times;</a>')
-        
+
       this.$input.before( token )
       this.$input.css('width', this.options.minWidth + 'px')
 
@@ -114,8 +114,18 @@
 
       // Listen to events
       token
+        .on('mousedown',  function (e) {
+          _self.preventDeactivation = true
+        })
         .on('click',    function (e) {
-          _self.activate( token )
+          _self.preventDeactivation = false
+
+          if (e.ctrlKey || e.metaKey) {
+            return _self.toggle( token )
+          }
+          
+          _self.activate( token, e.shiftKey, e.shiftKey )
+          
         })
         .on('dblclick', function (e) {
           _self.edit( token )
@@ -151,9 +161,10 @@
       return this.$input.get(0)
     }
 
-  , getTokens: function() {
+  , getTokens: function(active) {
       var tokens = []
-      this.$element.find('.token').each( function() {
+        , activeClass = active ? '.active' : '' // get active tokens only
+      this.$element.find( '.token' + activeClass ).each( function() {
         tokens.push({
           value: $(this).data('value') || $(this).find('.token-label').text(),
           label: $(this).find('.token-label').text()
@@ -162,8 +173,8 @@
       return tokens
   }
 
-  , getTokensList: function() {
-      return $.map( this.getTokens(), function (token) {
+  , getTokensList: function(active) {
+      return $.map( this.getTokens(active), function (token) {
         return token.value
       }).join(', ')
   }
@@ -194,33 +205,52 @@
 
       if (!this.focused) return
 
-      this.lastKeyDown = e.keyCode
-
       switch(e.keyCode) {
         case 8: // backspace
-          if (!this.$input.is(':focus')) return
+          if (!this.$input.is(':focus')) break
           this.lastInputValue = this.$input.val()
           break
 
         case 37: // left arrow
           if (this.$input.is(':focus')) {
-            if (this.$input.val().length > 0) return
-            this.activate( this.$input.prev('.token') )
+            if (this.$input.val().length > 0) break
+
+            var prev = this.$input.prev('.token:last')
+
+            if (!prev.length) break
+
+            this.preventInputFocus = true
+
+            this.activate( prev )
             e.preventDefault()
+
           } else {
-            this.prev()
+            this.prev( e.shiftKey )
             e.preventDefault()
           }
           break
 
         case 39: // right arrow
-          if (this.$input.is(':focus')) return
-          this.next()
-          e.preventDefault()
+          if (this.$input.is(':focus')) {
+            if (this.$input.val().length > 0) break
+            
+            var next = this.$input.next('.token:first')
+
+            if (!next.length) break
+
+            this.preventInputFocus = true
+
+            this.activate( next )
+            e.preventDefault()              
+
+          } else {
+            this.next( e.shiftKey )
+            e.preventDefault()
+          }
           break
 
         case 65: // a (to handle ctrl + a)
-          if (this.$input.val().length > 0 || !(e.ctrlKey || e.metaKey)) return
+          if (this.$input.val().length > 0 || !(e.ctrlKey || e.metaKey)) break
           this.activateAll()
           e.preventDefault()
           break
@@ -231,10 +261,12 @@
             this.createTokensFromInput(e)
           }
           if (e.keyCode === 13) {
-            if (!this.$helper.is(':focus') || this.$element.find('.token.active').length !== 1) return
+            if (!this.$helper.is(':focus') || this.$element.find('.token.active').length !== 1) break
             this.edit( this.$element.find('.token.active') )
           }
       }
+
+      this.lastKeyDown = e.keyCode
     }
 
   , keypress: function(e) {
@@ -242,11 +274,14 @@
     }
 
   , keyup: function (e) {
+      this.preventInputFocus = false
+
       if (!this.focused) return
+
       switch(e.keyCode) {
         case 8: // backspace
           if (this.$input.is(':focus')) {
-            if (this.$input.val().length || this.lastInputValue.length && this.lastKeyDown === 8) return
+            if (this.$input.val().length || this.lastInputValue.length && this.lastKeyDown === 8) break
             this.activate( this.$input.prev('.token') )
           } else {
             this.remove(e)
@@ -258,21 +293,25 @@
           break
 
         case 188: // comma, hopefully (can also be angle bracket, so we need to check for keyPress code)
-          if (this.lastKeyPress !== 44 || !this.$input.is(':focus') || !this.$input.val()) return
+          if (this.lastKeyPress !== 44 || !this.$input.is(':focus') || !this.$input.val()) break
           this.createTokensFromInput(e)
       }
+      this.lastKeyUp = e.keyCode
     }
 
   , focus: function (e) {
       this.focused = true
       this.$element.addClass('focus')
-      this.$element.find('.active').removeClass('active')
+      if (this.$input.is(':focus')) this.$element.find('.active').removeClass('active')
     }
 
   , blur: function (e) {
       this.focused = false
       this.$element.removeClass('focus')
-      this.$element.find('.active').removeClass('active')
+
+      if (!this.preventDeactivation) {
+        this.$element.find('.active').removeClass('active')
+      }
 
       if (this.$input.data('edit')) {
         this.createTokensFromInput(e)
@@ -303,10 +342,12 @@
           .data( 'edit', false )
           .css( 'width', this.options.minWidth + 'px' )
 
-        var _self = this
-        setTimeout(function () {
-          _self.$input.focus()
-        }, 1)
+        if (!this.preventInputFocus) {
+          var _self = this
+          setTimeout(function () {
+            _self.$input.focus()
+          }, 1)
+        }
 
         this.$element.css( 'width', this.$element.data('prev-width') )
       }
@@ -315,7 +356,15 @@
       e.stopPropagation()
     }  
 
-  , next: function () {
+  , next: function (add) {
+      var firstActive = this.$element.find('.active:first')
+        , deactivate = firstActive && this.firstActiveToken ? firstActive.index() < this.firstActiveToken.index() : false
+
+      if (deactivate) {
+        this.deactivate( firstActive )
+        return
+      }
+
       var active = this.$element.find('.active:last')
         , next = active.next('.token')
 
@@ -324,10 +373,18 @@
         return
       }
 
-      this.activate(next)
+      this.activate(next, add)
     }
 
-  , prev: function () {
+  , prev: function (add) {
+      var lastActive = this.$element.find('.active:last')
+        , deactivate = lastActive && this.firstActiveToken ? lastActive.index() > this.firstActiveToken.index() : false
+
+      if (deactivate) {
+        this.deactivate( lastActive )
+        return
+      }
+
       var active = this.$element.find('.active:first')
         , prev = active.prev('.token')
 
@@ -335,29 +392,69 @@
         prev = this.$element.find('.token:first')
       }
 
-      if (!prev.length) {
+      if (!prev.length && !add) {
         this.$input.focus()
         return
       }
 
-      this.activate( prev )
+      this.activate( prev, add )
     }
 
-  , activate: function (token) {
+  , activate: function (token, add, multi, remember) {
+
       if (!token) return
+
+      if (typeof remember === 'undefined') var remember = true
+
+      if (multi) var add = true
 
       this.$helper.focus()
 
-      this.$element.find('.active').removeClass('active')
+      if (!add) {
+        this.$element.find('.active').removeClass('active')
+        if (remember) {
+          this.firstActiveToken = token 
+        } else {
+          delete this.firstActiveToken
+        }
+      }
+
+      if (multi && this.firstActiveToken) {
+        // Determine first active token and the current tokens indicies
+        // Account for the 1 hidden textarea by subtracting 1 from both
+        var i = this.firstActiveToken.index() - 1 
+          , a = token.index() -1
+          , _self = this
+
+        this.$element.find('.token').slice( Math.min(i, a) + 1, Math.max(i, a) ).each( function() {
+          _self.activate( $(this), true )
+        })
+      }
+
       token.addClass('active')
-      this.$helper.val( token.data('value') ).select()
+      this.$helper.val( this.getTokensList( true ) ).select()
     }
 
   , activateAll: function() {
-      this.$helper.focus()
+      var _self = this
 
-      this.$element.find('.token').addClass('active')
-      this.$helper.val( this.getTokensList() ).select()
+      this.$element.find('.token').each( function (i) {
+        _self.activate($(this), i !== 0, false, false)
+      })
+    }
+
+  , deactivate: function(token) {
+      if (!token) return
+
+      token.removeClass('active')
+      this.$helper.val( this.getTokensList( true ) ).select()
+    }
+
+  , toggle: function(token) {
+      if (!token) return
+
+      token.toggleClass('active')
+      this.$helper.val( this.getTokensList( true ) ).select()
     }
 
   , edit: function (token) {
