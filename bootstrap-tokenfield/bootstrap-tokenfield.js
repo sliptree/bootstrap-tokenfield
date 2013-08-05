@@ -147,6 +147,8 @@
       afterE.relatedTarget = token
       this.$element.trigger(afterE)
 
+      this.$element.val( this.getTokensList() ).trigger('change')
+
       this.update()
 
       return this.$input.get(0)
@@ -553,8 +555,7 @@
       }
       token.remove()
 
-      this.$element.trigger('removeToken')
-
+      this.$element.val( this.getTokensList() ).trigger('removeToken').trigger('change')
 
       if (!this.$wrapper.find('.token').length || e.type === 'click') this.$input.focus()
 
