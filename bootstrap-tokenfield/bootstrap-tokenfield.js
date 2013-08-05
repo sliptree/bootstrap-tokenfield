@@ -355,12 +355,12 @@
       this.focused = false
       this.$element.removeClass('focus')
 
-      if (!this.preventDeactivation) {
+      if (!this.preventDeactivation && !this.$helper.is(':focus')) {
         this.$element.find('.active').removeClass('active')
         this.firstActiveToken = null
       }
 
-      if (this.$input.data('edit')) {
+      if (this.$input.data('edit') && !this.$input.is(':focus')) {
         this.createTokensFromInput(e)
       }
     }
@@ -423,7 +423,6 @@
     }
 
   , prev: function (add) {
-      if (this.$element.find('.token.active').length === this.$element.find('.token').length) return
 
       if (add) {
         var lastActive = this.$element.find('.active:last')
@@ -431,7 +430,7 @@
 
         if (deactivate) return this.deactivate( lastActive )
       }
-
+    
       var active = this.$element.find('.active:first')
         , prev = active.prev('.token')
 
@@ -529,8 +528,7 @@
 
       token.replaceWith( this.$input )
 
-      this.$input.focus()
-                .val( e.token.value )
+      this.$input.val( e.token.value )
                 .select()
                 .data( 'edit', true )
                 .width( tokenWidth )
@@ -571,7 +569,7 @@
         this.$input.width(this.$mirror.width() + 10)
       }
       else {
-        this.$input.width( this.$element.offset().left + this.$element.width() - this.$input.offset().left )
+        this.$input.width( this.$element.offset().left + this.$element.width() - this.$input.offset().left + 5 )
       }
     }
 
