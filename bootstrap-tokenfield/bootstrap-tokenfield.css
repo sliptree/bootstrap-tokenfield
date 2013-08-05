@@ -9,11 +9,10 @@
   -o-transition: border linear 0.2s, box-shadow linear 0.2s;
   transition: border linear 0.2s, box-shadow linear 0.2s;
   display: inline-block;
-  min-height: 20px;
+  min-height: 16px;
   padding: 4px 6px 0 6px;
   margin-bottom: 10px;
   font-size: 14px;
-  line-height: 20px;
   color: #555555;
   vertical-align: middle;
   -webkit-border-radius: 4px;
@@ -40,30 +39,34 @@
 
 .tokenfield .token {
   display: inline-block;
-  padding: 1px 4px;
-  font-size: 14px;
-  line-height: 16px;
   white-space: nowrap;
-  vertical-align: middle;
   background-color: #ededed;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   border-radius: 3px;
   border: 1px solid #ccc;
+  font-size: 14px;
+  height: 16px;
+  padding: 1px 4px;
   margin: 0 5px 4px 0;
+  vertical-align: top;
 }
 .tokenfield .token.active {
   border-color: rgba(82, 168, 236, 0.8);
 }
 .tokenfield .token .token-label {
-  display: inline-block;
+  display: block;
+  float: left;
   overflow: hidden;
   text-overflow: ellipsis;
+  line-height: 15.9px;
+  -webkit-padding-before: 1px;
 }
+
 .tokenfield .token .close {
-  float: none;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 14px;
+  font-size: 16px;
   margin-left: 5px;
 }
 
@@ -74,8 +77,9 @@
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
+  height: 20px;
   padding: 0;
-  margin: 0 5px 4px 0;
+  margin: 0 0 4px 0;
 }
 .tokenfield input:focus {
   border-color: transparent;
