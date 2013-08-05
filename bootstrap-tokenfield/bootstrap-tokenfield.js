@@ -28,7 +28,7 @@
     this.$copyHelper = $('<input type="text" />').css({
       'position': 'absolute',
       'left': '-10000px',
-    }).prop('tabindex', -1);
+    }).prop('tabindex', -1).prependTo( this.$wrapper )
 
     this.options = $.extend({}, $.fn.tokenfield.defaults, { tokens: this.$element.val() }, options)
     
@@ -57,7 +57,17 @@
     
     this.setTokens(this.options.tokens)
 
+    // Start listening to events
     this.listen()
+
+    // Initialize autocomplete, if necessary
+    if (this.options.autocomplete.source) {
+      var autocompleteOptions = $.extend({}, this.options.autocomplete, {
+        minLength: this.options.showAutocompleteOnFocus ? 0 : null,
+        position: { my: "left top", at: "left bottom", of: this.$wrapper }
+      })
+      this.$input.autocomplete( autocompleteOptions )
+    }
   }
 
   Tokenfield.prototype = {
@@ -190,6 +200,8 @@
   }
 
   , listen: function () {
+      var _self = this
+
       this.$wrapper
         .on('click',    $.proxy(this.focusInput, this))
 
@@ -201,7 +213,7 @@
         .on('keypress', $.proxy(this.keypress, this))
         .on('keyup',    $.proxy(this.keyup, this))
 
-      this.$element
+      this.$copyHelper
         .on('focus',    $.proxy(this.focus, this))
         .on('blur',     $.proxy(this.blur, this))        
         .on('keydown',  $.proxy(this.keydown, this))
@@ -209,6 +221,27 @@
 
       // Secondary listeners for input width calculation
       this.$input.on('keydown, keypress, keyup',  $.proxy(this.update, this))
+
+      this.$input
+        .on('autocompletecreate', function() {
+          // Set minimum autocomplete menu width
+          var minWidth = _self.$wrapper.width() +
+              parseInt(_self.$wrapper.css('padding-right'), 10) +
+              parseInt(_self.$wrapper.css('border-right-width'), 10)
+          $(this).data('uiAutocomplete').menu.element.css( 'min-width', minWidth + 'px' )
+        })
+        .on('autocompleteopen', function() {
+          _self.$input.data('autocomplete-open', true)
+        })
+        .on('autocompleteclose', function() {
+          _self.$input.data('autocomplete-open', false)
+        })
+        .on('autocompleteselect', function (e, ui) {
+          _self.$input.val('')
+          _self.createToken( ui.item )
+          return false
+        })
+
     }
 
   , keydown: function (e) {
@@ -225,7 +258,7 @@
           if (this.$input.is(':focus')) {
             if (this.$input.val().length > 0) break
 
-            var prev = this.$input.prev('.token:last')
+            var prev = this.$input.prevAll('.token:first')
 
             if (!prev.length) break
 
@@ -309,6 +342,7 @@
 
         case 9: // tab
         case 13: // enter
+          if (this.$input.data('autocomplete-open')) break
           if (this.$input.is(':focus') && this.$input.val().length || this.$input.data('edit')) {
             this.createTokensFromInput(e)
           }
@@ -334,7 +368,7 @@
         case 8: // backspace
           if (this.$input.is(':focus')) {
             if (this.$input.val().length || this.lastInputValue.length && this.lastKeyDown === 8) break
-            this.activate( this.$input.prev('.token') )
+            this.activate( this.$input.prevAll('.token:first') )
           } else {
             this.remove(e)
           }
@@ -358,6 +392,10 @@
       if (this.$input.is(':focus')) {
         this.$wrapper.find('.active').removeClass('active')
         this.firstActiveToken = null
+
+        if (this.options.showAutocompleteOnFocus && this.$input.data('uiAutocomplete')) {
+          this.search()
+        }
       }
     }
 
@@ -422,7 +460,7 @@
       }
 
       var active = this.$wrapper.find('.active:last')
-        , next = active.next('.token')
+        , next = active.nextAll('.token:first')
 
       if (!next.length) {
         this.$input.focus()
@@ -442,7 +480,7 @@
       }
 
       var active = this.$wrapper.find('.active:first')
-        , prev = active.prev('.token')
+        , prev = active.prevAll('.token:first')
 
       if (!prev.length) {
         prev = this.$wrapper.find('.token:first')
@@ -466,7 +504,7 @@
 
       if (multi) var add = true
 
-      this.$element.focus()
+      this.$copyHelper.focus()
 
       if (!add) {
         this.$wrapper.find('.active').removeClass('active')
@@ -480,8 +518,8 @@
       if (multi && this.firstActiveToken) {
         // Determine first active token and the current tokens indicies
         // Account for the 1 hidden textarea by subtracting 1 from both
-        var i = this.firstActiveToken.index() - 1 
-          , a = token.index() -1
+        var i = this.firstActiveToken.index() - 2
+          , a = token.index() - 2
           , _self = this
 
         this.$wrapper.find('.token').slice( Math.min(i, a) + 1, Math.max(i, a) ).each( function() {
@@ -589,6 +627,10 @@
       this.$input.focus()
     }
 
+  , search: function () {
+      this.$input.autocomplete('search')
+    }
+
   }
 
 
@@ -613,7 +655,9 @@
   $.fn.tokenfield.defaults = {
     minWidth: 60,
     minLength: 0,
-    allowDuplicates: false
+    allowDuplicates: false,
+    autocomplete: {},
+    showAutocompleteOnFocus: false
   }  
 
   $.fn.tokenfield.Constructor = Tokenfield

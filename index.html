@@ -10,6 +10,7 @@
 
     <!-- Le styles -->
     <link href="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" type="text/css" rel="stylesheet">
+    <link href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" type="text/css" rel="stylesheet">
     <link href="google-code-prettify/prettify.css" type="text/css" rel="stylesheet">
     <link href="bootstrap-tokenfield/bootstrap-tokenfield.css" type="text/css" rel="stylesheet">
     <link href="docs.css" type="text/css" rel="stylesheet">
@@ -22,7 +23,8 @@
     <!-- Le javascript
     ================================================== -->
     <script type="text/javascript" src="google-code-prettify/prettify.js"></script>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
     <script type="text/javascript" src="bootstrap-tokenfield/bootstrap-tokenfield.js" charset="UTF-8"></script>
 
     <script type="text/javascript">
@@ -118,7 +120,12 @@
               <div class="control-group">
                 <input type="text" class="token-example-field" id="tokenfield-1" value="red,green,blue" />
                 <script type="text/javascript">
-                  $('#tokenfield-1').tokenfield()
+                  $('#tokenfield-1').tokenfield({
+                    autocomplete: {
+                      source: ['red','blue','green','yellow','violet','brown','purple','black','white'],
+                    },
+                    showAutocompleteOnFocus: true
+                  })
                 </script>
               </div>
             </div>
