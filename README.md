@@ -17,6 +17,11 @@ Check out the [demo and docs](http://sliptree.github.io/bootstrap-tokenfield/)
 
 ### Changelog
 
+0.6.7 Crossable
+
+* Fixed: Firefox close icon was misplaced
+* New: IE 8-10 support (both CSS and Javascript)
+
 0.6.5 Shiftable
 
 * New feature: select specific tokens with Ctrl/Shift + click
@@ -37,5 +42,5 @@ Check out the [demo and docs](http://sliptree.github.io/bootstrap-tokenfield/)
 * ~~Add hooks to enable token manipulation on copy/paste~~ DONE!
 * ~~Add events~~ DONE!
 * ~~Add Shift/Ctrl + arrow keys / click support~~ DONE!
+* ~~Cross-browser testing (currently tested on Chrome only)~~ DONE!
 * Add support for jQuery UI autocomplete
-* Cross-browser testing (currently tested on Chrome only)

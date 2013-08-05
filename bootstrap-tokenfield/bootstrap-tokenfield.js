@@ -1,5 +1,5 @@
 /* ============================================================
- * bootstrap-tokenfield.js v0.6.5
+ * bootstrap-tokenfield.js v0.6.7
  * ============================================================
  *
  * Copyright 2013 Sliptree
@@ -430,7 +430,7 @@
 
         if (deactivate) return this.deactivate( lastActive )
       }
-    
+
       var active = this.$element.find('.active:first')
         , prev = active.prev('.token')
 
