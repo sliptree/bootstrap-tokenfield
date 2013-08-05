@@ -17,15 +17,23 @@
   var Tokenfield = function (element, options) {
     var _self = this
 
-    this.$input = $(element).addClass('token-input')
-    this.$element = $('<div class="tokenfield" />')
-    this.$helper = $('<textarea class="token-helper" tabindex="-1" style="position: absolute; left: -10000px;" />').prependTo(this.$element)
-    this.$mirror = $('<span style="position:absolute; top:-999px; left:0; white-space:pre;"/>');
 
-    this.options = $.extend({}, $.fn.tokenfield.defaults, { tokens: this.$input.data('tokens') }, options)
+    this.$wrapper = $('<div class="tokenfield" />')
+    this.$element = $(element).css({
+      'position': 'absolute',
+      'left': '-10000px',
+    }).prop('tabindex', -1);
+    this.$input = $('<input type="text" class="token-input" />').appendTo( this.$wrapper )
+    this.$mirror = $('<span style="position:absolute; top:-999px; left:0; white-space:pre;"/>');
+    this.$copyHelper = $('<input type="text" />').css({
+      'position': 'absolute',
+      'left': '-10000px',
+    }).prop('tabindex', -1);
+
+    this.options = $.extend({}, $.fn.tokenfield.defaults, { tokens: this.$element.val() }, options)
     
     // Copy some styles
-    this.$element.width( this.$input.width() )
+    this.$wrapper.width( this.$element.width() )
 
     // Set up mirror for input auto-sizing
     this.$input.css('min-width', this.options.minWidth + 'px')
@@ -44,8 +52,8 @@
     this.$mirror.appendTo( 'body' )
 
     // Insert tokenfield to HTML
-    this.$element.insertBefore( this.$input )
-    this.$input.appendTo( this.$element )
+    this.$wrapper.insertBefore( this.$element )
+    this.$element.prependTo( this.$wrapper )
     
     this.setTokens(this.options.tokens)
 
@@ -77,7 +85,7 @@
         value: value,
         label: label
       }
-      this.$input.trigger(e)
+      this.$element.trigger(e)
 
       var token = $('<div class="token" />')
             .attr('data-value', e.token.value)
@@ -93,7 +101,7 @@
       // Determine maximum possible token label width
       if (!this.maxTokenWidth) {
         this.maxTokenWidth =
-          this.$element.width() - closeButton.outerWidth() - 
+          this.$wrapper.width() - closeButton.outerWidth() - 
           Number(closeButton.css('margin-left')) -
           Number(closeButton.css('margin-right')) -
           Number(token.css('border-left-width')) -
@@ -137,7 +145,7 @@
       var afterE = $.Event('afterCreateToken')
       afterE.token = e.token
       afterE.relatedTarget = token
-      this.$input.trigger(afterE)
+      this.$element.trigger(afterE)
 
       this.update()
 
@@ -147,7 +155,7 @@
   , setTokens: function (tokens, add) {
       if (!tokens) return
 
-      if (!add) this.$element.find('.token').remove()
+      if (!add) this.$wrapper.find('.token').remove()
 
       if (typeof tokens === 'string') {
         tokens = tokens.split(',')
@@ -164,7 +172,7 @@
   , getTokens: function(active) {
       var tokens = []
         , activeClass = active ? '.active' : '' // get active tokens only
-      this.$element.find( '.token' + activeClass ).each( function() {
+      this.$wrapper.find( '.token' + activeClass ).each( function() {
         tokens.push({
           value: $(this).data('value') || $(this).find('.token-label').text(),
           label: $(this).find('.token-label').text()
@@ -180,7 +188,7 @@
   }
 
   , listen: function () {
-      this.$element
+      this.$wrapper
         .on('click',    $.proxy(this.focusInput, this))
 
       this.$input
@@ -191,7 +199,7 @@
         .on('keypress', $.proxy(this.keypress, this))
         .on('keyup',    $.proxy(this.keyup, this))
 
-      this.$helper
+      this.$element
         .on('focus',    $.proxy(this.focus, this))
         .on('blur',     $.proxy(this.blur, this))        
         .on('keydown',  $.proxy(this.keydown, this))
@@ -247,7 +255,7 @@
             _self.deactivate( $(this) )
           })
 
-          this.activate( this.$element.find('.token:first'), true, true )
+          this.activate( this.$wrapper.find('.token:first'), true, true )
           e.preventDefault()
           break
 
@@ -287,7 +295,7 @@
             _self.deactivate( $(this) )
           })          
 
-          this.activate( this.$element.find('.token:last'), true, true )
+          this.activate( this.$wrapper.find('.token:last'), true, true )
           e.preventDefault()
           break        
 
@@ -303,8 +311,8 @@
             this.createTokensFromInput(e)
           }
           if (e.keyCode === 13) {
-            if (!this.$helper.is(':focus') || this.$element.find('.token.active').length !== 1) break
-            this.edit( this.$element.find('.token.active') )
+            if (!this.$element.is(':focus') || this.$wrapper.find('.token.active').length !== 1) break
+            this.edit( this.$wrapper.find('.token.active') )
           }
       }
 
@@ -343,20 +351,20 @@
 
   , focus: function (e) {
       this.focused = true
-      this.$element.addClass('focus')
+      this.$wrapper.addClass('focus')
 
       if (this.$input.is(':focus')) {
-        this.$element.find('.active').removeClass('active')
+        this.$wrapper.find('.active').removeClass('active')
         this.firstActiveToken = null
       }
     }
 
   , blur: function (e) {
       this.focused = false
-      this.$element.removeClass('focus')
+      this.$wrapper.removeClass('focus')
 
-      if (!this.preventDeactivation && !this.$helper.is(':focus')) {
-        this.$element.find('.active').removeClass('active')
+      if (!this.preventDeactivation && !this.$element.is(':focus')) {
+        this.$wrapper.find('.active').removeClass('active')
         this.firstActiveToken = null
       }
 
@@ -385,7 +393,7 @@
 
       if (this.$input.data( 'edit' )) {
         this.$input
-          .appendTo( this.$element )
+          .appendTo( this.$wrapper )
           .data( 'edit', false )
           .css( 'width', this.options.minWidth + 'px' )
 
@@ -396,7 +404,7 @@
           }, 1)
         }
 
-        this.$element.css( 'width', this.$element.data('prev-width') )
+        this.$wrapper.css( 'width', this.$wrapper.data('prev-width') )
       }
 
       e.preventDefault()
@@ -405,13 +413,13 @@
 
   , next: function (add) {
       if (add) {
-        var firstActive = this.$element.find('.active:first')
+        var firstActive = this.$wrapper.find('.active:first')
           , deactivate = firstActive && this.firstActiveToken ? firstActive.index() < this.firstActiveToken.index() : false
 
         if (deactivate) return this.deactivate( firstActive )
       }
 
-      var active = this.$element.find('.active:last')
+      var active = this.$wrapper.find('.active:last')
         , next = active.next('.token')
 
       if (!next.length) {
@@ -425,17 +433,17 @@
   , prev: function (add) {
 
       if (add) {
-        var lastActive = this.$element.find('.active:last')
+        var lastActive = this.$wrapper.find('.active:last')
           , deactivate = lastActive && this.firstActiveToken ? lastActive.index() > this.firstActiveToken.index() : false
 
         if (deactivate) return this.deactivate( lastActive )
       }
 
-      var active = this.$element.find('.active:first')
+      var active = this.$wrapper.find('.active:first')
         , prev = active.prev('.token')
 
       if (!prev.length) {
-        prev = this.$element.find('.token:first')
+        prev = this.$wrapper.find('.token:first')
       }
 
       if (!prev.length && !add) {
@@ -450,16 +458,16 @@
 
       if (!token) return
 
-      if (this.$element.find('.token.active').length === this.$element.find('.token').length) return
+      if (this.$wrapper.find('.token.active').length === this.$wrapper.find('.token').length) return
 
       if (typeof remember === 'undefined') var remember = true
 
       if (multi) var add = true
 
-      this.$helper.focus()
+      this.$element.focus()
 
       if (!add) {
-        this.$element.find('.active').removeClass('active')
+        this.$wrapper.find('.active').removeClass('active')
         if (remember) {
           this.firstActiveToken = token 
         } else {
@@ -474,19 +482,19 @@
           , a = token.index() -1
           , _self = this
 
-        this.$element.find('.token').slice( Math.min(i, a) + 1, Math.max(i, a) ).each( function() {
+        this.$wrapper.find('.token').slice( Math.min(i, a) + 1, Math.max(i, a) ).each( function() {
           _self.activate( $(this), true )
         })
       }
 
       token.addClass('active')
-      this.$helper.val( this.getTokensList( true ) ).select()
+      this.$copyHelper.val( this.getTokensList( true ) ).select()
     }
 
   , activateAll: function() {
       var _self = this
 
-      this.$element.find('.token').each( function (i) {
+      this.$wrapper.find('.token').each( function (i) {
         _self.activate($(this), i !== 0, false, false)
       })
     }
@@ -495,14 +503,14 @@
       if (!token) return
 
       token.removeClass('active')
-      this.$helper.val( this.getTokensList( true ) ).select()
+      this.$copyHelper.val( this.getTokensList( true ) ).select()
     }
 
   , toggle: function(token) {
       if (!token) return
 
       token.toggleClass('active')
-      this.$helper.val( this.getTokensList( true ) ).select()
+      this.$copyHelper.val( this.getTokensList( true ) ).select()
     }
 
   , edit: function (token) {
@@ -517,14 +525,14 @@
         value: value,
         label: label
       }
-      this.$input.trigger(e)
+      this.$element.trigger(e)
 
       token.find('.token-label').text(e.token.value)
       var tokenWidth = token.outerWidth()
 
-      this.$element
-        .data( 'prev-width', this.$element.width() )
-        .width( this.$element.width() )
+      this.$wrapper
+        .data( 'prev-width', this.$wrapper.width() )
+        .width( this.$wrapper.width() )
 
       token.replaceWith( this.$input )
 
@@ -537,16 +545,18 @@
   , remove: function (e, direction) {
       if (this.$input.is(':focus')) return
 
-
-      var token = (e.type === 'click') ? $(e.target).closest('.token') : this.$element.find('.token.active')
-      if (!direction) direction = 'prev'
-
-      this[direction]()
+      var token = (e.type === 'click') ? $(e.target).closest('.token') : this.$wrapper.find('.token.active')
+      
+      if (e.type !== 'click') {
+        if (!direction) var direction = 'prev'
+        this[direction]()
+      }
       token.remove()
 
-      this.$input.trigger('removeToken')
+      this.$element.trigger('removeToken')
 
-      if (!this.$element.find('.token').length || e.type === 'click') this.$input.focus()
+
+      if (!this.$wrapper.find('.token').length || e.type === 'click') this.$input.focus()
 
       this.$input.css('width', this.options.minWidth + 'px')
       this.update()
@@ -569,7 +579,7 @@
         this.$input.width(this.$mirror.width() + 10)
       }
       else {
-        this.$input.width( this.$element.offset().left + this.$element.width() - this.$input.offset().left + 5 )
+        this.$input.width( this.$wrapper.offset().left + this.$wrapper.width() - this.$input.offset().left + 5 )
       }
     }
 

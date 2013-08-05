@@ -116,13 +116,13 @@
             <p>Create elegant taggable fields with copy/paste and keyboard support.</p>
             <div class="bs-docs-example" style="background-color: #f5f5f5;">
               <div class="control-group">
-                <input type="text" class="token-example-field" id="tokenfield-1" data-tokens="red,green,blue" />
+                <input type="text" class="token-example-field" id="tokenfield-1" value="red,green,blue" />
                 <script type="text/javascript">
                   $('#tokenfield-1').tokenfield()
                 </script>
               </div>
             </div>
-            <pre class="prettyprint linenums">&lt;input type="text" data-tokens="red,green,blue"&gt;</pre>
+            <pre class="prettyprint linenums">&lt;input type="text" value="red,green,blue"&gt;</pre>
             <pre class="prettyprint linenums">$('#tokenfield-1').tokenfield()</pre>
 
             <hr class="bs-docs-separator">
@@ -133,7 +133,7 @@
             <pre class="prettyprint linenums">$('.tokenfield').typeahead()</pre>
 
             <h3 id="options">Options</h3>
-            <p>Options can be passed via data attributes or JavaScript. For data attributes, append the option name to <code>data-</code>, as in <code>data-tokens=""</code>.</p>
+            <p>Options can be passed via data attributes or JavaScript. For data attributes, append the option name to <code>data-</code>, as in <code>value=""</code>.</p>
             <table class="table table-bordered table-striped">
               <thead>
                <tr>
@@ -253,7 +253,7 @@ $('#myTokenfield').on('removeToken', function () {
 </pre>
 
             <div class="bs-docs-example" style="background-color: #f5f5f5;">
-              <input type="text" class="token-example-field" id="tokenfield-2" data-tokens="red,green,blue" />
+              <input type="text" class="token-example-field" id="tokenfield-2" value="red,green,blue" />
               <script type="text/javascript">
                 $('#tokenfield-2').tokenfield()
                   .on('beforeCreateToken', function (e) {
@@ -278,7 +278,7 @@ $('#myTokenfield').on('removeToken', function () {
             <p>If You have one token selected, you can select all tokens with the keyboard. Then, you can copy the tokens using keyboard. You can also paste tokens to another field.</p>
 
             <div class="bs-docs-example" style="background-color: #f5f5f5;">
-              <input type="text" class="token-example-field" id="tokenfield-3" data-tokens="red,green,blue" />
+              <input type="text" class="token-example-field" id="tokenfield-3" value="red,green,blue" />
               <script type="text/javascript">
                 $('#tokenfield-3').tokenfield()
               </script>
@@ -286,10 +286,10 @@ $('#myTokenfield').on('removeToken', function () {
 
             <h3 id="copy-paste">Copy &amp; paste support</h3>
             <p>You can copy tokens from a tokenfield and paste them to any other field as comma-separated values. When you paste to another tokenfield, they will become tokens there, aswell!</p>
-            <p>Try it out, copy the following to the field below: red,green,blue</p>
+            <p>Try it out, copy the following to the field below: violet,yellow,brown</p>
 
             <div class="bs-docs-example" style="background-color: #f5f5f5;">
-              <input type="text" class="token-example-field" id="tokenfield-4" data-tokens="red,green,blue" />
+              <input type="text" class="token-example-field" id="tokenfield-4" value="red,green,blue" />
               <script type="text/javascript">
                 $('#tokenfield-4').tokenfield()
               </script>
@@ -304,7 +304,7 @@ $('#myTokenfield').on('removeToken', function () {
                 <div class="control-group warning">
                   <label class="control-label" for="inputWarning">Input with warning</label>
                   <div class="controls">
-                    <input type="text" class="token-example-field token-validation-example" id="inputWarning" data-tokens="red,green,blue">
+                    <input type="text" class="token-example-field token-validation-example" id="inputWarning" value="red,green,blue">
                     <span class="help-inline">Something may have gone wrong</span>
                   </div>
                 </div>
@@ -312,7 +312,7 @@ $('#myTokenfield').on('removeToken', function () {
                 <div class="control-group error">
                   <label class="control-label" for="inputError">Input with error</label>
                   <div class="controls">
-                    <input type="text" class="token-example-field token-validation-example" id="inputError" data-tokens="red,green,blue">
+                    <input type="text" class="token-example-field token-validation-example" id="inputError" value="red,green,blue">
                     <span class="help-inline">Please correct the error</span>
                   </div>
                 </div>
@@ -320,7 +320,7 @@ $('#myTokenfield').on('removeToken', function () {
                 <div class="control-group info">
                   <label class="control-label" for="inputInfo">Input with info</label>
                   <div class="controls">
-                    <input type="text" class="token-example-field token-validation-example" id="inputInfo" data-tokens="red,green,blue">
+                    <input type="text" class="token-example-field token-validation-example" id="inputInfo" value="red,green,blue">
                     <span class="help-inline">Can't add this tag</span>
                   </div>
                 </div>
@@ -328,7 +328,7 @@ $('#myTokenfield').on('removeToken', function () {
                 <div class="control-group success">
                   <label class="control-label" for="inputSuccess">Input with success</label>
                   <div class="controls">
-                    <input type="text" class="token-example-field token-validation-example" id="inputSuccess" data-tokens="red,green,blue">
+                    <input type="text" class="token-example-field token-validation-example" id="inputSuccess" value="red,green,blue">
                     <span class="help-inline">Woohoo!</span>
                   </div>
                 </div>
