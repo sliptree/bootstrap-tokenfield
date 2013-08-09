@@ -21,13 +21,13 @@
     this.$wrapper = $('<div class="tokenfield" />')
     this.$element = $(element).css({
       'position': 'absolute',
-      'left': '-10000px',
+      'left': '-10000px'
     }).prop('tabindex', -1);
     this.$input = $('<input type="text" class="token-input" />').appendTo( this.$wrapper )
     this.$mirror = $('<span style="position:absolute; top:-999px; left:0; white-space:pre;"/>');
     this.$copyHelper = $('<input type="text" />').css({
       'position': 'absolute',
-      'left': '-10000px',
+      'left': '-10000px'
     }).prop('tabindex', -1).prependTo( this.$wrapper )
 
     this.options = $.extend({}, $.fn.tokenfield.defaults, { tokens: this.$element.val() }, options)
@@ -112,18 +112,18 @@
       if (!this.maxTokenWidth) {
         this.maxTokenWidth =
           this.$wrapper.width() - closeButton.outerWidth() - 
-          Number(closeButton.css('margin-left')) -
-          Number(closeButton.css('margin-right')) -
-          Number(token.css('border-left-width')) -
-          Number(token.css('border-right-width')) -
-          Number(token.css('padding-left')) -
-          Number(token.css('padding-right'))
-          Number(tokenLabel.css('border-left-width')) -
-          Number(tokenLabel.css('border-right-width')) -
-          Number(tokenLabel.css('padding-left')) -
-          Number(tokenLabel.css('padding-right'))
-          Number(tokenLabel.css('margin-left')) -
-          Number(tokenLabel.css('margin-right'))
+          parseInt(closeButton.css('margin-left'), 10) -
+          parseInt(closeButton.css('margin-right'), 10) -
+          parseInt(token.css('border-left-width'), 10) -
+          parseInt(token.css('border-right-width'), 10) -
+          parseInt(token.css('padding-left'), 10) -
+          parseInt(token.css('padding-right'), 10)
+          parseInt(tokenLabel.css('border-left-width'), 10) -
+          parseInt(tokenLabel.css('border-right-width'), 10) -
+          parseInt(tokenLabel.css('padding-left'), 10) -
+          parseInt(tokenLabel.css('padding-right'), 10)
+          parseInt(tokenLabel.css('margin-left'), 10) -
+          parseInt(tokenLabel.css('margin-right'), 10)
       }
 
       tokenLabel
