@@ -1,7 +1,7 @@
-bootstrap-tokenfield
+Bootstrap Tokenfield
 ====================
 
-A jQuery tag/token input plugin for Twitter's Bootstrap, by the guys from Sliptree
+A jQuery tagging / tokenizer input plugin for Twitter's Bootstrap, by the guys from [Sliptree](https://sliptree.com)
 
 Check out the [demo and docs](http://sliptree.github.io/bootstrap-tokenfield/)
 
@@ -16,6 +16,10 @@ Check out the [demo and docs](http://sliptree.github.io/bootstrap-tokenfield/)
 * Select specific tokens with Ctrl + click and Shift + click
 
 ### Changelog
+
+0.7.0 Autocompleted
+
+* New feature: jQuery UI Autocomplete support
 
 0.6.7 Crossable
 
@@ -34,13 +38,3 @@ Check out the [demo and docs](http://sliptree.github.io/bootstrap-tokenfield/)
 * A lot of improvements and bugfixes
 
 0.5 Initial release
-
-### Todo
-
-* ~~Edit existing tags with double-click/enter~~ DONE!
-* ~~Add option to disallow duplicates~~ DONE!
-* ~~Add hooks to enable token manipulation on copy/paste~~ DONE!
-* ~~Add events~~ DONE!
-* ~~Add Shift/Ctrl + arrow keys / click support~~ DONE!
-* ~~Cross-browser testing (currently tested on Chrome only)~~ DONE!
-* Add support for jQuery UI autocomplete
