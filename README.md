@@ -17,6 +17,11 @@ Check out the [demo and docs](http://sliptree.github.io/bootstrap-tokenfield/)
 
 ### Changelog
 
+0.7.1 
+
+* Fixed: pressing comma did not create a token in Firefox
+* Fixed: tokenfield('getTokensList') returned array instead of string
+
 0.7.0 Autocompleted
 
 * New feature: jQuery UI Autocomplete support
