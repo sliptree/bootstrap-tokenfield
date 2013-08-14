@@ -641,16 +641,17 @@
   var old = $.fn.tokenfield
 
   $.fn.tokenfield = function (option, param) {
-    return this.map(function () {
-      var $this = $(this)
-        , data = $this.data('tokenfield')
-        , options = typeof option == 'object' && option
+    var $this = $(this)
+      , data = $this.data('tokenfield')
+      , options = typeof option == 'object' && option
+
+    if (typeof option === 'string' && data && data[option]) {
+      return data[option](param)
+    } else {
       if (!data) $this.data('tokenfield', (data = new Tokenfield(this, options)))
-      if (typeof option == 'string') {
-        return data[option](param)
-      }
-      return this
-    })
+    }
+
+    return this
   }
 
   $.fn.tokenfield.defaults = {
