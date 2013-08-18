@@ -23,7 +23,9 @@
       'position': 'absolute',
       'left': '-10000px'
     }).prop('tabindex', -1);
-    this.$input = $('<input type="text" class="token-input" />').appendTo( this.$wrapper )
+    this.$input = $('<input type="text" class="token-input" />')
+                    .appendTo( this.$wrapper )
+                    .prop('placeholder', this.$element.prop('placeholder'))
     this.$mirror = $('<span style="position:absolute; top:-999px; left:0; white-space:pre;"/>');
     this.$copyHelper = $('<input type="text" />').css({
       'position': 'absolute',
@@ -197,6 +199,10 @@
       return $.map( this.getTokens(active), function (token) {
         return token.value
       }).join(', ')
+  }
+
+  , getInput: function() {
+    return this.$input.val()
   }
 
   , listen: function () {
@@ -409,7 +415,7 @@
         this.firstActiveToken = null
       }
 
-      if (this.$input.data('edit') && !this.$input.is(':focus')) {
+      if (this.$input.data('edit') && !this.$input.is(':focus') || this.options.createTokensOnBlur) {
         this.createTokensFromInput(e)
       }
     }
@@ -659,7 +665,8 @@
     minLength: 0,
     allowDuplicates: false,
     autocomplete: {},
-    showAutocompleteOnFocus: false
+    showAutocompleteOnFocus: false,
+    createTokensOnBlur: false
   }  
 
   $.fn.tokenfield.Constructor = Tokenfield

@@ -118,7 +118,7 @@
             <p>Create elegant taggable fields with copy/paste and keyboard support.</p>
             <div class="bs-docs-example" style="background-color: #f5f5f5;">
               <div class="control-group">
-                <input type="text" class="token-example-field" id="tokenfield-1" value="red,green,blue" />
+                <input type="text" class="token-example-field" id="tokenfield-1" value="red,green,blue" placeholder="Type something and hit enter" />
                 <script type="text/javascript">
                   $('#tokenfield-1').tokenfield({
                     autocomplete: {
@@ -131,7 +131,14 @@
               </div>
             </div>
             <pre class="prettyprint linenums">&lt;input type="text" value="red,green,blue"&gt;</pre>
-            <pre class="prettyprint linenums">$('#tokenfield-1').tokenfield()</pre>
+            <pre class="prettyprint linenums">
+$('#tokenfield-1').tokenfield({
+  autocomplete: {
+    source: ['red','blue','green','yellow','violet','brown','purple','black','white'],
+    delay: 100
+  },
+  showAutocompleteOnFocus: true
+})</pre>
 
             <hr class="bs-docs-separator">
 
