@@ -17,35 +17,43 @@
   var Tokenfield = function (element, options) {
     var _self = this
 
-    this.$element = $(element).css({
+    this.$element = $(element)
+    // Extend options
+    this.options = $.extend({}, $.fn.tokenfield.defaults, { tokens: this.$element.val() }, options)    
+    // Store original input width
+    var elWidth = this.$element.width();
+    // Move original input out of the way
+    this.$element.css({
       'position': 'absolute',
       'left': '-10000px'
     }).prop('tabindex', -1);
 
+    // Create a wrapper
     this.$wrapper = $('<div class="tokenfield form-control" />')
     if (this.$element.hasClass('input-lg')) this.$wrapper.addClass('input-lg')
     if (this.$element.hasClass('input-sm')) this.$wrapper.addClass('input-sm')
 
+    // Create a new input
     this.$input = $('<input type="text" class="token-input" />')
                     .appendTo( this.$wrapper )
-                    .prop('placeholder', this.$element.prop('placeholder'))
-    this.$mirror = $('<span style="position:absolute; top:-999px; left:0; white-space:pre;"/>');
+                    .prop('placeholder',  this.$element.prop('placeholder') )
+
+    // Set up a copy helper to handle copy & paste
     this.$copyHelper = $('<input type="text" />').css({
       'position': 'absolute',
       'left': '-10000px'
     }).prop('tabindex', -1).prependTo( this.$wrapper )
-
-    this.options = $.extend({}, $.fn.tokenfield.defaults, { tokens: this.$element.val() }, options)
     
-    // Copy classes & styles that affect the layout
-    $.each( this.$input.prop('class').split(/\s+/), function (index, className) {
-      console.log(~className.indexOf('.col-'));
-      if ( ~className.indexOf('.col-') || className === 'input-lg' || className === 'input-sm' ) {
-        _self.$wrapper.addClass( className );
-      }
-    });
+    // If the input is in inline form, set width explicitly
+    if (this.$element.parents('.form-inline').length) this.$wrapper.width( elWidth )
+
+    // Set tokenfield disabled, if original input is disabled
+    if (this.$element.prop('disabled')) {
+      this.disable();
+    }
 
     // Set up mirror for input auto-sizing
+    this.$mirror = $('<span style="position:absolute; top:-999px; left:0; white-space:pre;"/>');
     this.$input.css('min-width', this.options.minWidth + 'px')
     $.each([
         'fontFamily', 
@@ -72,6 +80,7 @@
 
     // Initialize autocomplete, if necessary
     if (this.options.autocomplete.source) {
+      console.log('jah, on ')
       var autocompleteOptions = $.extend({}, this.options.autocomplete, {
         minLength: this.options.showAutocompleteOnFocus ? 0 : null,
         position: { my: "left top", at: "left bottom", of: this.$wrapper }
@@ -143,9 +152,11 @@
       // Listen to events
       token
         .on('mousedown',  function (e) {
+          if (_self.disabled) return false;
           _self.preventDeactivation = true
         })
         .on('click',    function (e) {
+          if (_self.disabled) return false;
           _self.preventDeactivation = false
 
           if (e.ctrlKey || e.metaKey) {
@@ -156,6 +167,7 @@
           _self.activate( token, e.shiftKey, e.shiftKey )          
         })
         .on('dblclick', function (e) {
+          if (_self.disabled) return false;
           _self.edit( token )
         })
 
@@ -255,6 +267,9 @@
           _self.createToken( ui.item )
           return false
         })
+
+      // Listen to window resize
+      $(window).on('resize', $.proxy(this.update, this ))
 
     }
 
@@ -598,7 +613,7 @@
     }
 
   , remove: function (e, direction) {
-      if (this.$input.is(':focus')) return
+      if (this.$input.is(':focus') || this.disabled) return
 
       var token = (e.type === 'click') ? $(e.target).closest('.token') : this.$wrapper.find('.token.active')
       
@@ -633,6 +648,7 @@
         this.$input.width(this.$mirror.width() + 10)
       }
       else {
+        this.$input.css( 'width', this.options.minWidth + 'px' )
         this.$input.width( this.$wrapper.offset().left + this.$wrapper.width() - this.$input.offset().left + 5 )
       }
     }
@@ -644,6 +660,18 @@
 
   , search: function () {
       this.$input.autocomplete('search')
+    }
+
+  , disable: function () {
+      this.disabled = true;
+      this.$input.prop('disabled', true);
+      this.$wrapper.addClass('disabled');
+    }
+
+  , enable: function () {
+      this.disabled = false;
+      this.$input.prop('disabled', false);
+      this.$wrapper.removeClass('disabled');
     }
 
   }

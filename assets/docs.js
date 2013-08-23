@@ -14,7 +14,8 @@ jQuery(document).ready(function($) {
       source: ['red','blue','green','yellow','violet','brown','purple','black','white'],
       delay: 100
     },
-    showAutocompleteOnFocus: true
+    showAutocompleteOnFocus: true,
+    allowDuplicates: true
   });
 
   $('#tokenfield-2').tokenfield()

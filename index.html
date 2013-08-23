@@ -35,6 +35,13 @@ title: Tokenfield for Bootstrap
       <div class="container">
         <h1>Tokenfield for Bootstrap</h1>
         <p>Advanced tagging/tokenizing plugin for input fields with a focus on keyboard and copy-paste support.</p>
+        <ul id="feature-highlights">
+          <li>Copy &amp; paste support</li>
+          <li>Keyboard navigation</li>
+          <li>Edit existing tokens</li>
+          <li>Multiple lines of tokens</li>
+          <li>Responsive</li>
+        </ul>
         <div id="main-links">
           <a id="download-master" href="https://github.com/sliptree/bootstrap-tokenfield/zipball/master" class="btn btn-primary">Download Development</a>     
         </div>
@@ -75,7 +82,7 @@ title: Tokenfield for Bootstrap
 
               <div class="bs-example">
                 <div class="form-group">
-                  <input type="text" class="form-control" /><input type="text" class="form-control token-example-field" id="tokenfield-1" value="red,green,blue" placeholder="Type something and hit enter" />
+                  <input type="text" class="form-control" id="tokenfield-1" value="red,green,blue" placeholder="Type something and hit enter" />
                 </div>
               </div>
 {% highlight html %}
@@ -88,7 +95,8 @@ $('#tokenfield').tokenfield({
     source: ['red','blue','green','yellow','violet','brown','purple','black','white'],
     delay: 100
   },
-  showAutocompleteOnFocus: true
+  showAutocompleteOnFocus: true,
+  allowDuplicates: true
 })
 {% endhighlight %}
 
@@ -193,6 +201,18 @@ $('#myField').tokenfield('getTokens');
 $('#myField').tokenfield('getTokensList');
 {% endhighlight %}
 
+              <h4>.tokenfield('disable')</h4>
+              <p>Disable tokenfield (just like a normal input field)</p>
+{% highlight js %}
+$('#myField').tokenfield('disable');
+{% endhighlight %}
+
+              <h4>.tokenfield('enable')</h4>
+              <p>Enable tokenfield (just like a normal input field)</p>
+{% highlight js %}
+$('#myField').tokenfield('disable');
+{% endhighlight %}
+
               <h3 id="events">Events</h3>
               <p>Tokenfield exposes a few events for hooking into it's functionality.</p>
 
@@ -226,7 +246,7 @@ $('#myField').tokenfield('getTokensList');
               </div>
 
               <div class="bs-example">
-                <input type="text" class="form-control token-example-field" id="tokenfield-2" value="create,new,token" />
+                <input type="text" class="form-control" id="tokenfield-2" value="create,new,token" />
               </div>
 
 {% highlight js %}
@@ -386,7 +406,7 @@ $('#myTokenfield').on('removeToken', function () {
               <p>Disabled tokenfield</p>
 
               <form class="bs-example bs-example-form" role="form">
-                <input type="text" class="form-control token-example-field" value="red,green,blue" disabled />
+                <input type="text" class="form-control token-example-field" value="red,green,blue" disabled="disabled" />
               </form>
 
               <p>Disabled fieldset with tokenfield</p>
@@ -398,8 +418,8 @@ $('#myTokenfield').on('removeToken', function () {
                     <input type="text" id="disabledTextInput" class="form-control" placeholder="Disabled input">
                   </div>
                   <div class="form-group">
-                    <label for="disabledTextInput">Disabled tokenfield</label>
-                    <input type="text" class="form-control token-example-field" value="red,green,blue" />
+                    <label for="disabledTokenfield">Disabled tokenfield</label>
+                    <input type="text" id="disabledTokenfield" class="form-control token-example-field" value="red,green,blue" />
                   </div>
                 </fieldset>
               </form>
@@ -408,8 +428,8 @@ $('#myTokenfield').on('removeToken', function () {
 
               <form class="bs-example form-inline" role="form">
                 <div class="form-group">
-                  <label class="sr-only" for="exampleInputEmail2">Tags</label>
-                  <input type="text" class="form-control token-example-field" value="red,green,blue" placeholder="Enter tags" />
+                  <label class="sr-only" for="exampleInlineTags">Tags</label>
+                  <input type="text" id="exampleInlineTags" class="form-control token-example-field" value="red,green,blue" placeholder="Enter tags" />
                 </div>
                 <button type="submit" class="btn btn-default">Search</button>
               </form>

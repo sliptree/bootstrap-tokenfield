@@ -1081,3 +1081,29 @@ h1[id] {
   margin-top: 15px;
   margin-bottom: 5px;
 }
+
+/* Feature highlights */
+
+#feature-highlights {
+  font-size: 0.7em;
+  list-style: none;
+  padding: 0;
+}
+#exampleInlineTags {
+  width: 400px;
+}
+@media (min-width: 768px) {
+  #feature-highlights {
+    padding: inherit;
+    list-style: disc
+  }
+}
+@media (min-width: 992px) {
+  #feature-highlights {
+    list-style: disc;
+    position: absolute;
+    top: 20px;
+    right: 0;
+    font-size: 0.9em;
+  }
+}
