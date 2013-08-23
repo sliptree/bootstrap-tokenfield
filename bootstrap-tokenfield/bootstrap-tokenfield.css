@@ -1,7 +1,7 @@
 .tokenfield {
   height: auto;
   min-height: 34px;
-  padding-bottom: 3px;
+  padding-bottom: 0px;
 }
 .tokenfield.focus {
   border-color: #66afe9;
@@ -11,39 +11,42 @@
 }
 
 .tokenfield .token {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box; /* Firefox */  
   display: inline-block;
   border: 1px solid #ccc;
   background-color: #ededed;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   border-radius: 3px;
-  white-space: nowrap;
-  font-size: 1em;
-  padding: 0px 4px;
-  margin: 0 5px 3px 0;
+  white-space: nowrap; 
+  margin: -1px 5px 4px 0; 
+  height: 22px;
   vertical-align: top;
-  position: relative;
 }
 .tokenfield .token.active {
   border-color: rgba(82, 168, 236, 0.8);
 }
+
 .tokenfield .token .token-label {
-  display: block;
-  float: left;
+  display: inline-block;
   overflow: hidden;
   text-overflow: ellipsis;
-  line-height: 1.137em;
-  -webkit-padding-before: 1px; /* Fix 1px difference between FF/Chrome caused by line-height */
+  padding-left: 4px;
+  vertical-align: top;
 }
+
 .tokenfield .token .close {
   font-family: Arial;
+  display: inline-block;
+  line-height: 100%;
   font-size: 1.1em;
-  line-height: 1em;
+  line-height: 1.49em;
   margin-left: 5px;
-  padding: 0 4px 0 1px;
-  margin-right: -3px;
-  margin-top: 1px;
-  -webkit-padding-before: 1px; /* Fix 1px difference between FF/Chrome caused by line-height */
+  float: none;
+  height: 100%;
+  vertical-align: top;
+  padding-right: 4px;
 }
 
 .tokenfield .token-input {
@@ -56,6 +59,7 @@
   box-shadow: none;
   height: 20px;
   padding: 0;
+  margin-bottom: 5px;
 }
 .tokenfield .token-input:focus {
   border-color: transparent;
@@ -64,26 +68,6 @@
   -webkit-box-shadow: none;
      -moz-box-shadow: none;
           box-shadow: none;
-}
-
-/* Different sizes */
-.tokenfield.input-sm {
-  min-height: 30px;
-  padding-bottom: 2px;
-}
-.tokenfield.input-lg {
-  min-height: 45px;
-  padding-bottom: 7px;
-}
-
-.input-group-sm .token-input
-.tokenfield.input-sm .token-input {
-  height: 18px;
-}
-
-.input-group-lg .token-input
-.tokenfield.input-lg .token-input {
-  height: 23px;
 }
 
 /* Disabled tokenfield */
@@ -97,4 +81,44 @@
 .tokenfield.disabled .close:hover {
   cursor: not-allowed;
   opacity: 0.2;
-};
+}
+
+/* Different sizes */
+.tokenfield.input-sm,
+.input-group-sm .tokenfield {
+  min-height: 30px;
+  padding-bottom: 0px;
+}
+.input-group-sm .token,
+.tokenfield.input-sm .token {
+  height: 20px;
+}
+.input-group-sm .token-input,
+.tokenfield.input-sm .token-input {
+  height: 18px;
+}
+
+.tokenfield.input-lg,
+.input-group-lg .tokenfield {
+  min-height: 45px;
+  padding-bottom: 4px;
+}
+.input-group-lg .token,
+.tokenfield.input-lg .token {
+  height: 25px;
+}
+.input-group-lg .token-label,
+.tokenfield.input-lg .token-label {
+  line-height: 23px;
+}
+.input-group-lg .token .close,
+.tokenfield.input-lg .token .close {
+  line-height: 1.3em;
+}
+.input-group-lg .token-input,
+.tokenfield.input-lg .token-input {
+  height: 23px;
+  line-height: 23px;
+  margin-bottom: 6px;
+  vertical-align: top;
+}

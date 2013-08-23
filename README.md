@@ -17,6 +17,14 @@ Check out the [demo and docs](http://sliptree.github.io/bootstrap-tokenfield/)
 
 ### Changelog
 
+0.9.0 Bootstrappable
+
+* New: Bootstrap 3 support
+* New: Input group support
+* New: Disable/enable tokenfield
+* New: Tokenfield is now responsive
+* Deprecated: Bootstrap 2 support
+
 0.7.1 
 
 * Fixed: pressing comma did not create a token in Firefox

@@ -1,5 +1,5 @@
 /* ============================================================
- * bootstrap-tokenfield.js v0.7.1
+ * bootstrap-tokenfield.js v0.9.5
  * ============================================================
  *
  * Copyright 2013 Sliptree
@@ -80,7 +80,6 @@
 
     // Initialize autocomplete, if necessary
     if (this.options.autocomplete.source) {
-      console.log('jah, on ')
       var autocompleteOptions = $.extend({}, this.options.autocomplete, {
         minLength: this.options.showAutocompleteOnFocus ? 0 : null,
         position: { my: "left top", at: "left bottom", of: this.$wrapper }
@@ -441,6 +440,8 @@
       if (this.$input.data('edit') && !this.$input.is(':focus') || this.options.createTokensOnBlur) {
         this.createTokensFromInput(e)
       }
+      
+      this.preventDeactivation = false
     }
 
   , paste: function (e) {
@@ -558,6 +559,7 @@
       }
 
       token.addClass('active')
+      this.preventDeactivation = true
       this.$copyHelper.val( this.getTokensList( true ) ).select()
     }
 
