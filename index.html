@@ -21,7 +21,7 @@ title: Tokenfield for Bootstrap
     <link href="bootstrap-tokenfield/bootstrap-tokenfield.css" type="text/css" rel="stylesheet">
     <!-- Docs CSS -->
     <link href="assets/pygments-manni.css" type="text/css" rel="stylesheet">
-    <link href="assets/docs3.css" type="text/css" rel="stylesheet">
+    <link href="assets/docs.css" type="text/css" rel="stylesheet">
 
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -74,8 +74,8 @@ title: Tokenfield for Bootstrap
               <p>Create elegant taggable fields with copy/paste and keyboard support.</p>
 
               <div class="bs-example">
-                <div class="control-group">
-                  <input type="text" class="form-control token-example-field" id="tokenfield-1" value="red,green,blue" placeholder="Type something and hit enter" />
+                <div class="form-group">
+                  <input type="text" class="form-control" /><input type="text" class="form-control token-example-field" id="tokenfield-1" value="red,green,blue" placeholder="Type something and hit enter" />
                 </div>
               </div>
 {% highlight html %}
@@ -481,7 +481,7 @@ $('#myTokenfield').on('removeToken', function () {
 
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
     <script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-    <script type="text/javascript" src="bootstrap-tokenfield/bootstrap-tokenfield.js" charset="UTF-8"></script>   
+    <script type="text/javascript" src="bootstrap-tokenfield/bootstrap-tokenfield.min.js" charset="UTF-8"></script>   
     <script type="text/javascript" src="assets/docs.js" charset="UTF-8"></script>   
 
     <script type="text/javascript">
@@ -492,7 +492,7 @@ $('#myTokenfield').on('removeToken', function () {
 
       ga('create', 'UA-22737379-5', 'sliptree.github.io');
       ga('send', 'pageview');
-    </script>         
+    </script>
 
   </body>
 </html>

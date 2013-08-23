@@ -17,12 +17,15 @@
   var Tokenfield = function (element, options) {
     var _self = this
 
-
-    this.$wrapper = $('<div class="tokenfield" />')
     this.$element = $(element).css({
       'position': 'absolute',
       'left': '-10000px'
     }).prop('tabindex', -1);
+
+    this.$wrapper = $('<div class="tokenfield form-control" />')
+    if (this.$element.hasClass('input-lg')) this.$wrapper.addClass('input-lg')
+    if (this.$element.hasClass('input-sm')) this.$wrapper.addClass('input-sm')
+
     this.$input = $('<input type="text" class="token-input" />')
                     .appendTo( this.$wrapper )
                     .prop('placeholder', this.$element.prop('placeholder'))
@@ -34,8 +37,13 @@
 
     this.options = $.extend({}, $.fn.tokenfield.defaults, { tokens: this.$element.val() }, options)
     
-    // Copy some styles
-    this.$wrapper.width( this.$element.width() )
+    // Copy classes & styles that affect the layout
+    $.each( this.$input.prop('class').split(/\s+/), function (index, className) {
+      console.log(~className.indexOf('.col-'));
+      if ( ~className.indexOf('.col-') || className === 'input-lg' || className === 'input-sm' ) {
+        _self.$wrapper.addClass( className );
+      }
+    });
 
     // Set up mirror for input auto-sizing
     this.$input.css('min-width', this.options.minWidth + 'px')
@@ -647,17 +655,18 @@
   var old = $.fn.tokenfield
 
   $.fn.tokenfield = function (option, param) {
-    var $this = $(this)
-      , data = $this.data('tokenfield')
-      , options = typeof option == 'object' && option
+    this.each(function () {
+      var $this = $(this)
+        , data = $this.data('bs.tokenfield')
+        , options = typeof option == 'object' && option
 
-    if (typeof option === 'string' && data && data[option]) {
-      return data[option](param)
-    } else {
-      if (!data) $this.data('tokenfield', (data = new Tokenfield(this, options)))
-    }
-
-    return this
+      if (typeof option === 'string' && data && data[option]) {
+        return data[option](param)
+      } else {
+        if (!data) $this.data('bs.tokenfield', (data = new Tokenfield(this, options)))
+      }
+    })
+    return this;
   }
 
   $.fn.tokenfield.defaults = {

@@ -1,54 +1,25 @@
 .tokenfield {
-  background-color: #ffffff;
-  border: 1px solid #cccccc;
-  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-  -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
-  -moz-transition: border linear 0.2s, box-shadow linear 0.2s;
-  -o-transition: border linear 0.2s, box-shadow linear 0.2s;
-  transition: border linear 0.2s, box-shadow linear 0.2s;
-  display: inline-block;
-  min-height: 16px;
-  padding: 4px 6px 0 6px;
-  margin-bottom: 10px;
-  font-size: 14px;
-  color: #555555;
-  vertical-align: middle;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
-  font-weight: normal;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
-
-.tokenfield {
-  display: inline-block;
-  vertical-align: middle;
+  height: auto;
+  min-height: 34px;
 }
 .tokenfield.focus {
-  border-color: rgba(82, 168, 236, 0.8);
+  border-color: #66afe9;
   outline: 0;
-  outline: thin dotted \9;
-  /* IE6-9 */
-
-  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
-     -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
-          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);  
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
 }
 
 .tokenfield .token {
   display: inline-block;
-  white-space: nowrap;
+  border: 1px solid #ccc;
   background-color: #ededed;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   border-radius: 3px;
-  border: 1px solid #ccc;
-  font-size: 14px;
-  height: 16px;
-  padding: 1px 4px;
-  margin: 0 5px 4px 0;
+  white-space: nowrap;
+  font-size: 1em;
+  padding: 0px 4px;
+  margin-right: 5px;
   vertical-align: top;
   position: relative;
 }
@@ -60,13 +31,12 @@
   float: left;
   overflow: hidden;
   text-overflow: ellipsis;
-  line-height: 15.9px;
+  line-height: 1.137em;
   -webkit-padding-before: 1px; /* Fix 1px difference between FF/Chrome caused by line-height */
 }
-
 .tokenfield .token .close {
   font-family: Arial;
-  font-size: 16px;
+  font-size: 1.1em;
   line-height: 1em;
   margin-left: 5px;
   padding: 0 4px 0 1px;
@@ -75,18 +45,18 @@
   -webkit-padding-before: 1px; /* Fix 1px difference between FF/Chrome caused by line-height */
 }
 
-.tokenfield input {
+.tokenfield .token-input {
+  background: none;
   width: 60px;
   min-width: 60px;
   border: 0;
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
-  height: 20px;
+  height: 100%;
   padding: 0;
-  margin: 0 0 4px 0;
 }
-.tokenfield input:focus {
+.tokenfield .token-input:focus {
   border-color: transparent;
   outline: 0;
   /* IE6-9 */
@@ -95,57 +65,30 @@
           box-shadow: none;
 }
 
-/* Validation states */
-.control-group.warning .tokenfield input,
-.control-group.error .tokenfield input,
-.control-group.info .tokenfield input,
-.control-group.success .tokenfield input {
-  -webkit-box-shadow: none;
-     -moz-box-shadow: none;
-          box-shadow: none;  
+/* Different sizes */
+.tokenfield.input-sm {
+  min-height: 30px;
+}
+.tokenfield.input-lg {
+  min-height: 45px;
+}
+/*
+.tokenfield.input-sm .token {
+  font-size: 13px;
+}
+.tokenfield.input-sm .token .close {
+  font-size: 14px;
+}
+.tokenfield.input-sm .token .token-label {
+  line-height: 14px;
 }
 
-.control-group.warning .tokenfield {
-  border-color: #c09853;
+.tokenfield.input-lg .token {
+  font-size: 13px;
 }
-.control-group.warning .tokenfield.focus {
-  border-color: #a47e3c;
-  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),0 0 6px #dbc59e;
-  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),0 0 6px #dbc59e;
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),0 0 6px #dbc59e;  
+.tokenfield.input-lg .token .close {
+  font-size: 14px;
 }
-
-.control-group.error .tokenfield {
-  border-color: #953b39;
-}
-.control-group.error .tokenfield.focus {
-  border-color: #b94a48;
-  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),0 0 6px #d59392;
-  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),0 0 6px #d59392;
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),0 0 6px #d59392;  
-}
-
-.control-group.info .tokenfield {
-  border-color: #3a87ad;
-}
-.control-group.info .tokenfield.focus {
-  border-color: #2d6987;
-  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),0 0 6px #7ab5d3;
-  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),0 0 6px #7ab5d3;
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),0 0 6px #7ab5d3; 
-}
-
-.control-group.success .tokenfield {
-  border-color: #468847;
-}
-.control-group.success .tokenfield.focus {
-  border-color: #356635;
-  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),0 0 6px #7aba7b;
-  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),0 0 6px #7aba7b;
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),0 0 6px #7aba7b;  
-}
-
-/* Form styles support */
-.form-horizontal .tokenfield {
-  margin-bottom: 0;
-}
+.tokenfield.input-lg .token .token-label {
+  line-height: 23px;
+}*/
