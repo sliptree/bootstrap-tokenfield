@@ -157,7 +157,6 @@
         })
         .on('click',    function (e) {
           if (_self.disabled) return false;
-          _self.preventDeactivation = false
 
           if (e.ctrlKey || e.metaKey) {
             e.preventDefault()
@@ -292,11 +291,13 @@
             if (!prev.length) break
 
             this.preventInputFocus = true
+            this.preventDeactivation = true
 
             this.activate( prev )
             e.preventDefault()
 
           } else {
+
             this.prev( e.shiftKey )
             e.preventDefault()
           }
@@ -332,6 +333,7 @@
             if (!next.length) break
 
             this.preventInputFocus = true
+            this.preventDeactivation = true
 
             this.activate( next )
             e.preventDefault()              
@@ -398,6 +400,7 @@
         case 8: // backspace
           if (this.$input.is(':focus')) {
             if (this.$input.val().length || this.lastInputValue.length && this.lastKeyDown === 8) break
+            this.preventDeactivation = true
             this.activate( this.$input.prevAll('.token:first') )
           } else {
             this.remove(e)
@@ -560,7 +563,6 @@
       }
 
       token.addClass('active')
-      this.preventDeactivation = true
       this.$copyHelper.val( this.getTokensList( true ) ).select()
     }
 
