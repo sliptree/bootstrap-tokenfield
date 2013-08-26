@@ -71,6 +71,23 @@
           box-shadow: none;
 }
 
+/* Invalid token */
+.tokenfield .token.invalid {
+  background: none;
+  border: 1px solid transparent;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;  
+  border-bottom: 1px dotted #b94a48;
+}
+.tokenfield .token.invalid.active {
+  background: #ededed;
+  border: 1px solid #ededed;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+
 /* Disabled tokenfield */
 .tokenfield.disabled {
   cursor: not-allowed;

@@ -120,6 +120,7 @@
             .append('<span class="token-label" />')
             .append('<a href="#" class="close" tabindex="-1">&times;</a>')
 
+      // Insert token into HTML
       this.$input.before( token )
       this.$input.css('width', this.options.minWidth + 'px')
 
@@ -175,7 +176,7 @@
 
       var afterE = $.Event('afterCreateToken')
       afterE.token = e.token
-      afterE.relatedTarget = token
+      afterE.relatedTarget = token.get(0)
       this.$element.trigger(afterE)
 
       this.$element.val( this.getTokensList() ).trigger('change')
@@ -199,7 +200,7 @@
         _self.createToken(token)
       })
 
-      return this.$input.get(0)
+      return this.$element.get(0)
     }
 
   , getTokens: function(active) {
@@ -375,7 +376,7 @@
             this.createTokensFromInput(e)
           }
           if (e.keyCode === 13) {
-            if (!this.$element.is(':focus') || this.$wrapper.find('.token.active').length !== 1) break
+            if (!this.$copyHelper.is(':focus') || this.$wrapper.find('.token.active').length !== 1) break
             this.edit( this.$wrapper.find('.token.active') )
           }
       }
@@ -597,6 +598,7 @@
         value: value,
         label: label
       }
+      e.relatedTarget = token.get(0)
       this.$element.trigger(e)
 
       token.find('.token-label').text(e.token.value)
@@ -706,7 +708,7 @@
     autocomplete: {},
     showAutocompleteOnFocus: false,
     createTokensOnBlur: false
-  }  
+  }
 
   $.fn.tokenfield.Constructor = Tokenfield
 

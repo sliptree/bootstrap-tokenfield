@@ -230,11 +230,11 @@ $('#myField').tokenfield('disable');
                    </tr>
                    <tr>
                      <td>afterCreateToken</td>
-                     <td>This event is fired after the token has been created. Here, <code>token</code> property of the event is also available, but is basically read-only.</td>
+                     <td>This event is fired after the token has been created. Here, <code>token</code> property of the event is also available, but is basically read-only. You can also get a direct reference to the token DOM object via <code>e.relatedTarget</code>. The example below uses this to set an 'invalid' class on the newly created token if it does not pass validation.</td>
                    </tr>
                    <tr>
                      <td>beforeEditToken</td>
-                     <td>This event is fired just before a token is about to be edited. This allows you to manipluate the input field value before it is created. Again, to do this, manipluate the <code>token</code> property of the event.</td>
+                     <td>This event is fired just before a token is about to be edited. This allows you to manipluate the input field value before it is created. Again, to do this, manipluate the <code>token</code> property of the event. Here you can also access the token DOM object with <code>e.relatedTarget</code>.</td>
                    </tr>
                    <tr>
                      <td>removeToken</td>
@@ -244,26 +244,43 @@ $('#myField').tokenfield('disable');
                 </table>
               </div>
 
+              <p>The example below is pretty comprehensive. Here, we split user input into two parts: name and email. Then, we validate the email and if it is not valid, we add an <code>invalid</code> class to the token.</p>
+              <p>When the user starts to edit the token, we merge token value and label together again.</p>
+
               <div class="bs-example">
-                <input type="text" class="form-control" id="tokenfield-2" value="create,new,token" />
+                <input type="text" class="form-control" id="tokenfield-2" value="me|me@example.com,you@example.com,not really an email" />
               </div>
 
 {% highlight js %}
-$('#myTokenfield').on('beforeCreateToken', function (e) {
-  e.token.label = 'Something else'
-})
+$('#tokenfield')
 
-$('#myTokenfield').on('afterCreateToken', function (e) {
-  e.token // token object with value and label
-})
+  .on('beforeCreateToken', function (e) {
+    var token = e.token.value.split('|')
+    e.token.value = token[1] || token[0]
+    e.token.label = token[1] ? token[0] + ' (' + token[1] + ')' : token[0]
+  })
 
-$('#myTokenfield').on('beforeEditToken', function (e) {
-  e.token.value = 'Edit this instead' 
-})
+  .on('afterCreateToken', function (e) {
+    // Über-simplistic e-mail validation
+    var re = /\S+@\S+\.\S+/
+    var valid = re.test(e.token.value)
+    if (!valid) {
+      $(e.relatedTarget).addClass('invalid')
+    }
+  })
 
-$('#myTokenfield').on('removeToken', function () {
-  alert('Token removed!')
-})
+  .on('beforeEditToken', function (e) {
+    if (e.token.label !== e.token.value) {
+      var label = e.token.label.split(' (')
+      e.token.value = label[0] + '|' + e.token.value
+    }
+  })
+
+  .on('removeToken', function () {
+    alert('Token removed!')
+  })
+
+  .tokenfield()
 {% endhighlight %}
 
               <h3 id="keyboard">Keyboard support</h3>

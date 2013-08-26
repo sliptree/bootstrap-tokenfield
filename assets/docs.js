@@ -18,15 +18,29 @@ jQuery(document).ready(function($) {
     allowDuplicates: true
   });
 
-  $('#tokenfield-2').tokenfield()
+  $('#tokenfield-2')
   .on('beforeCreateToken', function (e) {
-    e.token.label = 'Something else'
+    var token = e.token.value.split('|')
+    e.token.value = token[1] || token[0]
+    e.token.label = token[1] ? token[0] + ' (' + token[1] + ')' : token[0]
+  })
+  .on('afterCreateToken', function (e) {
+    // Über-simplistic e-mail validation
+    var re = /\S+@\S+\.\S+/
+    var valid = re.test(e.token.value)
+    if (!valid) {
+      $(e.relatedTarget).addClass('invalid')
+    }
   })
   .on('beforeEditToken', function (e) {
-    e.token.value = 'Edit this instead'
+    if (e.token.label !== e.token.value) {
+      var label = e.token.label.split(' (')
+      e.token.value = label[0] + '|' + e.token.value
+    }
   })
   .on('removeToken', function () {
     alert('Token removed!')
   })
+  .tokenfield()
   
 });
