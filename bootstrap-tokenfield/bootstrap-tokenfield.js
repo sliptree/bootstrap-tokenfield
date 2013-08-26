@@ -246,7 +246,7 @@
         .on('keyup',    $.proxy(this.keyup, this))
 
       // Secondary listeners for input width calculation
-      this.$input.on('keydown, keypress, keyup',  $.proxy(this.update, this))
+      this.$input.on('keypress', $.proxy(this.update, this))
 
       this.$input
         .on('autocompletecreate', function() {
@@ -652,10 +652,11 @@
       e.stopPropagation()
     }
 
-  , update: function () {
+  , update: function (e) {
       var value = this.$input.val()
 
       if (this.$input.data('edit')) {
+
         if (!value) {
           value = this.$input.prop("placeholder")
         }
