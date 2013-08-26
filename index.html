@@ -157,6 +157,12 @@ $('.tokenfield').tokenfield()
                       <td>false</td>
                       <td>Whether to show autocomplete suggestions menu on focus or not.</td>
                     </tr>
+                    <tr>
+                      <td>createTokensOnBlur</td>
+                      <td>boolean</td>
+                      <td>false</td>
+                      <td>Whether to turn input into tokens when tokenfield loses focus or not.</td>
+                    </tr>
                   </tbody>
                 </table>
               </div>
@@ -211,6 +217,11 @@ $('#myField').tokenfield('disable');
 {% highlight js %}
 $('#myField').tokenfield('disable');
 {% endhighlight %}
+
+              <div class="bs-callout bs-callout-info">
+                <h4>Accessing original input</h4>
+                <p>Though not recommended, you can access the original input field like so: <code>$('#tokenfield').data('bs.tokenfield').$input</code></p>
+              </div>
 
               <h3 id="events">Events</h3>
               <p>Tokenfield exposes a few events for hooking into it's functionality.</p>
