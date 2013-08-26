@@ -250,10 +250,13 @@
       this.$input
         .on('autocompletecreate', function() {
           // Set minimum autocomplete menu width
-          var minWidth = _self.$wrapper.width() +
-              parseInt(_self.$wrapper.css('padding-right'), 10) +
-              parseInt(_self.$wrapper.css('border-right-width'), 10)
-          $(this).data('uiAutocomplete').menu.element.css( 'min-width', minWidth + 'px' )
+          var $_menuElement = $(this).data('uiAutocomplete').menu.element
+          
+          var minWidth = _self.$wrapper.outerWidth() -
+              parseInt( $_menuElement.css('border-left-width'), 10 ) -
+              parseInt( $_menuElement.css('border-right-width'), 10 )
+
+          $_menuElement.css( 'min-width', minWidth + 'px' )
         })
         .on('autocompleteopen', function() {
           _self.$input.data('autocomplete-open', true)
@@ -470,7 +473,7 @@
         this.$input
           .appendTo( this.$wrapper )
           .data( 'edit', false )
-          .css( 'width', this.options.minWidth + 'px' )
+          //.css( 'width', this.options.minWidth + 'px' )
 
         if (!this.preventInputFocus) {
           var _self = this
@@ -479,7 +482,7 @@
           }, 1)
         }
 
-        this.$wrapper.css( 'width', this.$wrapper.data('prev-width') )
+        //this.$wrapper.css( 'width', this.$wrapper.data('prev-width') )
       }
 
       e.preventDefault()
@@ -606,9 +609,9 @@
       token.find('.token-label').text(e.token.value)
       var tokenWidth = token.outerWidth()
 
-      this.$wrapper
-        .data( 'prev-width', this.$wrapper.width() )
-        .width( this.$wrapper.width() )
+      // this.$wrapper
+      //   .data( 'prev-width', this.$wrapper.width() )
+      //   .width( this.$wrapper.width() )
 
       token.replaceWith( this.$input )
 
