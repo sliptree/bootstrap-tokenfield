@@ -229,7 +229,7 @@
       var _self = this
 
       this.$wrapper
-        .on('click',    $.proxy(this.focusInput, this))
+        .on('mousedown',$.proxy(this.focusInput, this))
 
       this.$input
         .on('focus',    $.proxy(this.focus, this))
@@ -246,7 +246,9 @@
         .on('keyup',    $.proxy(this.keyup, this))
 
       // Secondary listeners for input width calculation
-      this.$input.on('keypress', $.proxy(this.update, this))
+      this.$input
+        .on('keypress', $.proxy(this.update, this))
+        .on('keyup',    $.proxy(this.update, this))
 
       this.$input
         .on('autocompletecreate', function() {
@@ -438,6 +440,7 @@
     }
 
   , blur: function (e) {
+
       this.focused = false
       this.$wrapper.removeClass('focus')
 
@@ -447,7 +450,7 @@
       }
 
       if (this.$input.data('edit') && !this.$input.is(':focus') || this.options.createTokensOnBlur) {
-        this.createTokensFromInput(e)
+        this.createTokensFromInput(e) 
       }
       
       this.preventDeactivation = false
@@ -615,7 +618,8 @@
       this.$input
         .appendTo( this.$wrapper )
         .data( 'edit', false )
-        //.css( 'width', this.options.minWidth + 'px' )
+
+      this.update()
 
       // Because moving the input element around in DOM 
       // will cause it to lose focus, we provide an option
@@ -673,8 +677,16 @@
     }
 
   , focusInput: function (e) {
-      if ($(e.target).closest('.token').length) return
-      this.$input.focus()
+      if ($(e.target).closest('.token').length || $(e.target).closest('.token-input').length) return
+      // Focus only after the current call stack has cleared,
+      // otherwise has no effect.
+      // Reason: mousedown is too early - input will lose focus
+      // after mousedown. However, since the input may be moved
+      // in DOM, there may be no click or mouseup event triggered.
+      var _self = this
+      setTimeout(function() {
+        _self.$input.focus()
+      }, 0)
     }
 
   , search: function () {
