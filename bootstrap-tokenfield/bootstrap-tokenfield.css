@@ -14,7 +14,7 @@
   box-sizing: border-box;
   -moz-box-sizing: border-box; /* Firefox */  
   display: inline-block;
-  border: 1px solid #ccc;
+  border: 1px solid #d9d9d9;
   background-color: #ededed;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
@@ -23,7 +23,12 @@
   margin: -1px 5px 4px 0; 
   height: 22px;
   vertical-align: top;
+  cursor: default;
 }
+.tokenfield .token:hover {
+  border-color: #b9b9b9;
+}
+
 .tokenfield .token.active {
   border-color: rgb(82, 168, 236);
   border-color: rgba(82, 168, 236, 0.8);
