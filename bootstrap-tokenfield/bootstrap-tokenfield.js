@@ -262,6 +262,9 @@
         .on('autocompleteselect', function (e, ui) {
           _self.$input.val('')
           _self.createToken( ui.item )
+          if (_self.$input.data( 'edit' )) {
+            _self.unedit(true)
+          }
           return false
         })
 
@@ -469,23 +472,7 @@
       this.$input.val('')
 
       if (this.$input.data( 'edit' )) {
-
-        this.$input
-          .appendTo( this.$wrapper )
-          .data( 'edit', false )
-          //.css( 'width', this.options.minWidth + 'px' )
-
-        // Because moving the input element around in DOM 
-        // will cause it to lose focus, we provide an option
-        // to re-focus the input after appending it to the wrapper
-        if (focus) {
-          var _self = this
-          setTimeout(function () {
-            _self.$input.focus()
-          }, 1)
-        }
-
-        //this.$wrapper.css( 'width', this.$wrapper.data('prev-width') )
+        this.unedit(focus)
       }
 
       e.preventDefault()
@@ -622,6 +609,25 @@
                 .select()
                 .data( 'edit', true )
                 .width( tokenWidth )
+    }
+
+  , unedit: function (focus) {
+      this.$input
+        .appendTo( this.$wrapper )
+        .data( 'edit', false )
+        //.css( 'width', this.options.minWidth + 'px' )
+
+      // Because moving the input element around in DOM 
+      // will cause it to lose focus, we provide an option
+      // to re-focus the input after appending it to the wrapper
+      if (focus) {
+        var _self = this
+        setTimeout(function () {
+          _self.$input.focus()
+        }, 1)
+      }
+
+      //this.$wrapper.css( 'width', this.$wrapper.data('prev-width') )
     }
 
   , remove: function (e, direction) {
