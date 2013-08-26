@@ -157,6 +157,7 @@
         })
         .on('click',    function (e) {
           if (_self.disabled) return false;
+          _self.preventDeactivation = false
 
           if (e.ctrlKey || e.metaKey) {
             e.preventDefault()
@@ -258,12 +259,6 @@
 
           $_menuElement.css( 'min-width', minWidth + 'px' )
         })
-        .on('autocompleteopen', function() {
-          _self.$input.data('autocomplete-open', true)
-        })
-        .on('autocompleteclose', function() {
-          _self.$input.data('autocomplete-open', false)
-        })
         .on('autocompleteselect', function (e, ui) {
           _self.$input.val('')
           _self.createToken( ui.item )
@@ -312,7 +307,7 @@
           if (this.$input.is(':focus')) {
             if (this.$input.val().length > 0) break
 
-            var prev = this.$input.prev('.token:last')
+            var prev = this.$input.prevAll('.token:last')
             if (!prev.length) return
 
             this.activate( prev )
@@ -329,9 +324,10 @@
 
         case 39: // right arrow
           if (this.$input.is(':focus')) {
+
             if (this.$input.val().length > 0) break
             
-            var next = this.$input.next('.token:first')
+            var next = this.$input.nextAll('.token:first')
 
             if (!next.length) break
 
@@ -353,7 +349,7 @@
           if (this.$input.is(':focus')) {
             if (this.$input.val().length > 0) break
 
-            var next = this.$input.next('.token:first')
+            var next = this.$input.nextAll('.token:first')
             if (!next.length) return
 
             this.activate( next )
@@ -376,9 +372,12 @@
 
         case 9: // tab
         case 13: // enter
-          if (this.$input.data('autocomplete-open')) break
+
+          // We will handle creating tokens from autocomplete in autocomplete events
+          if (this.$input.data('uiAutocomplete') && this.$input.data('uiAutocomplete').menu.element.find("li:has(a.ui-state-focus)").length) break
+          // Create token
           if (this.$input.is(':focus') && this.$input.val().length || this.$input.data('edit')) {
-            this.createTokensFromInput(e)
+            this.createTokensFromInput(e, this.$input.data('edit'))
           }
           if (e.keyCode === 13) {
             if (!this.$copyHelper.is(':focus') || this.$wrapper.find('.token.active').length !== 1) break
@@ -460,7 +459,7 @@
       }, 1)
     }
 
-  , createTokensFromInput: function (e) {
+  , createTokensFromInput: function (e, focus) {
       if (this.$input.val().length < this.options.minLength) return
 
       var tokensBefore = this.getTokensList()
@@ -470,12 +469,16 @@
       this.$input.val('')
 
       if (this.$input.data( 'edit' )) {
+
         this.$input
           .appendTo( this.$wrapper )
           .data( 'edit', false )
           //.css( 'width', this.options.minWidth + 'px' )
 
-        if (!this.preventInputFocus) {
+        // Because moving the input element around in DOM 
+        // will cause it to lose focus, we provide an option
+        // to re-focus the input after appending it to the wrapper
+        if (focus) {
           var _self = this
           setTimeout(function () {
             _self.$input.focus()
