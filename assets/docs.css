@@ -1107,3 +1107,11 @@ h1[id] {
     font-size: 0.9em;
   }
 }
+
+/* Fixed width input examples */
+.fluid-tokenfield {
+  width: 50%;
+}
+.fixed-tokenfield {
+  width: 300px;
+}

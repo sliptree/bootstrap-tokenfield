@@ -10,7 +10,6 @@
 
   "use strict"; // jshint ;_;
 
-
  /* TOKENFIELD PUBLIC CLASS DEFINITION
   * ============================== */
 
@@ -20,8 +19,21 @@
     this.$element = $(element)
     // Extend options
     this.options = $.extend({}, $.fn.tokenfield.defaults, { tokens: this.$element.val() }, options)    
+    
     // Store original input width
-    var elWidth = this.$element.width();
+    var elRules = window.getMatchedCSSRules( element )
+      , elStyleWidth = element.style.width
+      , elCSSWidth
+      , elWidth = this.$element.width()
+
+    if (elRules) {
+      $.each( elRules, function (i, rule) {
+        if (rule.style.width) {
+          elCSSWidth = rule.style.width;
+        }
+      });
+    }
+
     // Move original input out of the way
     this.$element.css({
       'position': 'absolute',
@@ -36,7 +48,14 @@
     // Create a new input
     this.$input = $('<input type="text" class="token-input" />')
                     .appendTo( this.$wrapper )
-                    .prop('placeholder',  this.$element.prop('placeholder') )
+                    .prop( 'placeholder',  this.$element.prop('placeholder') )
+                    .prop( 'id', this.$element.prop('id') + '-tokenfield' )
+
+    // Re-route original input label to new input
+    var $label = $( 'label[for="' + this.$element.prop('id') + '"]' )
+    if ( $label.length ) {
+      $label.prop( 'for', this.$input.prop('id') )
+    }
 
     // Set up a copy helper to handle copy & paste
     this.$copyHelper = $('<input type="text" />').css({
@@ -44,8 +63,17 @@
       'left': '-10000px'
     }).prop('tabindex', -1).prependTo( this.$wrapper )
     
-    // If the input is in inline form, set width explicitly
-    if (this.$element.parents('.form-inline').length) this.$wrapper.width( elWidth )
+    // Set wrapper width
+    if (elStyleWidth) {
+      this.$wrapper.css('width', elStyleWidth);
+    }
+    else if (elCSSWidth) {
+      this.$wrapper.css('width', elCSSWidth);
+    }
+    // If input is inside inline-form with no width set, set fixed width
+    else if (this.$element.parents('.form-inline').length) {
+      this.$wrapper.width( elWidth )
+    }
 
     // Set tokenfield disabled, if original input is disabled
     if (this.$element.prop('disabled')) {
@@ -667,7 +695,13 @@
         if (value === this.$mirror.text()) return
 
         this.$mirror.text(value)
-        this.$input.width(this.$mirror.width() + 10)
+        
+        var mirrorWidth = this.$mirror.width() + 10;
+        if ( mirrorWidth > this.$wrapper.width() ) {
+          return this.$input.width( this.$wrapper.width() )
+        }
+
+        this.$input.width( mirrorWidth )
       }
       else {
         this.$input.css( 'width', this.options.minWidth + 'px' )
