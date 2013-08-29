@@ -1,5 +1,5 @@
 /* ============================================================
- * bootstrap-tokenfield.js v0.9.5
+ * bootstrap-tokenfield.js v0.9.2
  * ============================================================
  *
  * Copyright 2013 Sliptree
@@ -667,7 +667,6 @@
         if (value === this.$mirror.text()) return
 
         this.$mirror.text(value)
-
         this.$input.width(this.$mirror.width() + 10)
       }
       else {
