@@ -17,6 +17,10 @@ Check out the [demo and docs](http://sliptree.github.io/bootstrap-tokenfield/)
 
 ### Changelog
 
+0.9.2 Maintenance release
+
+* Many small fixes and improvements
+
 0.9.0 Bootstrappable
 
 * New: Bootstrap 3 support
