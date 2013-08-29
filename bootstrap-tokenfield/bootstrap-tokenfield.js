@@ -207,7 +207,9 @@
       afterE.relatedTarget = token.get(0)
       this.$element.trigger(afterE)
 
-      this.$element.val( this.getTokensList() ).trigger('change')
+      var changeEvent = $.Event('change')
+      changeEvent.initiator = 'tokenfield'
+      this.$element.val( this.getTokensList() ).trigger( changeEvent )
 
       this.update()
 
@@ -255,6 +257,9 @@
 
   , listen: function () {
       var _self = this
+
+      this.$element
+        .on('change',   $.proxy(this.change, this))
 
       this.$wrapper
         .on('mousedown',$.proxy(this.focusInput, this))
@@ -493,6 +498,12 @@
       }, 1)
     }
 
+  , change: function (e) {
+      if ( e.initiator === 'tokenfield' ) return // Prevent loops
+      
+      this.setTokens( this.$element.val() )
+    }
+
   , createTokensFromInput: function (e, focus) {
       if (this.$input.val().length < this.options.minLength) return
 
@@ -673,7 +684,9 @@
       }
       token.remove()
 
-      this.$element.val( this.getTokensList() ).trigger('removeToken').trigger('change')
+      var changeEvent = $.Event('change')
+      changeEvent.initiator = 'tokenfield'
+      this.$element.val( this.getTokensList() ).trigger('removeToken').trigger( changeEvent )
 
       if (!this.$wrapper.find('.token').length || e.type === 'click') this.$input.focus()
 
