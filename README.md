@@ -17,6 +17,13 @@ Check out the [demo and docs](http://sliptree.github.io/bootstrap-tokenfield/)
 
 ### Changelog
 
+0.9.5 Typeable
+
+* New: Twitter Typeahead support
+* New: When triggering 'change' event on original input, setTokens is now called. This allows you to update tokens externally.
+* Fixed: Nnput labels did not work with tokenfield
+* Fixed: Set correct input width on fixed-width inputs
+
 0.9.2 Maintenance release
 
 * Many small fixes and improvements

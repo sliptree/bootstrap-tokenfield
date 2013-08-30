@@ -17,6 +17,8 @@ title: Tokenfield for Bootstrap
     <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
     <!-- jQuery UI CSS -->
     <link href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" type="text/css" rel="stylesheet">
+    <!-- Bootstrap styling for Typeahead -->
+    <link href="assets/tokenfield-typeahead.css" type="text/css" rel="stylesheet">
     <!-- Tokenfield CSS -->
     <link href="bootstrap-tokenfield/bootstrap-tokenfield.css" type="text/css" rel="stylesheet">
     <!-- Docs CSS -->
@@ -79,6 +81,8 @@ title: Tokenfield for Bootstrap
               <h2 id="examples">Examples</h2>
               <p>Create elegant taggable fields with copy/paste and keyboard support.</p>
 
+              <p><strong>Using jQuery UI Autocomplete</strong></p>
+
               <div class="bs-example">
                 <div class="form-group">
                   <input type="text" class="form-control" id="tokenfield-1" value="red,green,blue" placeholder="Type something and hit enter" />
@@ -97,6 +101,27 @@ $('#tokenfield').tokenfield({
   showAutocompleteOnFocus: true,
   allowDuplicates: true
 })
+{% endhighlight %}
+
+              <p><strong>Using Twitter Typeahead</strong></p>
+
+              <div class="bs-example">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="tokenfield-typeahead" value="red,green,blue" placeholder="Type something and hit enter" />
+                </div>
+              </div>
+{% highlight html %}
+<input type="text" class="form-control" id="tokenfield-typeahead" value="red,green,blue" />
+{% endhighlight %}
+
+{% highlight js %}
+$('#tokenfield-typeahead').tokenfield({
+  typeahead: {
+    name: 'tags',
+    local: ['red','blue','green','yellow','violet','brown','purple','black','white'],
+  },
+  allowDuplicates: true
+});
 {% endhighlight %}
 
               <h2 id="usage">Usage</h2>
@@ -155,7 +180,13 @@ $('.tokenfield').tokenfield()
                       <td>showAutocompleteOnFocus</td>
                       <td>boolean</td>
                       <td>false</td>
-                      <td>Whether to show autocomplete suggestions menu on focus or not.</td>
+                      <td>Whether to show autocomplete suggestions menu on focus or not. Works only for jQuery UI Autocomplete, as Typeahead has no support for this kind of behavior.</td>
+                    </tr>
+                    <tr>
+                      <td>typeahead</td>
+                      <td>object</td>
+                      <td>{}</td>
+                      <td>Twitter Typeahead options</td>
                     </tr>
                     <tr>
                       <td>createTokensOnBlur</td>
@@ -170,6 +201,11 @@ $('.tokenfield').tokenfield()
               <div class="bs-callout bs-callout-info">
                 <h4>Data attributes for individual tokenfields</h4>
                 <p>Options for individual tokenfields can alternatively be specified through the use of data attributes, as explained above.</p>
+              </div>
+
+              <div class="bs-callout bs-callout-info">
+                <h4>Styling Twitter Typeahead </h4>
+                <p>Twitter Typeahead comes with no default styling. Make sure to include <a href="https://gist.github.com/ragulka/6388201">tokenfield-typeahead.css</a> on your page.</p>
               </div>
 
               <h3 id="methods">Methods</h3>
@@ -548,6 +584,7 @@ $('#tokenfield')
     <script type="text/javascript" src="bootstrap-tokenfield/bootstrap-tokenfield.min.js" charset="UTF-8"></script>   
     <script type="text/javascript" src="assets/scrollspy.js" charset="UTF-8"></script>   
     <script type="text/javascript" src="assets/affix.js" charset="UTF-8"></script>   
+    <script type="text/javascript" src="assets/typeahead.min.js" charset="UTF-8"></script>   
     <script type="text/javascript" src="assets/docs.min.js" charset="UTF-8"></script>   
 
     <script type="text/javascript">

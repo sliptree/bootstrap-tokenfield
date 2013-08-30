@@ -48,6 +48,14 @@ jQuery(document).ready(function($) {
     allowDuplicates: true
   });
 
+  $('#tokenfield-typeahead').tokenfield({
+    typeahead: {
+      name: 'tags',
+      local: ['red','blue','green','yellow','violet','brown','purple','black','white'],
+    },
+    allowDuplicates: true
+  });
+
   $('#tokenfield-2')
     .on('beforeCreateToken', function (e) {
       var token = e.token.value.split('|')

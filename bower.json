@@ -1,6 +1,6 @@
 {
   "name": "bootstrap-tokenfield",
-  "version": "0.9.2",
+  "version": "0.9.5",
   "main": ["bootstrap-tokenfield/bootstrap-tokenfield.js","bootstrap-tokenfield/bootstrap-tokenfield.css"],
   "dependencies": {
     "jquery": "1.9.x"

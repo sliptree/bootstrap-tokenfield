@@ -1,5 +1,5 @@
 /* ============================================================
- * bootstrap-tokenfield.js v0.9.2
+ * bootstrap-tokenfield.js v0.9.5
  * ============================================================
  *
  * Copyright 2013 Sliptree
@@ -107,12 +107,19 @@
     this.listen()
 
     // Initialize autocomplete, if necessary
-    if (this.options.autocomplete.source) {
+    if ( ! $.isEmptyObject( this.options.autocomplete ) ) {
       var autocompleteOptions = $.extend({}, this.options.autocomplete, {
         minLength: this.options.showAutocompleteOnFocus ? 0 : null,
         position: { my: "left top", at: "left bottom", of: this.$wrapper }
       })
       this.$input.autocomplete( autocompleteOptions )
+    }
+
+    // Initialize typeahead, if necessary
+    if ( ! $.isEmptyObject( this.options.typeahead ) ) {
+      var typeaheadOptions = $.extend({}, this.options.typeahead, {})
+      this.$input.typeahead( typeaheadOptions )
+      this.typeahead = true
     }
   }
 
@@ -149,7 +156,11 @@
             .append('<a href="#" class="close" tabindex="-1">&times;</a>')
 
       // Insert token into HTML
-      this.$input.before( token )
+      if (this.$input.hasClass('tt-query')) {
+        this.$input.parent().before( token )
+      } else {
+        this.$input.before( token )
+      }
       this.$input.css('width', this.options.minWidth + 'px')
 
       var tokenLabel = token.find('.token-label')
@@ -302,6 +313,13 @@
           }
           return false
         })
+        .on('typeahead:selected', function (e, datum) {
+          _self.$input.typeahead('setQuery', '')
+          _self.createToken( datum.value )
+          if (_self.$input.data( 'edit' )) {
+            _self.unedit(true)
+          }
+        })
 
       // Listen to window resize
       $(window).on('resize', $.proxy(this.update, this ))
@@ -322,7 +340,7 @@
           if (this.$input.is(':focus')) {
             if (this.$input.val().length > 0) break
 
-            var prev = this.$input.prevAll('.token:first')
+            var prev = this.$input.hasClass('tt-query') ? this.$input.parent().prevAll('.token:first') : this.$input.prevAll('.token:first')
 
             if (!prev.length) break
 
@@ -345,7 +363,7 @@
           if (this.$input.is(':focus')) {
             if (this.$input.val().length > 0) break
 
-            var prev = this.$input.prevAll('.token:last')
+            var prev = this.$input.hasClass('tt-query') ? this.$input.parent().prevAll('.token:last') : this.$input.prevAll('.token:last')
             if (!prev.length) return
 
             this.activate( prev )
@@ -365,7 +383,7 @@
 
             if (this.$input.val().length > 0) break
             
-            var next = this.$input.nextAll('.token:first')
+            var next = this.$input.hasClass('tt-query') ? this.$input.parent().nextAll('.token:first') : this.$input.nextAll('.token:first')
 
             if (!next.length) break
 
@@ -387,7 +405,7 @@
           if (this.$input.is(':focus')) {
             if (this.$input.val().length > 0) break
 
-            var next = this.$input.nextAll('.token:first')
+            var next = this.$input.hasClass('tt-query') ? this.$input.parent().nextAll('.token:first') : this.$input.nextAll('.token:first')
             if (!next.length) return
 
             this.activate( next )
@@ -413,6 +431,9 @@
 
           // We will handle creating tokens from autocomplete in autocomplete events
           if (this.$input.data('uiAutocomplete') && this.$input.data('uiAutocomplete').menu.element.find("li:has(a.ui-state-focus)").length) break
+          // We will handle creating tokens from typeahead in typeahead events
+          if (this.$input.hasClass('tt-query') && this.$wrapper.find('.tt-is-under-cursor').length ) break
+          
           // Create token
           if (this.$input.is(':focus') && this.$input.val().length || this.$input.data('edit')) {
             this.createTokensFromInput(e, this.$input.data('edit'))
@@ -440,8 +461,13 @@
         case 8: // backspace
           if (this.$input.is(':focus')) {
             if (this.$input.val().length || this.lastInputValue.length && this.lastKeyDown === 8) break
+            
             this.preventDeactivation = true
-            this.activate( this.$input.prevAll('.token:first') )
+            var prev = this.$input.hasClass('tt-query') ? this.$input.parent().prevAll('.token:first') : this.$input.prevAll('.token:first')
+
+            if (!prev.length) break
+
+            this.activate( prev )
           } else {
             this.remove(e)
           }
@@ -466,7 +492,7 @@
         this.$wrapper.find('.active').removeClass('active')
         this.firstActiveToken = null
 
-        if (this.options.showAutocompleteOnFocus && this.$input.data('uiAutocomplete')) {
+        if (this.options.showAutocompleteOnFocus) {
           this.search()
         }
       }
@@ -641,11 +667,9 @@
       token.find('.token-label').text(e.token.value)
       var tokenWidth = token.outerWidth()
 
-      // this.$wrapper
-      //   .data( 'prev-width', this.$wrapper.width() )
-      //   .width( this.$wrapper.width() )
+      var $_input = this.$input.hasClass('tt-query') ? this.$input.parent() : this.$input
 
-      token.replaceWith( this.$input )
+      token.replaceWith( $_input )
 
       this.$input.val( e.token.value )
                 .select()
@@ -654,9 +678,10 @@
     }
 
   , unedit: function (focus) {
-      this.$input
-        .appendTo( this.$wrapper )
-        .data( 'edit', false )
+      var $_input = this.$input.hasClass('tt-query') ? this.$input.parent() : this.$input
+      $_input.appendTo( this.$wrapper )
+      
+      this.$input.data('edit', false)
 
       this.update()
 
@@ -669,8 +694,6 @@
           _self.$input.focus()
         }, 1)
       }
-
-      //this.$wrapper.css( 'width', this.$wrapper.data('prev-width') )
     }
 
   , remove: function (e, direction) {
@@ -736,7 +759,9 @@
     }
 
   , search: function () {
-      this.$input.autocomplete('search')
+      if ( this.$input.data('uiAutocomplete') ) {
+        this.$input.autocomplete('search')
+      }
     }
 
   , disable: function () {
@@ -779,6 +804,7 @@
     minLength: 0,
     allowDuplicates: false,
     autocomplete: {},
+    typeahead: {},
     showAutocompleteOnFocus: false,
     createTokensOnBlur: false
   }
