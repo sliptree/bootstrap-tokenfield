@@ -5,7 +5,6 @@
  * Copyright 2013 Sliptree
  * ============================================================ */
 
-
 !function ($) {
 
   "use strict"; // jshint ;_;
@@ -21,7 +20,7 @@
     this.options = $.extend({}, $.fn.tokenfield.defaults, { tokens: this.$element.val() }, options)    
     
     // Store original input width
-    var elRules = window.getMatchedCSSRules( element )
+    var elRules = (typeof window.getMatchedCSSRules === 'function') ? window.getMatchedCSSRules( element ) : null
       , elStyleWidth = element.style.width
       , elCSSWidth
       , elWidth = this.$element.width()
