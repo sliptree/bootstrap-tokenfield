@@ -1,0 +1,33 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Mocha Test Runner</title>
+
+  <link rel="stylesheet" href="../bower_components/mocha/mocha.css" />
+  <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css" />
+
+  <link rel="stylesheet" href="../bootstrap-tokenfield/bootstrap-tokenfield.css" />
+</head>
+
+<body>
+  <div id="mocha"></div>
+
+  <!-- dependencides -->
+  <script src="../bower_components/jquery/jquery.js"></script>
+  <script src="../bower_components/bootstrap/dist/js/bootstrap.js"></script>
+  <script src="../bootstrap-tokenfield/bootstrap-tokenfield.js"></script>
+  <script src="../bower_components/mocha/mocha.js"></script>
+  <script src="../bower_components/chai/chai.js"></script>
+  <script>mocha.setup('bdd')</script>
+
+  <!-- tests -->
+  <script src="test.tokenfield.js"></script>
+
+  <!-- setup & run tests -->
+  <script>
+    should = chai.should();
+    mocha.run();
+  </script>
+
+</body>
+</html>

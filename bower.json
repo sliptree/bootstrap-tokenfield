@@ -4,5 +4,9 @@
   "main": ["bootstrap-tokenfield/bootstrap-tokenfield.js","bootstrap-tokenfield/bootstrap-tokenfield.css"],
   "dependencies": {
     "jquery": "1.9.x"
+  },
+  "devDependecies": {
+    "mocha": "1.12.*",
+    "chai": "1.7.*"
   }
 }

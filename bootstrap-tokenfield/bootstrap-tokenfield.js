@@ -74,8 +74,8 @@
       this.$wrapper.width( elWidth )
     }
 
-    // Set tokenfield disabled, if original input is disabled
-    if (this.$element.prop('disabled')) {
+    // Set tokenfield disabled, if original or fieldset input is disabled
+    if (this.$element.prop('disabled') || this.$element.parents('fieldset[disabled]').length) {
       this.disable();
     }
 
@@ -766,12 +766,14 @@
   , disable: function () {
       this.disabled = true;
       this.$input.prop('disabled', true);
+      this.$element.prop('disabled', true);
       this.$wrapper.addClass('disabled');
     }
 
   , enable: function () {
       this.disabled = false;
       this.$input.prop('disabled', false);
+      this.$element.prop('disabled', false);
       this.$wrapper.removeClass('disabled');
     }
 
@@ -784,18 +786,22 @@
   var old = $.fn.tokenfield
 
   $.fn.tokenfield = function (option, param) {
-    this.each(function () {
+    var value
+
+    var elements = this.each(function () {
       var $this = $(this)
         , data = $this.data('bs.tokenfield')
         , options = typeof option == 'object' && option
 
       if (typeof option === 'string' && data && data[option]) {
-        return data[option](param)
+        value = data[option](param)
+        return value;
       } else {
         if (!data) $this.data('bs.tokenfield', (data = new Tokenfield(this, options)))
       }
     })
-    return this;
+
+    return value ? value : elements;
   }
 
   $.fn.tokenfield.defaults = {
