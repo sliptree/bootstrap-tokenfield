@@ -20,7 +20,7 @@
   -moz-border-radius: 3px;
   border-radius: 3px;
   white-space: nowrap; 
-  margin: -1px 5px 4px 0; 
+  margin: -1px 5px 5px 0; 
   height: 22px;
   vertical-align: top;
   cursor: default;
@@ -65,7 +65,7 @@
   box-shadow: none;
   height: 20px;
   padding: 0;
-  margin-bottom: 5px;
+  margin-bottom: 6px;
 }
 .tokenfield .token-input:focus {
   border-color: transparent;
@@ -115,10 +115,12 @@
 .input-group-sm .token,
 .tokenfield.input-sm .token {
   height: 20px;
+  margin-bottom: 4px;
 }
 .input-group-sm .token-input,
 .tokenfield.input-sm .token-input {
   height: 18px;
+  margin-bottom: 5px;
 }
 
 .tokenfield.input-lg,
