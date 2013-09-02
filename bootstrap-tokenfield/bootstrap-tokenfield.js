@@ -319,6 +319,13 @@
             _self.unedit(true)
           }
         })
+        .on('typeahead:autocompleted', function (e, datum) {
+          _self.createToken( _self.$input.val() )
+          _self.$input.typeahead('setQuery', '')
+          if (_self.$input.data( 'edit' )) {
+            _self.unedit(true)
+          }
+        })
 
       // Listen to window resize
       $(window).on('resize', $.proxy(this.update, this ))
@@ -432,6 +439,7 @@
           if (this.$input.data('uiAutocomplete') && this.$input.data('uiAutocomplete').menu.element.find("li:has(a.ui-state-focus)").length) break
           // We will handle creating tokens from typeahead in typeahead events
           if (this.$input.hasClass('tt-query') && this.$wrapper.find('.tt-is-under-cursor').length ) break
+          if (this.$input.hasClass('tt-query') && this.$wrapper.find('.tt-hint').val()) break
           
           // Create token
           if (this.$input.is(':focus') && this.$input.val().length || this.$input.data('edit')) {
