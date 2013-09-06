@@ -313,8 +313,8 @@
           return false
         })
         .on('typeahead:selected', function (e, datum) {
-          _self.$input.typeahead('setQuery', '')
           _self.createToken( datum.value )
+          _self.$input.typeahead('setQuery', '')
           if (_self.$input.data( 'edit' )) {
             _self.unedit(true)
           }
@@ -439,7 +439,7 @@
           if (this.$input.data('uiAutocomplete') && this.$input.data('uiAutocomplete').menu.element.find("li:has(a.ui-state-focus)").length) break
           // We will handle creating tokens from typeahead in typeahead events
           if (this.$input.hasClass('tt-query') && this.$wrapper.find('.tt-is-under-cursor').length ) break
-          if (this.$input.hasClass('tt-query') && this.$wrapper.find('.tt-hint').val()) break
+          if (this.$input.hasClass('tt-query') && this.$wrapper.find('.tt-hint').val().length) break
           
           // Create token
           if (this.$input.is(':focus') && this.$input.val().length || this.$input.data('edit')) {
@@ -544,7 +544,13 @@
       this.setTokens( this.$input.val(), true )
       if (tokensBefore == this.getTokensList() && this.$input.val().length) return // No tokens were added, do nothing
 
-      this.$input.val('')
+      if (this.$input.hasClass('tt-query')) {
+        // Typeahead acts weird when simply setting input value to empty,
+        // so we set the query to empty instead
+        this.$input.typeahead('setQuery', '')
+      } else {
+        this.$input.val('')
+      }
 
       if (this.$input.data( 'edit' )) {
         this.unedit(focus)
