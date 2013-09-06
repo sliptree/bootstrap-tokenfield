@@ -284,7 +284,11 @@ $('#myField').tokenfield('disable');
                    </tr>
                    <tr>
                      <td>removeToken</td>
-                     <td>This event is fired after a token is removed.</td>
+                     <td>This event is fired after a token is removed. You will have access to <code>token</code> property of the event. This way, you can determine which token was removed.</td>
+                   </tr>
+                   <tr>
+                     <td>preventDuplicateToken</td>
+                     <td>This event is fired when <code>allowDuplicates</code> is set to <code>false</code> and a duplicate is being prevented from created. You can find out the offending token by looking at the <code>token</code> property of the event.</td>
                    </tr>
                   </tbody>
                 </table>
@@ -322,8 +326,12 @@ $('#tokenfield')
     }
   })
 
-  .on('removeToken', function () {
-    alert('Token removed!')
+  .on('removeToken', function (e) {
+    alert('Token removed! Token value was: ' + e.token.value)
+  })
+
+  .on('preventDuplicateToken', function (e) {
+    alert('Duplicate detected! Token value is: ' + e.token.value)
   })
 
   .tokenfield()

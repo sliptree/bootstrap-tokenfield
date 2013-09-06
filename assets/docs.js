@@ -76,8 +76,11 @@ jQuery(document).ready(function($) {
         e.token.value = label[0] + '|' + e.token.value
       }
     })
-    .on('removeToken', function () {
-      alert('Token removed!')
+    .on('removeToken', function (e) {
+      alert('Token removed! Token value was: ' + e.token.value)
+    })
+    .on('preventDuplicateToken', function (e) {
+      alert('Duplicate detected! Token value is: ' + e.token.value)
     })
     .tokenfield()
   

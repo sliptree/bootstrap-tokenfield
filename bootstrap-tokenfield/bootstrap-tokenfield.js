@@ -139,18 +139,30 @@
 
       if (!this.options.allowDuplicates && $.grep(this.getTokens(), function (token) {
         return token.value === value
-      }).length) return
+      }).length) {
+        // Allow listening to when duplicates get prevented
+        var duplicateEvent = $.Event('preventDuplicateToken')
+        duplicateEvent.token = {
+          value: value,
+          label: label
+        }
+        this.$element.trigger( duplicateEvent )        
+        return
+      }
 
       // Allow changing token data before creating it
-      var e = $.Event('beforeCreateToken')
-      e.token = {
+      var beforeCreateEvent = $.Event('beforeCreateToken')
+      beforeCreateEvent.token = {
         value: value,
         label: label
       }
-      this.$element.trigger(e)
+      this.$element.trigger( beforeCreateEvent )
+
+      value = beforeCreateEvent.token.value
+      label = beforeCreateEvent.token.label
 
       var token = $('<div class="token" />')
-            .attr('data-value', e.token.value)
+            .attr('data-value', value)
             .append('<span class="token-label" />')
             .append('<a href="#" class="close" tabindex="-1">&times;</a>')
 
@@ -184,7 +196,7 @@
       }
 
       tokenLabel
-        .text(e.token.label)
+        .text(label)
         .css('max-width', this.maxTokenWidth)
 
       // Listen to events
@@ -212,10 +224,10 @@
       closeButton
           .on('click',  $.proxy(this.remove, this))
 
-      var afterE = $.Event('afterCreateToken')
-      afterE.token = e.token
-      afterE.relatedTarget = token.get(0)
-      this.$element.trigger(afterE)
+      var afterCreateEvent = $.Event('afterCreateToken')
+      afterCreateEvent.token = beforeCreateEvent.token
+      afterCreateEvent.relatedTarget = token.get(0)
+      this.$element.trigger( afterCreateEvent )
 
       var changeEvent = $.Event('change')
       changeEvent.initiator = 'tokenfield'
@@ -243,14 +255,19 @@
       return this.$element.get(0)
     }
 
+  , getTokenData: function(token) {
+      return {
+        value: token.data('value') || token.find('.token-label').text(),
+        label: token.find('.token-label').text()
+      }
+    }
+
   , getTokens: function(active) {
-      var tokens = []
+      var self = this
+        , tokens = []
         , activeClass = active ? '.active' : '' // get active tokens only
       this.$wrapper.find( '.token' + activeClass ).each( function() {
-        tokens.push({
-          value: $(this).data('value') || $(this).find('.token-label').text(),
-          label: $(this).find('.token-label').text()
-        })
+        tokens.push( self.getTokenData( $(this) ) )
       })
       return tokens
   }
@@ -669,22 +686,25 @@
         , label = token.find('.token-label').text()
 
       // Allow changing input value before editing
-      var e = $.Event('beforeEditToken')
-      e.token = {
+      var beforeEditEvent = $.Event('beforeEditToken')
+      beforeEditEvent.token = {
         value: value,
         label: label
       }
-      e.relatedTarget = token.get(0)
-      this.$element.trigger(e)
+      beforeEditEvent.relatedTarget = token.get(0)
+      this.$element.trigger( beforeEditEvent )
 
-      token.find('.token-label').text(e.token.value)
+      value = beforeEditEvent.token.value
+      label = beforeEditEvent.token.label
+
+      token.find('.token-label').text(value)
       var tokenWidth = token.outerWidth()
 
       var $_input = this.$input.hasClass('tt-query') ? this.$input.parent() : this.$input
 
       token.replaceWith( $_input )
 
-      this.$input.val( e.token.value )
+      this.$input.val( value )
                 .select()
                 .data( 'edit', true )
                 .width( tokenWidth )
@@ -718,14 +738,25 @@
         if (!direction) var direction = 'prev'
         this[direction]()
       }
-      token.remove()
+
+      // Prepare events
+
+      var removeEvent = $.Event('removeToken')
+      removeEvent.token = this.getTokenData( token )
 
       var changeEvent = $.Event('change')
       changeEvent.initiator = 'tokenfield'
-      this.$element.val( this.getTokensList() ).trigger('removeToken').trigger( changeEvent )
 
+      // Remove token from DOM
+      token.remove()
+
+      // Trigger events
+      this.$element.val( this.getTokensList() ).trigger( removeEvent ).trigger( changeEvent )
+
+      // Focus, if necessary
       if (!this.$wrapper.find('.token').length || e.type === 'click') this.$input.focus()
 
+      // Adjust input width
       this.$input.css('width', this.options.minWidth + 'px')
       this.update()
 
