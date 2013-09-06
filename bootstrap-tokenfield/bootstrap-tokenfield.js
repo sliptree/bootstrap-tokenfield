@@ -474,6 +474,14 @@
   , keypress: function(e) {
       this.lastKeyPressCode = e.keyCode
       this.lastKeyPressCharCode = e.charCode
+
+      // Comma
+      if (e.charCode == 44 && this.$input.is(':focus')) {
+        if (this.$input.val()) {
+          this.createTokensFromInput(e)
+        }
+        return false;
+      }
     }
 
   , keyup: function (e) {
@@ -500,10 +508,6 @@
         case 46: // delete
           this.remove(e, 'next')
           break
-
-        case 188: // comma, hopefully (can also be angle bracket, so we need to check for keyPress code)
-          if (this.lastKeyPressCharCode !== 44 || !this.$input.is(':focus') || !this.$input.val()) break
-          this.createTokensFromInput(e)
       }
       this.lastKeyUp = e.keyCode
     }
