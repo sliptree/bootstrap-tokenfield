@@ -127,8 +127,8 @@
     constructor: Tokenfield
 
   , createToken: function (attrs) {
-      if (typeof attrs === 'string') {
-        attrs = { value: attrs, label: attrs }
+      if (!('label' in attrs)) {
+        attrs = { value: attrs.value, label: attrs.value }
       }
       
       var _self = this
@@ -330,7 +330,7 @@
           return false
         })
         .on('typeahead:selected', function (e, datum) {
-          _self.createToken( datum.value )
+          _self.createToken( datum )
           _self.$input.typeahead('setQuery', '')
           if (_self.$input.data( 'edit' )) {
             _self.unedit(true)
