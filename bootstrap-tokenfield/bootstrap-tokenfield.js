@@ -158,6 +158,8 @@
       }
       this.$element.trigger( beforeCreateEvent )
 
+      if (!beforeCreateEvent.token) return
+
       value = beforeCreateEvent.token.value
       label = beforeCreateEvent.token.label
 
