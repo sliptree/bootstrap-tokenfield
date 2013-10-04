@@ -73,7 +73,7 @@
     this.$wrapper.insertBefore( this.$element )
     this.$element.prependTo( this.$wrapper )
     
-    this.setTokens(this.options.tokens)
+    this.setTokens(this.options.tokens, false, false)
 
     // Start listening to events
     this.listen()
@@ -92,10 +92,14 @@
 
     constructor: Tokenfield
 
-  , createToken: function (attrs) {
+  , createToken: function (attrs, triggerChange) {
       if (typeof attrs === 'string') {
         attrs = { value: attrs, label: attrs }
       }
+
+     if (typeof triggerChange === 'undefined') {
+         triggerChange = true
+     }
       
       var _self = this
         , value = $.trim(attrs.value)
@@ -178,17 +182,23 @@
       afterE.relatedTarget = token
       this.$element.trigger(afterE)
 
-      this.$element.val( this.getTokensList() ).trigger('change')
+      if (triggerChange) {
+        this.$element.val( this.getTokensList() ).trigger('change')
+      }
 
       this.update()
 
       return this.$input.get(0)
     }    
 
-  , setTokens: function (tokens, add) {
+  , setTokens: function (tokens, add, triggerChange) {
       if (!tokens) return
 
       if (!add) this.$wrapper.find('.token').remove()
+
+      if (typeof triggerChange === 'undefined') {
+          triggerChange = true
+      }
 
       if (typeof tokens === 'string') {
         tokens = tokens.split(',')
@@ -196,7 +206,7 @@
 
       var _self = this
       $.each(tokens, function (i, token) {
-        _self.createToken(token)
+        _self.createToken(token, triggerChange)
       })
 
       return this.$input.get(0)
