@@ -324,7 +324,7 @@
       this.$input
         .on('autocompletecreate', function() {
           // Set minimum autocomplete menu width
-          var $_menuElement = $(this).data('uiAutocomplete').menu.element
+          var $_menuElement = $(this).data('ui-autocomplete').menu.element
           
           var minWidth = _self.$wrapper.outerWidth() -
               parseInt( $_menuElement.css('border-left-width'), 10 ) -
@@ -464,7 +464,7 @@
         case 13: // enter
 
           // We will handle creating tokens from autocomplete in autocomplete events
-          if (this.$input.data('uiAutocomplete') && this.$input.data('uiAutocomplete').menu.element.find("li:has(a.ui-state-focus)").length) break
+          if (this.$input.data('ui-autocomplete') && this.$input.data('ui-autocomplete').menu.element.find("li:has(a.ui-state-focus)").length) break
           // We will handle creating tokens from typeahead in typeahead events
           if (this.$input.hasClass('tt-query') && this.$wrapper.find('.tt-is-under-cursor').length ) break
           if (this.$input.hasClass('tt-query') && this.$wrapper.find('.tt-hint').val().length) break
@@ -818,7 +818,7 @@
     }
 
   , search: function () {
-      if ( this.$input.data('uiAutocomplete') ) {
+      if ( this.$input.data('ui-autocomplete') ) {
         this.$input.autocomplete('search')
       }
     }
