@@ -340,14 +340,24 @@
           }
           return false
         })
-        .on('typeahead:selected', function (e, datum) {
-          _self.createToken( datum.value )
+        .on('typeahead:selected', function (e, datum, dataset) {
+          var valueKey = 'value'
+
+          // Get the actual valueKey for this dataset
+          $.each(_self.$input.data('ttView').datasets, function (i, set) {
+            if (set.name === dataset) {
+              valueKey = set.valueKey
+            }
+          })
+
+          // Create token
+          _self.createToken( datum[valueKey] )
           _self.$input.typeahead('setQuery', '')
           if (_self.$input.data( 'edit' )) {
             _self.unedit(true)
           }
         })
-        .on('typeahead:autocompleted', function (e, datum) {
+        .on('typeahead:autocompleted', function (e, datum, dataset) {
           _self.createToken( _self.$input.val() )
           _self.$input.typeahead('setQuery', '')
           if (_self.$input.data( 'edit' )) {
