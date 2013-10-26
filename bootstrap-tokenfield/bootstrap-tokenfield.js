@@ -267,10 +267,19 @@
     }
 
   , getTokenData: function(token) {
-      return {
-        value: token.data('value') || token.find('.token-label').text(),
-        label: token.find('.token-label').text()
+      var data = token.map(function() {
+        var $token = $(this);
+        return {
+          value: $token.data('value') || $token.find('.token-label').text(),
+          label: $token.find('.token-label').text()
+        }
+      }).get();
+
+      if (data.length == 1) {
+        data = data[0];
       }
+
+      return data;
     }
 
   , getTokens: function(active) {

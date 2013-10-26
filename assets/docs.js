@@ -77,7 +77,12 @@ jQuery(document).ready(function($) {
       }
     })
     .on('removeToken', function (e) {
-      alert('Token removed! Token value was: ' + e.token.value)
+      if (e.token.length > 1) {
+        var values = $.map(e.token, function (token) { return token.value });
+        alert(e.token.length + ' tokens removed! Token values were: ' + values.join(', '))
+      } else {
+        alert('Token removed! Token value was: ' + e.token.value)
+      } 
     })
     .on('preventDuplicateToken', function (e) {
       alert('Duplicate detected! Token value is: ' + e.token.value)
