@@ -718,6 +718,8 @@
       }
       beforeEditEvent.relatedTarget = token.get(0)
       this.$element.trigger( beforeEditEvent )
+      
+      if (!beforeEditEvent.token) return
 
       value = beforeEditEvent.token.value
       label = beforeEditEvent.token.label
