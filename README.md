@@ -17,6 +17,19 @@ Check out the [demo and docs](http://sliptree.github.io/bootstrap-tokenfield/)
 
 ### Changelog
 
+0.9.7 Valuable
+
+* Fixed: Twitter Typeahead valueKey support #18
+* Fixed: Removing multiple tokens returned wrong data #30
+* Fixed: If token is removed in beforeEdit event, no longer falls over #27, #28
+* Fixed: Change event was triggered on initialization #22
+* Fixed: When token is removed in beforeCreateToken event, no longer tries to create a token
+* Fixed: Pressing comma key was not handled reliably
+* New: `prevetDuplicateToken` event
+* Improved: Typeahead integration
+* Improved: styling
+* Minor tweaks, fixes, improvements 
+
 0.9.5 Typeable
 
 * New: Twitter Typeahead support
