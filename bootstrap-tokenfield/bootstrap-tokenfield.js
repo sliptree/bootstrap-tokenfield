@@ -270,7 +270,7 @@
       var data = token.map(function() {
         var $token = $(this);
         return {
-          value: $token.data('value') || $token.find('.token-label').text(),
+          value: $token.attr('data-value') || $token.find('.token-label').text(),
           label: $token.find('.token-label').text()
         }
       }).get();
