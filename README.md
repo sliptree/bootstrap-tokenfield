@@ -14,8 +14,15 @@ Check out the [demo and docs](http://sliptree.github.io/bootstrap-tokenfield/)
 * Copy & paste tokens with Ctrl+C and Ctrl+V
 * Keyboard navigation, delete tokens with keyboard (arrow keys, Shift + arrow keys)
 * Select specific tokens with Ctrl + click and Shift + click
+* Twitter Typeahead and jQuery UI Autocomplete support
 
 ### Changelog
+
+0.9.8 
+
+* New: `triggerKeys` option
+* Fixed: Long placeholders are not being cut off anymore when initializing tokenfield with no tokens #37
+* Fixed: createTokensOnBlur no more breaks token editing #35
 
 0.9.7 Valuable
 
