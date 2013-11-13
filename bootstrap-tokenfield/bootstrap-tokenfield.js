@@ -570,11 +570,12 @@
         this.firstActiveToken = null
       }
 
-      if (this.$input.data('edit') && !this.$input.is(':focus') || this.options.createTokensOnBlur) {
+      if (!this.preventCreateTokens && (this.$input.data('edit') && !this.$input.is(':focus') || this.options.createTokensOnBlur )) {
         this.createTokensFromInput(e) 
       }
       
       this.preventDeactivation = false
+      this.preventCreateTokens = false
     }
 
   , paste: function (e) {
@@ -743,6 +744,8 @@
       var $_input = this.$input.hasClass('tt-query') ? this.$input.parent() : this.$input
 
       token.replaceWith( $_input )
+
+      this.preventCreateTokens = true
 
       this.$input.val( value )
                 .select()
