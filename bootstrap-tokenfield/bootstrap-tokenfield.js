@@ -99,7 +99,11 @@
     // Insert tokenfield to HTML
     this.$wrapper.insertBefore( this.$element )
     this.$element.prependTo( this.$wrapper )
+
+    // Calculate inner input width
+    this.update()
     
+    // Create initial tokens, if any
     this.setTokens(this.options.tokens, false, false)
 
     // Start listening to events
@@ -506,7 +510,7 @@
       this.lastKeyPressCharCode = e.charCode
 
       // Comma
-      if (e.charCode == 44 && this.$input.is(':focus')) {
+      if (~$.inArray( e.charCode, this.options.triggerKeys) && this.$input.is(':focus')) {
         if (this.$input.val()) {
           this.createTokensFromInput(e)
         }
@@ -892,7 +896,8 @@
     autocomplete: {},
     typeahead: {},
     showAutocompleteOnFocus: false,
-    createTokensOnBlur: false
+    createTokensOnBlur: false,
+    triggerKeys: [44]
   }
 
   $.fn.tokenfield.Constructor = Tokenfield
