@@ -18,6 +18,10 @@ Check out the [demo and docs](http://sliptree.github.io/bootstrap-tokenfield/)
 
 ### Changelog
 
+0.9.9-1
+
+* Fixed: setTokens now respects `triggerKeys` option
+
 0.9.8 
 
 * New: `triggerKeys` option

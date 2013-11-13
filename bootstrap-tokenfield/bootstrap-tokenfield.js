@@ -1,5 +1,5 @@
 /* ============================================================
- * bootstrap-tokenfield.js v0.9.8
+ * bootstrap-tokenfield.js v0.9.9-1
  * ============================================================
  *
  * Copyright 2013 Sliptree
@@ -258,8 +258,11 @@
           triggerChange = true
       }
 
-      if (typeof tokens === 'string') {
-        tokens = tokens.split(',')
+      if (typeof tokens === 'string' && this.options.triggerKeys.length) {
+        var delimiters = $.map(this.options.triggerKeys, function (charCode) {
+          return String.fromCharCode(charCode)
+        })
+        tokens = tokens.split( new RegExp( '[' + delimiters.join('') + ']' ) )
       }
 
       var _self = this
