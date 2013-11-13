@@ -1,5 +1,5 @@
 /* ============================================================
- * bootstrap-tokenfield.js v0.9.9-1
+ * bootstrap-tokenfield.js v0.9.9-2
  * ============================================================
  *
  * Copyright 2013 Sliptree
@@ -258,11 +258,15 @@
           triggerChange = true
       }
 
-      if (typeof tokens === 'string' && this.options.triggerKeys.length) {
-        var delimiters = $.map(this.options.triggerKeys, function (charCode) {
-          return String.fromCharCode(charCode)
-        })
-        tokens = tokens.split( new RegExp( '[' + delimiters.join('') + ']' ) )
+      if (typeof tokens === 'string') {
+        if (this.options.triggerKeys.length) {
+          var delimiters = $.map(this.options.triggerKeys, function (charCode) {
+            return String.fromCharCode(charCode)
+          })
+          tokens = tokens.split( new RegExp( '[' + delimiters.join('') + ']' ) )
+        } else {
+          tokens = [tokens];
+        }
       }
 
       var _self = this
