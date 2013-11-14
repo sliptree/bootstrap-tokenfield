@@ -1,7 +1,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Mocha Test Runner</title>
+  <title>Tokenfield Test Runner</title>
 
   <link rel="stylesheet" href="../bower_components/mocha/mocha.css" />
   <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css" />
@@ -18,10 +18,17 @@
   <script src="../bootstrap-tokenfield/bootstrap-tokenfield.js"></script>
   <script src="../bower_components/mocha/mocha.js"></script>
   <script src="../bower_components/chai/chai.js"></script>
+  <script src="vendor/bililiteRange.js"></script>
+  <script src="vendor/jquery.simulate.js"></script>
+  <script src="vendor/jquery.simulate.ext.js"></script>
+  <script src="vendor/jquery.simulate.key-combo.js"></script>
+  <script src="vendor/jquery.simulate.key-sequence.js"></script>
   <script>mocha.setup('bdd')</script>
 
   <!-- tests -->
-  <script src="test.tokenfield.js"></script>
+  <script src="setup.js"></script>
+  <script src="test.tokenfield.unit.js"></script>
+  <script src="test.tokenfield.integration.js"></script>
 
   <!-- setup & run tests -->
   <script>
