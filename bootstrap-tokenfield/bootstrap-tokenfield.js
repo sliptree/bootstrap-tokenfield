@@ -16,9 +16,16 @@
     var _self = this
 
     this.$element = $(element)
-    // Extend options
-    this.options = $.extend({}, $.fn.tokenfield.defaults, { tokens: this.$element.val() }, options)    
     
+    // Extend options
+    this.options = $.extend({}, $.fn.tokenfield.defaults, { tokens: this.$element.val() }, options)
+    
+    // Setup delimiters and trigger keys
+    this._delimiters = (typeof this.options.delimiter === 'string') ? [this.options.delimiter] : this.options.delimiter
+    this._triggerKeys = $.map(this._delimiters, function (delimiter) {
+      return delimiter.charCodeAt(0);
+    });
+
     // Store original input width
     var elRules = (typeof window.getMatchedCSSRules === 'function') ? window.getMatchedCSSRules( element ) : null
       , elStyleWidth = element.style.width
@@ -45,10 +52,11 @@
     if (this.$element.hasClass('input-sm')) this.$wrapper.addClass('input-sm')
 
     // Create a new input
+    var id = this.$element.prop('id') || new Date().getTime() + '' + Math.floor((1 + Math.random()) * 100)
     this.$input = $('<input type="text" class="token-input" />')
                     .appendTo( this.$wrapper )
                     .prop( 'placeholder',  this.$element.prop('placeholder') )
-                    .prop( 'id', this.$element.prop('id') + '-tokenfield' )
+                    .prop( 'id', id + '-tokenfield' )
 
     // Re-route original input label to new input
     var $label = $( 'label[for="' + this.$element.prop('id') + '"]' )
@@ -259,11 +267,8 @@
       }
 
       if (typeof tokens === 'string') {
-        if (this.options.triggerKeys.length) {
-          var delimiters = $.map(this.options.triggerKeys, function (charCode) {
-            return String.fromCharCode(charCode)
-          })
-          tokens = tokens.split( new RegExp( '[' + delimiters.join('') + ']' ) )
+        if (this._delimiters.length) {
+          tokens = tokens.split( new RegExp( '[' + this._delimiters.join('') + ']' ) )
         } else {
           tokens = [tokens];
         }
@@ -303,10 +308,14 @@
       return tokens
   }
 
-  , getTokensList: function(active) {
+  , getTokensList: function(delimiter, beautify, active) {
+      delimiter = delimiter || this._delimiters[0]
+      beautify = ( typeof beautify !== 'undefined' && beautify !== null ) ? beautify : this.options.beautify
+      
+      var separator = delimiter + ( beautify && delimiter !== ' ' ? ' ' : '')
       return $.map( this.getTokens(active), function (token) {
         return token.value
-      }).join(', ')
+      }).join(separator)
   }
 
   , getInput: function() {
@@ -396,12 +405,12 @@
 
       switch(e.keyCode) {
         case 8: // backspace
-          if (!this.$input.is(':focus')) break
+          if (!this.$input.is(document.activeElement)) break
           this.lastInputValue = this.$input.val()
           break
 
         case 37: // left arrow
-          if (this.$input.is(':focus')) {
+          if (this.$input.is(document.activeElement)) {
             if (this.$input.val().length > 0) break
 
             var prev = this.$input.hasClass('tt-query') ? this.$input.parent().prevAll('.token:first') : this.$input.prevAll('.token:first')
@@ -424,7 +433,7 @@
         case 38: // up arrow
           if (!e.shiftKey) return
 
-          if (this.$input.is(':focus')) {
+          if (this.$input.is(document.activeElement)) {
             if (this.$input.val().length > 0) break
 
             var prev = this.$input.hasClass('tt-query') ? this.$input.parent().prevAll('.token:last') : this.$input.prevAll('.token:last')
@@ -443,7 +452,7 @@
           break
 
         case 39: // right arrow
-          if (this.$input.is(':focus')) {
+          if (this.$input.is(document.activeElement)) {
 
             if (this.$input.val().length > 0) break
             
@@ -466,7 +475,7 @@
         case 40: // down arrow
           if (!e.shiftKey) return
 
-          if (this.$input.is(':focus')) {
+          if (this.$input.is(document.activeElement)) {
             if (this.$input.val().length > 0) break
 
             var next = this.$input.hasClass('tt-query') ? this.$input.parent().nextAll('.token:first') : this.$input.nextAll('.token:first')
@@ -500,11 +509,11 @@
           if (this.$input.hasClass('tt-query') && this.$wrapper.find('.tt-hint').val().length) break
           
           // Create token
-          if (this.$input.is(':focus') && this.$input.val().length || this.$input.data('edit')) {
+          if (this.$input.is(document.activeElement) && this.$input.val().length || this.$input.data('edit')) {
             this.createTokensFromInput(e, this.$input.data('edit'))
           }
           if (e.keyCode === 13) {
-            if (!this.$copyHelper.is(':focus') || this.$wrapper.find('.token.active').length !== 1) break
+            if (!this.$copyHelper.is(document.activeElement) || this.$wrapper.find('.token.active').length !== 1) break
             this.edit( this.$wrapper.find('.token.active') )
           }
       }
@@ -517,7 +526,7 @@
       this.lastKeyPressCharCode = e.charCode
 
       // Comma
-      if (~$.inArray( e.charCode, this.options.triggerKeys) && this.$input.is(':focus')) {
+      if ($.inArray( e.charCode, this._triggerKeys) !== -1 && this.$input.is(document.activeElement)) {
         if (this.$input.val()) {
           this.createTokensFromInput(e)
         }
@@ -532,7 +541,7 @@
 
       switch(e.keyCode) {
         case 8: // backspace
-          if (this.$input.is(':focus')) {
+          if (this.$input.is(document.activeElement)) {
             if (this.$input.val().length || this.lastInputValue.length && this.lastKeyDown === 8) break
             
             this.preventDeactivation = true
@@ -557,7 +566,7 @@
       this.focused = true
       this.$wrapper.addClass('focus')
 
-      if (this.$input.is(':focus')) {
+      if (this.$input.is(document.activeElement)) {
         this.$wrapper.find('.active').removeClass('active')
         this.firstActiveToken = null
 
@@ -572,12 +581,12 @@
       this.focused = false
       this.$wrapper.removeClass('focus')
 
-      if (!this.preventDeactivation && !this.$element.is(':focus')) {
+      if (!this.preventDeactivation && !this.$element.is(document.activeElement)) {
         this.$wrapper.find('.active').removeClass('active')
         this.firstActiveToken = null
       }
 
-      if (!this.preventCreateTokens && (this.$input.data('edit') && !this.$input.is(':focus') || this.options.createTokensOnBlur )) {
+      if (!this.preventCreateTokens && (this.$input.data('edit') && !this.$input.is(document.activeElement) || this.options.createTokensOnBlur )) {
         this.createTokensFromInput(e) 
       }
       
@@ -700,7 +709,7 @@
       }
 
       token.addClass('active')
-      this.$copyHelper.val( this.getTokensList( true ) ).select()
+      this.$copyHelper.val( this.getTokensList( null, null, true ) ).select()
     }
 
   , activateAll: function() {
@@ -715,14 +724,14 @@
       if (!token) return
 
       token.removeClass('active')
-      this.$copyHelper.val( this.getTokensList( true ) ).select()
+      this.$copyHelper.val( this.getTokensList( null, null, true ) ).select()
     }
 
   , toggle: function(token) {
       if (!token) return
 
       token.toggleClass('active')
-      this.$copyHelper.val( this.getTokensList( true ) ).select()
+      this.$copyHelper.val( this.getTokensList( null, null, true ) ).select()
     }
 
   , edit: function (token) {
@@ -780,7 +789,7 @@
     }
 
   , remove: function (e, direction) {
-      if (this.$input.is(':focus') || this.disabled) return
+      if (this.$input.is(document.activeElement) || this.disabled) return
 
       var token = (e.type === 'click') ? $(e.target).closest('.token') : this.$wrapper.find('.token.active')
       
@@ -882,6 +891,9 @@
 
   $.fn.tokenfield = function (option, param) {
     var value
+      , args = []
+    
+    Array.prototype.push.apply( args, arguments );
 
     var elements = this.each(function () {
       var $this = $(this)
@@ -889,14 +901,14 @@
         , options = typeof option == 'object' && option
 
       if (typeof option === 'string' && data && data[option]) {
-        value = data[option](param)
-        return value;
+        args.shift()
+        value = data[option].apply(data, args)
       } else {
         if (!data) $this.data('bs.tokenfield', (data = new Tokenfield(this, options)))
       }
     })
 
-    return value ? value : elements;
+    return typeof value !== 'undefined' ? value : elements;
   }
 
   $.fn.tokenfield.defaults = {
@@ -907,7 +919,8 @@
     typeahead: {},
     showAutocompleteOnFocus: false,
     createTokensOnBlur: false,
-    triggerKeys: [44]
+    delimiter: ',',
+    beautify: true
   }
 
   $.fn.tokenfield.Constructor = Tokenfield
