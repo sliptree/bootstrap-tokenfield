@@ -13,11 +13,11 @@ describe('initializing tokenfield', function() {
     it('should move the original input out of the way', function() {
       this.$field.css('position').should.equal('absolute');
       this.$field.css('left').should.equal('-10000px');
-      this.$field.data('bs.tokenfield').$wrapper.offset().left.should.be.above(this.$field.offset().left);
+      this.$wrapper.offset().left.should.be.above(this.$field.offset().left);
     });
 
     it('should not create any tokens', function() {
-      this.$field.data('bs.tokenfield').$wrapper.find('.token').length.should.equal(0);
+      this.$wrapper.find('.token').length.should.equal(0);
     });
 
   });
@@ -33,7 +33,7 @@ describe('initializing tokenfield', function() {
     });
 
     it('should create tokens for each comma-separated value', function() {
-      this.$field.data('bs.tokenfield').$wrapper.find('.token').length.should.equal(3);
+      this.$wrapper.find('.token').length.should.equal(3);
     });
 
   });
@@ -51,7 +51,7 @@ describe('Tokenfield public methods', function() {
       });
 
       it('should create a new token', function() {
-        this.$field.data('bs.tokenfield').$wrapper.find('.token').should.have.length(1);
+        this.$wrapper.find('.token').should.have.length(1);
       });
 
       it('add the new token value to original input', function() {
@@ -87,7 +87,7 @@ describe('Tokenfield public methods', function() {
       });
 
       it('should create a new token', function() {
-        this.$field.data('bs.tokenfield').$wrapper.find('.token').should.have.length(1);
+        this.$wrapper.find('.token').should.have.length(1);
       });
 
       it('add the new token value to original input', function() {
@@ -130,7 +130,7 @@ describe('Tokenfield public methods', function() {
 
       it('should return an array of only active token key-value pairs', function() {
         // Mark green as active
-        this.$field.data('bs.tokenfield').$wrapper.find('.token')
+        this.$wrapper.find('.token')
             .filter(':has(.token-label:contains(green))').addClass('active');
 
         var tokens = this.$field.tokenfield('getTokens', true);
@@ -190,9 +190,9 @@ describe('Tokenfield public methods', function() {
 
       it('should return a string with semicolon-separated token values', function() {
         // Mark green and yellow as active
-        this.$field.data('bs.tokenfield').$wrapper.find('.token')
+        this.$wrapper.find('.token')
             .filter(':has(.token-label:contains(green))').addClass('active');
-        this.$field.data('bs.tokenfield').$wrapper.find('.token')
+        this.$wrapper.find('.token')
             .filter(':has(.token-label:contains(yellow))').addClass('active');
 
         var tokens = this.$field.tokenfield('getTokensList', ';', false, true);
@@ -317,11 +317,11 @@ describe('Tokenfield public methods', function() {
 
     it('should disable both original and token input', function() {
       this.$field.prop('disabled').should.be.true;
-      this.$field.data('bs.tokenfield').$input.prop('disabled').should.be.true;
+      this.$input.prop('disabled').should.be.true;
     });
 
     it('should add "disabled" class to tokenfield', function() {
-      this.$field.data('bs.tokenfield').$wrapper.hasClass('disabled').should.be.true;
+      this.$wrapper.hasClass('disabled').should.be.true;
     });
 
   });  
@@ -335,11 +335,11 @@ describe('Tokenfield public methods', function() {
 
     it('should enable both original and token input', function() {
       this.$field.prop('disabled').should.be.false;
-      this.$field.data('bs.tokenfield').$input.prop('disabled').should.be.false;
+      this.$input.prop('disabled').should.be.false;
     });
 
     it('should remove "disabled" class from tokenfield', function() {
-      this.$field.data('bs.tokenfield').$wrapper.hasClass('disabled').should.be.false;
+      this.$wrapper.hasClass('disabled').should.be.false;
     });
 
   });  

@@ -1,6 +1,6 @@
-describe('initializing tokenfield', function() {
+describe('Integration', function() {
 
-  describe('with an alternative delimiter', function() {
+  describe('Using an alternative delimiter', function() {
     before(function() {
       TFT.template = '<input type="text" class="tokenize" value="red;green;blue;yellow" />'
       TFT.options = {
@@ -18,7 +18,7 @@ describe('initializing tokenfield', function() {
     });
 
     it('should create a token when the delimiting key is pressed and use the first delimiter for setting original input value', function() {
-      this.$field.data('bs.tokenfield').$input.focus().simulate("key-sequence", { sequence: "purple;olive;" })
+      this.$input.focus().simulate("key-sequence", { sequence: "purple;olive;" })
       this.$field.data('bs.tokenfield').$wrapper.find('.token').length.should.equal(6);
       this.$field.val().should.equal('red; green; blue; yellow; purple; olive');
     });    
@@ -42,10 +42,606 @@ describe('initializing tokenfield', function() {
     });
 
     it('should create a token when the delimiting key is pressed and use the first delimiter for setting original input value', function() {
-      this.$field.data('bs.tokenfield').$input.focus().simulate("key-sequence", { sequence: "purple olive." })
+      this.$input.focus().simulate("key-sequence", { sequence: "purple olive." });
       this.$field.data('bs.tokenfield').$wrapper.find('.token').length.should.equal(6);
       this.$field.val().should.equal('red green blue yellow purple olive');
     });
+  });
+
+  describe('Keyboard interaction', function() {
+
+    describe("Pressing Ctrl+A", function() {
+      before(function() {
+        TFT.template = '<input type="text" class="tokenize" value="red,green,blue" />'
+      });
+
+      after(function() {
+        delete TFT.template;
+      });
+
+      it("should select all tokens", function() {
+        this.$input.focus().simulate("key-combo", { combo: "ctrl+a" });
+        this.$field.tokenfield('getTokens', true).length.should.equal(3);
+      });
+    });
+
+    describe("pressing Cmd+A", function() {
+      before(function() {
+        TFT.template = '<input type="text" class="tokenize" value="red,green,blue" />'
+      });
+
+      after(function() {
+        delete TFT.template;
+      });
+
+      it("should select all tokens", function() {
+        this.$input.focus().simulate("key-combo", { combo: "meta+a" });
+        this.$field.tokenfield('getTokens', true).length.should.equal(3);
+      });
+    });
+
+    describe("Pressing delete", function() {
+      describe("when a token is selected", function() {
+        before(function() {
+          TFT.template = '<input type="text" class="tokenize" value="red,green,blue,yellow" />'
+        });
+
+        after(function() {
+          delete TFT.template;
+        });
+
+        describe('and there are more tokens to the right of selected token', function() {
+          it("should delete the selected token and move focus to the next token", function() {
+            // Mark green as active
+            this.$wrapper.find('.token')
+                .filter(':has(.token-label:contains(green))').addClass('active');
+
+            this.$copyHelper.simulate("key-sequence", { sequence: "{del}" });
+            this.$field.tokenfield('getTokens').length.should.equal(3);
+            this.$field.tokenfield('getTokensList', null, null, true).should.equal('blue');
+          });
+        })
+
+        describe('and there are no more tokens to the right of the selected token', function() {
+          it("should delete the selected token and move focus to input", function() {
+            // Mark green as active
+            this.$wrapper.find('.token')
+                .filter(':has(.token-label:contains(yellow))').addClass('active');
+
+            this.$copyHelper.simulate("key-sequence", { sequence: "{del}" });
+            this.$field.tokenfield('getTokens').length.should.equal(3);
+            this.$field.tokenfield('getTokensList', null, null, true).should.equal('');
+            this.$input.is(document.activeElement).should.be.true;
+          });
+        })
+      });
+
+      describe("when multiple tokens are selected", function() {
+        before(function() {
+          TFT.template = '<input type="text" class="tokenize" value="red,green,blue,yellow,purple" />'
+        });
+
+        after(function() {
+          delete TFT.template;
+        });
+
+        describe('and there are more tokens to the right of selected tokens', function() {
+          it("should delete the selected tokens and move focus to the next token of the rightmost selected token", function() {
+            // Mark green and yellow as active
+            this.$wrapper.find('.token')
+                .filter(':has(.token-label:contains(green))').addClass('active');
+            this.$wrapper.find('.token')
+                .filter(':has(.token-label:contains(yellow))').addClass('active');
+
+            this.$copyHelper.simulate("key-sequence", { sequence: "{del}" });
+            this.$field.tokenfield('getTokens').length.should.equal(3);
+            this.$field.tokenfield('getTokensList', null, null, true).should.equal('purple');
+          });
+        });
+
+        describe('and there are no more tokens to the right of selected tokens', function() {
+          it("should delete the selected tokens and move focus input", function() {
+            // Mark green and yellow as active
+            this.$wrapper.find('.token')
+                .filter(':has(.token-label:contains(green))').addClass('active');
+            this.$wrapper.find('.token')
+                .filter(':has(.token-label:contains(purple))').addClass('active');
+
+            this.$copyHelper.simulate("key-sequence", { sequence: "{del}" });
+            this.$field.tokenfield('getTokens').length.should.equal(3);
+            this.$field.tokenfield('getTokensList').should.equal('red, blue, yellow');
+            this.$input.is(document.activeElement).should.be.true;
+
+          });
+        });
+      });
+    });
+
+    describe("Pressing backspace", function() {
+      describe("when a token is selected", function() {
+        before(function() {
+          TFT.template = '<input type="text" class="tokenize" value="red,green,blue,yellow" />'
+        });
+
+        after(function() {
+          delete TFT.template;
+        });
+
+        describe('and there are more tokens to the left of selected token', function() {
+          it("should delete the selected token and move focus to the previous token", function() {
+            // Mark green as active
+            this.$wrapper.find('.token')
+                .filter(':has(.token-label:contains(blue))').addClass('active');
+
+            this.$copyHelper.simulate("key-sequence", { sequence: "{backspace}" });
+            this.$field.tokenfield('getTokens').length.should.equal(3);
+            this.$field.tokenfield('getTokensList', null, null, true).should.equal('green');
+          });
+        })
+
+        describe('and there are no more tokens to the left of the selected token', function() {
+          it("should delete the selected token and move focus to input", function() {
+            // Mark green as active
+            this.$wrapper.find('.token')
+                .filter(':has(.token-label:contains(red))').addClass('active');
+
+            this.$copyHelper.simulate("key-sequence", { sequence: "{backspace}" });
+            this.$field.tokenfield('getTokens').length.should.equal(3);
+            this.$field.tokenfield('getTokensList', null, null, true).should.equal('');
+            this.$input.is(document.activeElement).should.be.true;
+          });
+        })
+      });
+
+      describe("when multiple tokens are selected", function() {
+        before(function() {
+          TFT.template = '<input type="text" class="tokenize" value="red,green,blue,yellow,purple" />'
+        });
+
+        after(function() {
+          delete TFT.template;
+        });
+
+        describe('and there are more tokens to the left of selected tokens', function() {
+          it("should delete the selected tokens and move focus to the previous token of the leftmost selected token", function() {
+            // Mark green and yellow as active
+            this.$wrapper.find('.token')
+                .filter(':has(.token-label:contains(green))').addClass('active');
+            this.$wrapper.find('.token')
+                .filter(':has(.token-label:contains(yellow))').addClass('active');
+
+            this.$copyHelper.simulate("key-sequence", { sequence: "{backspace}" });
+            this.$field.tokenfield('getTokens').length.should.equal(3);
+            this.$field.tokenfield('getTokensList', null, null, true).should.equal('red');
+          });
+        });
+
+        describe('and there are no more tokens to the left of selected tokens', function() {
+          it("should delete the selected tokens and move focus input", function() {
+            // Mark green and yellow as active
+            this.$wrapper.find('.token')
+                .filter(':has(.token-label:contains(red))').addClass('active');
+            this.$wrapper.find('.token')
+                .filter(':has(.token-label:contains(purple))').addClass('active');
+
+            this.$copyHelper.simulate("key-sequence", { sequence: "{backspace}" });
+            this.$field.tokenfield('getTokens').length.should.equal(3);
+            this.$field.tokenfield('getTokensList').should.equal('green, blue, yellow');
+            this.$input.is(document.activeElement).should.be.true;
+          });
+        });
+      });
+
+      describe("when focus is on input", function() {
+        before(function() {
+          TFT.template = '<input type="text" class="tokenize" value="red,green,blue" />'
+        });
+
+        after(function() {
+          delete TFT.template;
+        });
+
+        it("should move focus to the last token", function() {
+          this.$input.simulate("key-sequence", { sequence: "{backspace}" });
+          this.$field.tokenfield('getTokensList', null, null, true ).should.equal('blue');
+        });
+      });
+    });
+
+    describe("Pressing left arrow key", function() {
+      describe("when no tokens are selected", function() {
+        before(function() {
+          TFT.template = '<input type="text" class="tokenize" value="red,green,blue" />'
+        });
+
+        after(function() {
+          delete TFT.template;
+        });
+
+        it("should move focus to the last token", function() {
+          this.$input.simulate("key-sequence", { sequence: "{leftarrow}" });
+          this.$field.tokenfield('getTokensList', null, null, true ).should.equal('blue');
+        });
+      });
+
+      describe("when a token is selected", function() {
+        before(function() {
+          TFT.template = '<input type="text" class="tokenize" value="red,green,blue" />'
+        });
+
+        after(function() {
+          delete TFT.template;
+        });
+
+        it("should move focus to the previous token", function() {
+          this.$wrapper.find('.token')
+              .filter(':has(.token-label:contains(blue))').addClass('active');
+
+          this.$copyHelper.simulate("key-sequence", { sequence: "{leftarrow}" });
+          this.$field.tokenfield('getTokensList', null, null, true ).should.equal('green');
+        });
+      });
+
+      describe("when multiple tokens are selected", function() {
+        before(function() {
+          TFT.template = '<input type="text" class="tokenize" value="red,green,blue,yellow" />'
+        });
+
+        after(function() {
+          delete TFT.template;
+        });
+
+        it("should move focus to the previous token of the leftmost selected token", function() {
+          this.$wrapper.find('.token')
+              .filter(':has(.token-label:contains(green))').addClass('active');
+          this.$wrapper.find('.token')
+              .filter(':has(.token-label:contains(yellow))').addClass('active');
+                  
+          this.$copyHelper.simulate("key-sequence", { sequence: "{leftarrow}" });
+          this.$field.tokenfield('getTokensList', null, null, true ).should.equal('red');
+        });
+      });
+
+      describe("when the first token is selected", function() {
+        before(function() {
+          TFT.template = '<input type="text" class="tokenize" value="red,green,blue" />'
+        });
+
+        after(function() {
+          delete TFT.template;
+        });
+
+        it("should keep the focus on the first token", function() {
+          this.$wrapper.find('.token')
+              .filter(':has(.token-label:contains(red))').addClass('active');
+
+          this.$copyHelper.simulate("key-sequence", { sequence: "{leftarrow}" });
+          this.$field.tokenfield('getTokensList', null, null, true ).should.equal('red');
+        });
+      });
+    });
+
+    describe("Pressing right arrow key", function() {
+      describe("when no tokens are selected", function() {
+        before(function() {
+          TFT.template = '<input type="text" class="tokenize" value="red,green,blue" />'
+        });
+
+        after(function() {
+          delete TFT.template;
+        });
+
+        it("should keep the focus on the input", function() {
+          this.$input.simulate("key-sequence", { sequence: "{rightarrow}" });
+          this.$field.tokenfield('getTokensList', null, null, true ).should.equal('');          
+          this.$input.is(document.activeElement).should.be.true;
+        });
+      });
+
+      describe("when a token is selected", function() {
+        before(function() {
+          TFT.template = '<input type="text" class="tokenize" value="red,green,blue" />'
+        });
+
+        after(function() {
+          delete TFT.template;
+        });
+
+        it("should move focus to the next token", function() {
+          this.$wrapper.find('.token')
+              .filter(':has(.token-label:contains(red))').addClass('active');
+                  
+          this.$copyHelper.simulate("key-sequence", { sequence: "{rightarrow}" });
+          this.$field.tokenfield('getTokensList', null, null, true ).should.equal('green');
+        });
+      });
+
+      describe("when multiple tokens are selected", function() {
+        before(function() {
+          TFT.template = '<input type="text" class="tokenize" value="red,green,blue,yellow" />'
+        });
+
+        after(function() {
+          delete TFT.template;
+        });
+
+        it("should move focus to the next token of the rightmost selected token", function() {
+          this.$wrapper.find('.token')
+              .filter(':has(.token-label:contains(red))').addClass('active');
+          this.$wrapper.find('.token')
+              .filter(':has(.token-label:contains(blue))').addClass('active');
+                  
+          this.$copyHelper.simulate("key-sequence", { sequence: "{rightarrow}" });
+          this.$field.tokenfield('getTokensList', null, null, true ).should.equal('yellow');
+        });
+      });
+
+      describe("when the last token is selected", function() {
+        before(function() {
+          TFT.template = '<input type="text" class="tokenize" value="red,green,blue" />'
+        });
+
+        after(function() {
+          delete TFT.template;
+        });
+
+        it("should move the focus to the input", function() {
+          this.$wrapper.find('.token')
+              .filter(':has(.token-label:contains(blue))').addClass('active');
+                  
+          this.$copyHelper.simulate("key-sequence", { sequence: "{rightarrow}" });
+          this.$field.tokenfield('getTokensList', null, null, true ).should.equal('');
+          this.$input.is(document.activeElement).should.be.true;
+        });
+      });
+    });
+
+    describe("Pressing Shift + left arrow key", function() {
+      describe("when no tokens are selected", function() {
+        before(function() {
+          TFT.template = '<input type="text" class="tokenize" value="red,green,blue" />'
+        });
+
+        after(function() {
+          delete TFT.template;
+        });
+
+        it("should move focus to the last token", function() {
+          this.$input.focus().simulate("keydown", { keyCode: 37, charCode: 37, shiftKey: true });
+          this.$field.tokenfield('getTokensList', null, null, true ).should.equal('blue');
+        });
+      });
+
+      describe("when a token is selected", function() {
+        before(function() {
+          TFT.template = '<input type="text" class="tokenize" value="red,green,blue" />'
+        });
+
+        after(function() {
+          delete TFT.template;
+        });
+
+        it("should activate the previous token in addition to the already active token", function() {
+          this.$wrapper.find('.token')
+              .filter(':has(.token-label:contains(blue))').addClass('active');
+
+          this.$copyHelper.focus()
+                          .simulate("keydown", { keyCode: 37, shiftKey: true })
+                          .simulate("keydown", { keyCode: 37, shiftKey: true });
+          this.$field.tokenfield('getTokensList', null, null, true ).should.equal('red, green, blue');
+        });
+      });
+
+      describe("when multiple, non-adjacent tokens are selected", function() {
+        before(function() {
+          TFT.template = '<input type="text" class="tokenize" value="red,green,blue,yellow,purple" />'
+        });
+
+        after(function() {
+          delete TFT.template;
+        });
+
+        it("should move select the previous token of the leftmost selected token in addition to the already selected tokens", function() {
+          this.$wrapper.find('.token')
+              .filter(':has(.token-label:contains(green))').addClass('active');
+          this.$wrapper.find('.token')
+              .filter(':has(.token-label:contains(yellow))').addClass('active');
+
+          this.$copyHelper.focus().simulate("keydown", { keyCode: 37, shiftKey: true });
+          this.$field.tokenfield('getTokensList', null, null, true ).should.equal('red, green, yellow');
+        });
+      });     
+    });
+
+    describe("Pressing Shift + right arrow key", function() {
+      describe("when a token is selected", function() {
+        before(function() {
+          TFT.template = '<input type="text" class="tokenize" value="red,green,blue" />'
+        });
+
+        after(function() {
+          delete TFT.template;
+        });
+
+        it("should activate the next token in addition to the already active token", function() {
+          this.$wrapper.find('.token')
+              .filter(':has(.token-label:contains(red))').addClass('active');
+
+          this.$copyHelper.focus()
+                          .simulate("keydown", { keyCode: 39, shiftKey: true })
+                          .simulate("keydown", { keyCode: 39, shiftKey: true });
+          this.$field.tokenfield('getTokensList', null, null, true ).should.equal('red, green, blue');
+        });
+      });
+
+      describe("when multiple, non-adjacent tokens are selected", function() {
+        before(function() {
+          TFT.template = '<input type="text" class="tokenize" value="red,green,blue,yellow,purple" />'
+        });
+
+        after(function() {
+          delete TFT.template;
+        });
+
+        it("should move select the next token of the rightmost selected token in addition to the already selected tokens", function() {
+          this.$wrapper.find('.token')
+              .filter(':has(.token-label:contains(green))').addClass('active');
+          this.$wrapper.find('.token')
+              .filter(':has(.token-label:contains(yellow))').addClass('active');
+
+          this.$copyHelper.focus().simulate("keydown", { keyCode: 39, shiftKey: true });
+          this.$field.tokenfield('getTokensList', null, null, true ).should.equal('green, yellow, purple');
+        });
+      });
+    });
+
+    describe("Pressing Enter key", function() {
+      describe("when a token is selected", function() {
+        before(function() {
+          TFT.template = '<input type="text" class="tokenize" value="red,green,blue" />'
+        });
+
+        after(function() {
+          delete TFT.template;
+        });
+
+        it("should enter edit mode for the active token", function() {
+          this.$wrapper.find('.token')
+              .filter(':has(.token-label:contains(green))').addClass('active');
+
+          this.$copyHelper.simulate("key-sequence", { sequence: "{enter}" });
+          this.$input.data('edit').should.be.true;
+          this.$input.prev(':contains(red)').should.have.length(1);
+          this.$input.next(':contains(blue)').should.have.length(1);
+        });
+      });
+
+      describe("when input has text", function() {
+        before(function() {
+          TFT.template = '<input type="text" class="tokenize" value="red,green,blue" />'
+        });
+
+        after(function() {
+          delete TFT.template;
+        });
+
+        it("should create a new token from the input", function() {
+
+          this.$input.simulate("key-sequence", { sequence: "purple{enter}" });
+          this.$field.tokenfield('getTokens').should.have.length(4);
+        });
+      });
+    });
+
+    describe("Pressing Tab key", function() {
+      describe("when input has text", function() {
+        before(function() {
+          TFT.template = '<input type="text" class="tokenize" value="red,green,blue" />'
+        });
+
+        after(function() {
+          delete TFT.template;
+        });
+
+        it("should create a new token from the input", function() {
+
+          this.$input.focus().simulate("key-sequence", { sequence: "purple" });
+          this.$input.simulate("keydown", { keyCode: 9 });
+          this.$field.tokenfield('getTokens').should.have.length(4);
+        });
+      });
+    });
+
+  });
+
+  describe("Mouse interaction", function() {
+
+    describe("Clicking on a token", function() {
+      before(function() {
+        TFT.template = '<input type="text" class="tokenize" value="red,green,blue" />'
+      });
+
+      after(function() {
+        delete TFT.template;
+      });
+
+      it("should select the token and deactivate any other active tokens", function() {
+        this.$wrapper.find('.token')
+            .filter(':has(.token-label:contains(green))').addClass('active');
+
+        this.$wrapper.find('.token:contains(red)').click();
+        this.$field.tokenfield('getTokensList', null, null, true ).should.equal('red');
+      });
+    });
+
+    describe("Clicking on a token's remove icon", function() {
+      before(function() {
+        TFT.template = '<input type="text" class="tokenize" value="red,green,blue" />'
+      });
+
+      after(function() {
+        delete TFT.template;
+      });
+
+      it("should remove the token", function() {                
+        this.$wrapper.find('.token:contains(red)').find('.close').click();
+        this.$field.tokenfield('getTokensList' ).should.equal('green, blue');
+      });
+    });
+
+    describe("Double-clicking on a token", function() {
+      before(function() {
+        TFT.template = '<input type="text" class="tokenize" value="red,green,blue" />'
+      });
+
+      after(function() {
+        delete TFT.template;
+      });
+
+      it("should enter the edit mode of the token", function() {
+        this.$wrapper.find('.token')
+            .filter(':has(.token-label:contains(green))').addClass('active');
+                
+        this.$wrapper.find('.token:contains(red)').dblclick();
+        this.$input.data('edit').should.be.true;
+        this.$input.next(':contains(green)').should.have.length(1);        
+      });
+    });
+
+    describe("Ctrl-clicking on a token when another token is selected", function() {
+      before(function() {
+        TFT.template = '<input type="text" class="tokenize" value="red,green,blue" />'
+      });
+
+      after(function() {
+        delete TFT.template;
+      });
+
+      it("should activate the token in addition to the already active token", function() {
+        this.$wrapper.find('.token')
+            .filter(':has(.token-label:contains(green))').addClass('active');
+                
+        this.$wrapper.find('.token:contains(red)').simulate('click', { ctrlKey: true });
+        this.$field.tokenfield('getTokensList', null, null, true ).should.equal('red, green');
+      });
+    }); 
+
+    describe("Shift-clicking on a token when another token is selected", function() {
+      before(function() {
+        TFT.template = '<input type="text" class="tokenize" value="red,green,blue" />'
+      });
+
+      after(function() {
+        delete TFT.template;
+      });
+
+      it("should activate the token and all the tokens between the already active token", function() {
+        this.$wrapper.find('.token:contains(blue)').simulate('click');
+        this.$wrapper.find('.token:contains(red)').simulate('click', { shiftKey: true });
+        this.$field.tokenfield('getTokensList', null, null, true ).should.equal('red, green, blue');
+      });
+    });
+
   });
 
 });

@@ -796,6 +796,9 @@
       if (e.type !== 'click') {
         if (!direction) var direction = 'prev'
         this[direction]()
+
+        // Was this the first token?
+        if (direction === 'prev') var firstToken = token.first().prevAll('.token:first').length === 0
       }
 
       // Prepare events
@@ -812,8 +815,10 @@
       // Trigger events
       this.$element.val( this.getTokensList() ).trigger( removeEvent ).trigger( changeEvent )
 
-      // Focus, if necessary
-      if (!this.$wrapper.find('.token').length || e.type === 'click') this.$input.focus()
+      // Focus, when necessary:
+      // When there are no more tokens, or if this was the first token
+      // and it was removed with backspace or it was clicked on
+      if (!this.$wrapper.find('.token').length || e.type === 'click' || firstToken) this.$input.focus()
 
       // Adjust input width
       this.$input.css('width', this.options.minWidth + 'px')
