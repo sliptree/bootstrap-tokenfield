@@ -53,7 +53,7 @@
 
     // Create a new input
     var id = this.$element.prop('id') || new Date().getTime() + '' + Math.floor((1 + Math.random()) * 100)
-    this.$input = $('<input type="text" class="token-input" />')
+    this.$input = $('<input type="text" class="token-input" autocomplete="off" />')
                     .appendTo( this.$wrapper )
                     .prop( 'placeholder',  this.$element.prop('placeholder') )
                     .prop( 'id', id + '-tokenfield' )
