@@ -44,16 +44,14 @@ jQuery(document).ready(function($) {
       source: ['red','blue','green','yellow','violet','brown','purple','black','white'],
       delay: 100
     },
-    showAutocompleteOnFocus: true,
-    allowDuplicates: true
+    showAutocompleteOnFocus: true
   });
 
   $('#tokenfield-typeahead').tokenfield({
     typeahead: {
       name: 'tags',
       local: ['red','blue','green','yellow','violet','brown','purple','black','white'],
-    },
-    allowDuplicates: true
+    }
   });
 
   $('#tokenfield-2')

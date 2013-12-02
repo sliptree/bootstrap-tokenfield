@@ -697,6 +697,10 @@ describe('Integration', function() {
         this.$field.tokenfield('getTokensList').should.equal('red, green, blue');
       });
 
+      it("should add duplicate class to the existing token", function() {
+        this.$sandbox.find( '.token[data-value="red"]' ).hasClass('duplicate').should.equal(true);
+      });
+
       it("should keep the duplicate value in the input", function() {
         this.$input.val().should.equal('red');
       });

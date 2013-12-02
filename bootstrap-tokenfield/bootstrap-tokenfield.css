@@ -34,6 +34,28 @@
   border-color: rgba(82, 168, 236, 0.8);
 }
 
+.tokenfield .token.duplicate {
+  border-color: #b94a48;
+  -webkit-animation-direction: normal;
+  -webkit-animation-duration: 0.1s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-name: blink;
+  -webkit-animation-timing-function: ease;    
+}
+
+@-webkit-keyframes 'blink' {
+  0% { border-color: #ededed }
+  100% { border-color: #b94a48 }
+}
+@-moz-keyframes 'blink' {
+  0% { border-color: #ededed }
+  100% { border-color: #b94a48 }
+}
+@keyframes 'blink' {
+  0% { border-color: #ededed }
+  100% { border-color: #b94a48 }
+}
+
 .tokenfield .token .token-label {
   display: inline-block;
   overflow: hidden;

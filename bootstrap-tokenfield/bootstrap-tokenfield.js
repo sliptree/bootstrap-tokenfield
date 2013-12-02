@@ -162,8 +162,13 @@
           value: value,
           label: label
         }
-        this.$element.trigger( duplicateEvent )        
-        return
+        this.$element.trigger( duplicateEvent )
+        // Add duplicate warning class to existing token for 250ms
+        var duplicate = this.$wrapper.find( '.token[data-value="' + value + '"]' ).addClass('duplicate')
+        setTimeout(function() {
+          duplicate.removeClass('duplicate');
+        }, 250)
+        return false
       }
 
       // Allow changing token data before creating it
@@ -362,10 +367,11 @@
           $_menuElement.css( 'min-width', minWidth + 'px' )
         })
         .on('autocompleteselect', function (e, ui) {
-          _self.$input.val('')
-          _self.createToken( ui.item )
-          if (_self.$input.data( 'edit' )) {
-            _self.unedit(true)
+          if (_self.createToken( ui.item )) {
+            _self.$input.val('')
+            if (_self.$input.data( 'edit' )) {
+              _self.unedit(true)
+            }
           }
           return false
         })
@@ -380,10 +386,11 @@
           })
 
           // Create token
-          _self.createToken( datum[valueKey] )
-          _self.$input.typeahead('setQuery', '')
-          if (_self.$input.data( 'edit' )) {
-            _self.unedit(true)
+          if (_self.createToken( datum[valueKey] )) {
+            _self.$input.typeahead('setQuery', '')
+            if (_self.$input.data( 'edit' )) {
+              _self.unedit(true)
+            }
           }
         })
         .on('typeahead:autocompleted', function (e, datum, dataset) {
