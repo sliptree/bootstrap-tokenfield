@@ -642,6 +642,111 @@ describe('Integration', function() {
       });
     });
 
+    describe("Pressing enter with when there is no input", function() {
+      var submitted = false;
+
+      before(function() {
+        TFT.template = '<form method="post" action=""><input type="text" class="tokenize" value="red,green,blue" /><input type="submit"></form>';
+      });
+
+      after(function() {
+        delete TFT.template;
+      });      
+
+      beforeEach(function() {
+        this.$sandbox.find('form').on('submit', function(e) {
+          submitted = true;
+          event.preventDefault();
+          return false;
+        });
+        this.$input.focus().simulate("key-sequence", { sequence: "{enter}" });
+      });
+
+      it("should submit the underlying form", function() {
+        submitted.should.equal(true);
+      });
+    });
+
+  });
+
+  describe("Duplicates", function() {
+    
+    describe("Setting allowDuplicates to false", function() {
+      var submitted = false;
+
+      before(function() {
+        TFT.template = '<form method="post" action=""><input type="text" class="tokenize" value="red,green,blue" /><input type="submit"></form>';
+        TFT.options = { allowDuplicates: false }
+      });
+
+      after(function() {
+        delete TFT.template;
+        delete TFT.options;
+      });
+
+      beforeEach(function() {
+        this.$sandbox.find('form').on('submit', function(e) {
+          submitted = true;
+          event.preventDefault()
+          return false;
+        });      
+        this.$input.focus().simulate("key-sequence", { sequence: "red{enter}" });
+      });
+
+      it("should not create a duplicate token", function() {
+        this.$field.tokenfield('getTokensList').should.equal('red, green, blue');
+      });
+
+      it("should keep the duplicate value in the input", function() {
+        this.$input.val().should.equal('red');
+      });
+
+      it("should not submit the form when pressing enter", function(done) {
+        setTimeout(function() {
+          submitted.should.equal(false);
+          done();
+        }, 1);
+      });
+    });
+    
+    describe("Setting allowDuplicates to true", function() {
+      var submitted = false;
+
+      before(function() {
+        TFT.template = '<form method="post" action=""><input type="text" class="tokenize" value="red,green,blue" /><input type="submit"></form>';
+        TFT.options = { allowDuplicates: true }
+      });
+
+      after(function() {
+        delete TFT.template;
+        delete TFT.options;
+      });
+
+      beforeEach(function() {
+        this.$sandbox.find('form').on('submit', function (event) {
+          submitted = true;
+          event.preventDefault()
+          return false;
+        });
+        this.$input.focus().simulate("key-sequence", { sequence: "red{enter}" });
+      });
+
+      it("should create a duplicate token", function() {
+        this.$field.tokenfield('getTokensList').should.equal('red, green, blue, red');
+      });
+
+      it("should not keep the duplicate value in the input", function() {
+        this.$input.val().should.equal('');
+      });
+
+      it("should not submit the form when pressing enter", function(done) {
+        setTimeout(function() {
+          submitted.should.equal(false);
+          done();
+        }, 1);
+      });
+    });
+
   });
 
 });

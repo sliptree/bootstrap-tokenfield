@@ -401,7 +401,7 @@
 
   , keydown: function (e) {
 
-      if (!this.focused) return
+      if (!this.focused) return        
 
       switch(e.keyCode) {
         case 8: // backspace
@@ -500,18 +500,21 @@
           break
 
         case 9: // tab
-        case 13: // enter
+        case 13: // enter     
 
           // We will handle creating tokens from autocomplete in autocomplete events
           if (this.$input.data('ui-autocomplete') && this.$input.data('ui-autocomplete').menu.element.find("li:has(a.ui-state-focus)").length) break
+          
           // We will handle creating tokens from typeahead in typeahead events
           if (this.$input.hasClass('tt-query') && this.$wrapper.find('.tt-is-under-cursor').length ) break
           if (this.$input.hasClass('tt-query') && this.$wrapper.find('.tt-hint').val().length) break
           
           // Create token
           if (this.$input.is(document.activeElement) && this.$input.val().length || this.$input.data('edit')) {
-            this.createTokensFromInput(e, this.$input.data('edit'))
+            return this.createTokensFromInput(e, this.$input.data('edit'));
           }
+
+          // Edit token
           if (e.keyCode === 13) {
             if (!this.$copyHelper.is(document.activeElement) || this.$wrapper.find('.token.active').length !== 1) break
             this.edit( this.$wrapper.find('.token.active') )
@@ -610,11 +613,14 @@
     }
 
   , createTokensFromInput: function (e, focus) {
-      if (this.$input.val().length < this.options.minLength) return
+      if (this.$input.val().length < this.options.minLength)
+        return // No input, simply return
 
       var tokensBefore = this.getTokensList()
       this.setTokens( this.$input.val(), true )
-      if (tokensBefore == this.getTokensList() && this.$input.val().length) return // No tokens were added, do nothing
+      
+      if (tokensBefore == this.getTokensList() && this.$input.val().length)
+        return false // No tokens were added, do nothing (prevent form submit)
 
       if (this.$input.hasClass('tt-query')) {
         // Typeahead acts weird when simply setting input value to empty,
@@ -628,8 +634,7 @@
         this.unedit(focus)
       }
 
-      e.preventDefault()
-      e.stopPropagation()
+      return false // Prevent form being submitted
     }  
 
   , next: function (add) {
