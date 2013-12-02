@@ -194,16 +194,10 @@ $('.tokenfield').tokenfield()
                       <td>Whether to turn input into tokens when tokenfield loses focus or not.</td>
                     </tr>
                     <tr>
-                      <td>triggerKeys</td>
+                      <td>delimiters</td>
                       <td>array</td>
-                      <td><code>[44]</code></td>
-                      <td>An array of character codes that will trigger token creation on keypress event. Defaults to [44] (comma). Note - this does not affect Enter or Tab keys, as they are handled in the keydown event.</td>
-                    </tr>
-                    <tr>
-                      <td>separator</td>
-                      <td>string</td>
-                      <td><code>, </code></td>
-                      <td>A separator string to be used when getting the tokens via <code>$('#my-field').val()</code> or <code>$('#my-field').tokenfield('getTokensList')</code>. For example, when you set <code>triggerKeys: false</code>, you should probably use something other than a comma as a separator, perhaps a semicolon: <code>; </code></td>
+                      <td><code>[',']</code></td>
+                      <td>An array of characters that will trigger token creation on keypress event. Defaults to [','] (comma). Note - this does not affect Enter or Tab keys, as they are handled in the keydown event. The first delimiter will be used as a separator when getting the list of tokens or copy-pasting tokens.</td>
                     </tr>
                   </tbody>
                 </table>
