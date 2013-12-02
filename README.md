@@ -23,6 +23,7 @@ Check out the [demo and docs](http://sliptree.github.io/bootstrap-tokenfield/)
 * Fixed: Entering a duplicate token does not submit the underlying form anymore
 * Fixed: Selecting a duplicate token from autocomplete or typeahead suggestions no longer clears the input
 * Improved: Trying to enter a duplicate tag now animates the existing tag for a little while
+* Improved: Tokenfield input has now `autocomplete="off"` to prevent browser-specific autocomplete suggestions
 * Changed: `triggerKeys` has been renamed to `delimiter` and accepts a single or an array of characters instead of character codes.
 
 0.9.9-1
