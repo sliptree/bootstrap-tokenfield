@@ -159,6 +159,20 @@
 
       if (!value.length || !label.length || value.length < this.options.minLength) return
 
+      // Allow changing token data before creating it
+      var beforeCreateEvent = $.Event('beforeCreateToken')
+      beforeCreateEvent.token = {
+        value: value,
+        label: label
+      }
+      this.$element.trigger( beforeCreateEvent )
+
+      if (!beforeCreateEvent.token) return
+
+      value = beforeCreateEvent.token.value
+      label = beforeCreateEvent.token.label
+
+      // Check for duplicates
       if (!this.options.allowDuplicates && $.grep(this.getTokens(), function (token) {
         return token.value === value
       }).length) {
@@ -175,20 +189,7 @@
           duplicate.removeClass('duplicate');
         }, 250)
         return false
-      }
-
-      // Allow changing token data before creating it
-      var beforeCreateEvent = $.Event('beforeCreateToken')
-      beforeCreateEvent.token = {
-        value: value,
-        label: label
-      }
-      this.$element.trigger( beforeCreateEvent )
-
-      if (!beforeCreateEvent.token) return
-
-      value = beforeCreateEvent.token.value
-      label = beforeCreateEvent.token.label
+      }      
 
       var token = $('<div class="token" />')
             .attr('data-value', value)
