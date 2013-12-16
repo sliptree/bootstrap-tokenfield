@@ -38,6 +38,28 @@ describe('initializing tokenfield', function() {
 
   });
 
+  describe('with RTL', function() {
+    before(function() {
+      TFT.template = '<input type="text" class="tokenize" style="direction:rtl" value="red,green, blue" />';
+    });
+
+    after(function() {
+      TFT.template = null;
+    });
+
+    it('should set rtl class on tokenfield', function() {
+      this.$wrapper.hasClass('rtl').should.equal(true);
+    });
+
+    it('should place the original input and copyHelper input to the right', function() {
+      this.$field.css('position').should.equal('absolute');
+      this.$field.css('right').should.equal('-10000px');
+      this.$copyHelper.css('position').should.equal('absolute');
+      this.$copyHelper.css('right').should.equal('-10000px');
+      this.$wrapper.offset().left.should.be.below(this.$field.offset().left);
+    });  
+  })
+
 });
 
 describe('Tokenfield public methods', function() {

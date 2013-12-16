@@ -169,3 +169,16 @@
   margin-bottom: 6px;
   vertical-align: top;
 }
+
+/* RTL */
+.tokenfield.rtl {
+  direction: rtl;
+  text-align: right;
+}
+.tokenfield.rtl .token {
+  margin: -1px 0 5px 5px;
+}
+.tokenfield.rtl .token .token-label {
+  padding-left: 0px;
+  padding-right: 4px;
+}

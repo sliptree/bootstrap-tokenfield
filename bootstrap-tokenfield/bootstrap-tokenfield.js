@@ -22,7 +22,8 @@
     var _self = this
 
     this.$element = $(element)
-    
+    this.direction = this.$element.css('direction') === 'ltr' ? 'left' : 'right'
+
     // Extend options
     this.options = $.extend({}, $.fn.tokenfield.defaults, { tokens: this.$element.val() }, options)
     
@@ -47,15 +48,13 @@
     }
 
     // Move original input out of the way
-    this.$element.css({
-      'position': 'absolute',
-      'left': '-10000px'
-    }).prop('tabindex', -1);
+    this.$element.css('position', 'absolute').css(this.direction, '-10000px').prop('tabindex', -1)
 
     // Create a wrapper
     this.$wrapper = $('<div class="tokenfield form-control" />')
     if (this.$element.hasClass('input-lg')) this.$wrapper.addClass('input-lg')
     if (this.$element.hasClass('input-sm')) this.$wrapper.addClass('input-sm')
+    if (this.direction === 'right') this.$wrapper.addClass('rtl')
 
     // Create a new input
     var id = this.$element.prop('id') || new Date().getTime() + '' + Math.floor((1 + Math.random()) * 100)
@@ -71,10 +70,7 @@
     }
 
     // Set up a copy helper to handle copy & paste
-    this.$copyHelper = $('<input type="text" />').css({
-      'position': 'absolute',
-      'left': '-10000px'
-    }).prop('tabindex', -1).prependTo( this.$wrapper )
+    this.$copyHelper = $('<input type="text" />').css('position', 'absolute').css(this.direction, '-10000px').prop('tabindex', -1).prependTo( this.$wrapper )
     
     // Set wrapper width
     if (elStyleWidth) {
@@ -127,7 +123,7 @@
     if ( ! $.isEmptyObject( this.options.autocomplete ) ) {
       var autocompleteOptions = $.extend({}, this.options.autocomplete, {
         minLength: this.options.showAutocompleteOnFocus ? 0 : null,
-        position: { my: "left top", at: "left bottom", of: this.$wrapper }
+        position: { my: this.direction + " top", at: this.direction + " bottom", of: this.$wrapper }
       })
       this.$input.autocomplete( autocompleteOptions )
     }
@@ -868,7 +864,10 @@
       }
       else {
         this.$input.css( 'width', this.options.minWidth + 'px' )
-        this.$input.width( this.$wrapper.offset().left + this.$wrapper.width() - this.$input.offset().left + 5 )
+        if (this.direction === 'right') {
+          return this.$input.width( this.$input.offset().left + this.$input.outerWidth() - this.$wrapper.offset().left - parseInt(this.$wrapper.css('padding-left'), 10) - 1 )
+        }
+        this.$input.width( this.$wrapper.offset().left + this.$wrapper.width() + parseInt(this.$wrapper.css('padding-left'), 10) - this.$input.offset().left + 1 )
       }
     }
 
