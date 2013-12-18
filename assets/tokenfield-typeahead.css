@@ -2,6 +2,7 @@
 .twitter-typeahead {
   width: 100%;
   position: relative;
+  vertical-align: top;
 }
 .twitter-typeahead .tt-query,
 .twitter-typeahead .tt-hint {
