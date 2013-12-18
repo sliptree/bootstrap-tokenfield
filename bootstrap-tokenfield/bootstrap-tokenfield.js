@@ -869,7 +869,7 @@
         if (this.direction === 'right') {
           return this.$input.width( this.$input.offset().left + this.$input.outerWidth() - this.$wrapper.offset().left - parseInt(this.$wrapper.css('padding-left'), 10) - 1 )
         }
-        this.$input.width( this.$wrapper.offset().left + this.$wrapper.width() + parseInt(this.$wrapper.css('padding-left'), 10) - this.$input.offset().left + 1 )
+        this.$input.width( this.$wrapper.offset().left + this.$wrapper.width() + parseInt(this.$wrapper.css('padding-left'), 10) - this.$input.offset().left )
       }
     }
 
