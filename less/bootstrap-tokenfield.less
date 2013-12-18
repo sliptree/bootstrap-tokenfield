@@ -8,6 +8,12 @@
   .box-shadow(~"inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px @{color-rgba}");
 }
 
+.tokenfield-validation(@border-color) {
+  border-color: darken(@border-color, 10%);
+  @shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px lighten(@border-color, 20%);
+  .box-shadow(@shadow);
+}
+
 .tokenfield {
   height: auto;
   min-height: @input-height-base;
@@ -15,6 +21,15 @@
 }
 .tokenfield.focus {
   .tokenfield-focus();
+}
+.has-warning .tokenfield.focus {
+  .tokenfield-validation(@state-warning-text);
+}
+.has-error .tokenfield.focus {
+  .tokenfield-validation(@state-danger-text);
+}
+.has-success .tokenfield.focus {
+  .tokenfield-validation(@state-success-text);
 }
 
 .tokenfield .token {
