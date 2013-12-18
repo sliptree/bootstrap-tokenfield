@@ -48,10 +48,8 @@
     }
 
     // Move original input out of the way
-    this.$element.css({
-      'position': 'absolute',
-      'left': '-10000px'
-    }).prop('tabindex', -1)
+    var hidingPosition = $('body').css('direction') === 'rtl' ? 'right' : 'left';
+    this.$element.css('position', 'absolute').css(hidingPosition, '-10000px').prop('tabindex', -1)
 
     // Create a wrapper
     this.$wrapper = $('<div class="tokenfield form-control" />')
@@ -73,10 +71,7 @@
     }
 
     // Set up a copy helper to handle copy & paste
-    this.$copyHelper = $('<input type="text" />').css({
-      'position': 'absolute',
-      'left': '-10000px'
-    }).prop('tabindex', -1).prependTo( this.$wrapper )
+    this.$copyHelper = $('<input type="text" />').css('position', 'absolute').css(hidingPosition, '-10000px').prop('tabindex', -1).prependTo( this.$wrapper )
     
     // Set wrapper width
     if (elStyleWidth) {
