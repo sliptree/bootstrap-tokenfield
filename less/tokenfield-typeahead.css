@@ -136,10 +136,7 @@
   border: 1px solid rgba(0, 0, 0, 0.15);
   *border-right-width: 2px;
   *border-bottom-width: 2px;
-  border-top-right-radius: 6px;
-  border-top-left-radius: 6px;
-  border-bottom-right-radius: 6px;
-  border-bottom-left-radius: 6px;
+  border-radius: 6px;
   -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
   -webkit-background-clip: padding-box;
