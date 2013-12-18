@@ -1,4 +1,5 @@
 module.exports = function (grunt) {
+
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     
@@ -76,6 +77,7 @@ module.exports = function (grunt) {
         files: ['dist/**/*'],
       }
     }
+
   });
 
   grunt.loadNpmTasks('grunt-contrib-copy');
@@ -83,6 +85,8 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-jekyll');
+  grunt.loadNpmTasks('grunt-sed');
 
+  // Build task
   grunt.registerTask('build', ['copy', 'uglify', 'less']);
 }

@@ -1,6 +1,6 @@
 {
   "name": "bootstrap-tokenfield",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "main": [
     "dist/bootstrap-tokenfield.js",
     "dist/bootstrap-tokenfield.css"
