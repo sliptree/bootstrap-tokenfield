@@ -1,0 +1,187 @@
+@import "../bower_components/bootstrap/less/mixins.less";
+@import "../bower_components/bootstrap/less/variables.less";
+
+/* General Typeahead styling, from http://jsfiddle.net/ragulka/Dy9au/1/ */
+.twitter-typeahead {
+  width: 100%;
+  position: relative;
+  vertical-align: top;
+}
+.twitter-typeahead .tt-query,
+.twitter-typeahead .tt-hint {
+  margin: 0;
+  width: 100%;
+  color: @input-color;
+  vertical-align: middle;
+  background-color: @input-bg;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  -webkit-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+  transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+}
+.has-warning .twitter-typeahead .tt-query,
+.has-warning .twitter-typeahead .tt-hint {
+  border-color: #c09853;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+.has-error .twitter-typeahead .tt-query,
+.has-error .twitter-typeahead .tt-hint {
+  border-color: #b94a48;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+.has-success .twitter-typeahead .tt-query,
+.has-success .twitter-typeahead .tt-hint {
+  border-color: #468847;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+.twitter-typeahead .tt-query:focus,
+.twitter-typeahead .tt-hint:focus {
+  border-color: #66afe9;
+  outline: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+}
+.has-warning .twitter-typeahead .tt-query:focus,
+.has-warning .twitter-typeahead .tt-hint:focus {
+  border-color: #a47e3c;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #dbc59e;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #dbc59e;
+}
+.has-error .twitter-typeahead .tt-query:focus,
+.has-error .twitter-typeahead .tt-hint:focus {
+  border-color: #953b39;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
+}
+.has-success .twitter-typeahead .tt-query:focus,
+.has-success .twitter-typeahead .tt-hint:focus {
+  border-color: #356635;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #7aba7b;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #7aba7b;
+}
+.twitter-typeahead .tt-hint {
+  color: @input-color-placeholder;
+  z-index: 1;
+  border: 1px solid transparent;
+}
+.twitter-typeahead .tt-query {
+  z-index: 2;
+}
+.twitter-typeahead .tt-query,
+.twitter-typeahead .tt-hint {
+  height: @input-height-base;
+  padding: @padding-base-vertical @padding-base-horizontal;
+  font-size: 14px;
+  line-height: 1.428571429;
+}
+.twitter-typeahead .input-sm.tt-query,
+.twitter-typeahead .hint-sm.tt-hint {
+  border-radius: 3px;
+}
+.twitter-typeahead .input-lg.tt-query,
+.twitter-typeahead .hint-lg.tt-hint {
+  border-radius: 6px;
+}
+.input-group .twitter-typeahead:first-child .tt-query,
+.input-group .twitter-typeahead:first-child .tt-hint {
+  border-radius: 4px 0 0 4px !important;
+}
+.input-group .twitter-typeahead:last-child .tt-query,
+.input-group .twitter-typeahead:last-child .tt-hint {
+  border-radius: 0 4px 4px 0 !important;
+}
+.input-group.input-group-sm .twitter-typeahead:first-child .tt-query,
+.input-group.input-group-sm .twitter-typeahead:first-child .tt-hint {
+  border-radius: 3px 0 0 3px !important;
+}
+.input-group.input-group-sm .twitter-typeahead:last-child .tt-query,
+.input-group.input-group-sm .twitter-typeahead:last-child .tt-hint {
+  border-radius: 0 3px 3px 0 !important;
+}
+.input-sm.tt-query,
+.hint-sm.tt-hint,
+.input-group.input-group-sm .tt-query,
+.input-group.input-group-sm .tt-hint {
+  height: 30px;
+  padding: 5px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.input-group.input-group-lg .twitter-typeahead:first-child .tt-query,
+.input-group.input-group-lg .twitter-typeahead:first-child .tt-hint {
+  border-radius: 6px 0 0 6px !important;
+}
+.input-group.input-group-lg .twitter-typeahead:last-child .tt-query,
+.input-group.input-group-lg .twitter-typeahead:last-child .tt-hint {
+  border-radius: 0 6px 6px 0 !important;
+}
+.input-lg.tt-query,
+.hint-lg.tt-hint,
+.input-group.input-group-lg .tt-query,
+.input-group.input-group-lg .tt-hint {
+  height: 45px;
+  padding: 10px 16px;
+  font-size: 18px;
+  line-height: 1.33;
+}
+.tt-dropdown-menu {
+  width: 100%;
+  min-width: 160px;
+  margin-top: 2px;
+  padding: 5px 0;
+  background-color: @dropdown-bg;
+  border: 1px solid #ccc;
+  border: 1px solid @dropdown-border;
+  *border-right-width: 2px;
+  *border-bottom-width: 2px;
+  .border-top-radius(6px);
+  .border-bottom-radius(6px);
+  .box-shadow(0 5px 10px rgba(0, 0, 0, .2));
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+}
+.tt-suggestion {
+  display: block;
+  padding: 3px 20px;
+}
+.tt-suggestion.tt-is-under-cursor {
+  color: @dropdown-link-hover-color;
+  #gradient > .vertical(@dropdown-link-hover-bg, darken(@dropdown-link-hover-bg, 5%));
+}
+.tt-suggestion.tt-is-under-cursor a {
+  color: @dropdown-bg;
+}
+.tt-suggestion p {
+  margin: 0;
+}
+
+/* Tokenfield-specific Typeahead styling */
+.tokenfield .twitter-typeahead {
+  width: auto;
+}
+.tokenfield .twitter-typeahead .tt-hint {
+  padding: 0;
+  margin-left: -1px;
+  height: 20px;
+}
+.tokenfield.input-sm .twitter-typeahead .tt-query,
+.tokenfield.input-sm .twitter-typeahead .tt-hint {
+  height: 18px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.tokenfield.input-lg .twitter-typeahead .tt-query,
+.tokenfield.input-lg .twitter-typeahead .tt-hint {
+  height: 23px;
+  font-size: 18px;
+  line-height: 1.33;
+}
+.tokenfield .twitter-typeahead .tt-suggestions {
+  font-size: 14px;
+}

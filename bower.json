@@ -7,6 +7,7 @@
   },
   "devDependecies": {
     "mocha": "~1.12.*",
-    "chai": "~1.7.*"
+    "chai": "~1.7.*",
+    "bootstrap": "~3.*"
   }
 }
