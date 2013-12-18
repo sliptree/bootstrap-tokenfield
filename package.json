@@ -1,0 +1,19 @@
+{
+  "name": "bootstrap-tokenfield",
+  "version": "0.10.0",
+  "description": "Advanced tagging/tokenizing plugin for input fields with a focus on keyboard and copy-paste support.",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/sliptree/bootstrap-tokenfield.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sliptree/bootstrap-tokenfield/issues"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.2",
+    "grunt-less": "~0.1.7",
+    "grunt-contrib-less": "~0.8.3",
+    "grunt-contrib-uglify": "~0.2.7",
+    "grunt-contrib-copy": "~0.4.1"
+  }
+}
