@@ -319,6 +319,22 @@ describe('Integration', function() {
           this.$field.tokenfield('getTokensList', null, null, true ).should.equal('red');
         });
       });
+
+      describe("when no tokens are selected and direction is RTL", function() {
+        before(function() {
+          TFT.template = '<input type="text" class="tokenize" value="red,green,blue" style="direction:rtl" />'
+        });
+
+        after(function() {
+          delete TFT.template;
+        });
+
+        it("should keep the focus on the input", function() {
+          this.$input.simulate("key-sequence", { sequence: "{leftarrow}" });
+          this.$field.tokenfield('getTokensList', null, null, true ).should.equal('');          
+          this.$input.is(document.activeElement).should.be.true;
+        });
+      });
     });
 
     describe("Pressing right arrow key", function() {
@@ -394,6 +410,21 @@ describe('Integration', function() {
           this.$input.is(document.activeElement).should.be.true;
         });
       });
+
+      describe("when no tokens are selected and direction is RTL", function() {
+        before(function() {
+          TFT.template = '<input type="text" class="tokenize" value="red,green,blue" style="direction:rtl" />'
+        });
+
+        after(function() {
+          delete TFT.template;
+        });
+
+        it("should move focus to the last token", function() {
+          this.$input.simulate("key-sequence", { sequence: "{rightarrow}" });
+          this.$field.tokenfield('getTokensList', null, null, true ).should.equal('blue');
+        });
+      });      
     });
 
     describe("Pressing Shift + left arrow key", function() {

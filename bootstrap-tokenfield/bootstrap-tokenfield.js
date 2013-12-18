@@ -22,7 +22,7 @@
     var _self = this
 
     this.$element = $(element)
-    this.direction = this.$element.css('direction') === 'ltr' ? 'left' : 'right'
+    this.textDirection = this.$element.css('direction');
 
     // Extend options
     this.options = $.extend({}, $.fn.tokenfield.defaults, { tokens: this.$element.val() }, options)
@@ -48,13 +48,16 @@
     }
 
     // Move original input out of the way
-    this.$element.css('position', 'absolute').css(this.direction, '-10000px').prop('tabindex', -1)
+    this.$element.css({
+      'position': 'absolute',
+      'left': '-10000px'
+    }).prop('tabindex', -1)
 
     // Create a wrapper
     this.$wrapper = $('<div class="tokenfield form-control" />')
     if (this.$element.hasClass('input-lg')) this.$wrapper.addClass('input-lg')
     if (this.$element.hasClass('input-sm')) this.$wrapper.addClass('input-sm')
-    if (this.direction === 'right') this.$wrapper.addClass('rtl')
+    if (this.textDirection === 'rtl') this.$wrapper.addClass('rtl')
 
     // Create a new input
     var id = this.$element.prop('id') || new Date().getTime() + '' + Math.floor((1 + Math.random()) * 100)
@@ -70,7 +73,10 @@
     }
 
     // Set up a copy helper to handle copy & paste
-    this.$copyHelper = $('<input type="text" />').css('position', 'absolute').css(this.direction, '-10000px').prop('tabindex', -1).prependTo( this.$wrapper )
+    this.$copyHelper = $('<input type="text" />').css({
+      'position': 'absolute',
+      'left': '-10000px'
+    }).prop('tabindex', -1).prependTo( this.$wrapper )
     
     // Set wrapper width
     if (elStyleWidth) {
@@ -121,9 +127,10 @@
 
     // Initialize autocomplete, if necessary
     if ( ! $.isEmptyObject( this.options.autocomplete ) ) {
+      var side = this.textDirection === 'rtl' ? 'right' : 'left'
       var autocompleteOptions = $.extend({}, this.options.autocomplete, {
         minLength: this.options.showAutocompleteOnFocus ? 0 : null,
-        position: { my: this.direction + " top", at: this.direction + " bottom", of: this.$wrapper }
+        position: { my: side + " top", at: side + " bottom", of: this.$wrapper }
       })
       this.$input.autocomplete( autocompleteOptions )
     }
@@ -413,7 +420,9 @@
 
   , keydown: function (e) {
 
-      if (!this.focused) return        
+      if (!this.focused) return
+
+      var _self = this
 
       switch(e.keyCode) {
         case 8: // backspace
@@ -422,87 +431,19 @@
           break
 
         case 37: // left arrow
-          if (this.$input.is(document.activeElement)) {
-            if (this.$input.val().length > 0) break
-
-            var prev = this.$input.hasClass('tt-query') ? this.$input.parent().prevAll('.token:first') : this.$input.prevAll('.token:first')
-
-            if (!prev.length) break
-
-            this.preventInputFocus = true
-            this.preventDeactivation = true
-
-            this.activate( prev )
-            e.preventDefault()
-
-          } else {
-
-            this.prev( e.shiftKey )
-            e.preventDefault()
-          }
+          leftRight( this.textDirection === 'rtl' ? 'next': 'prev' )
           break
 
         case 38: // up arrow
-          if (!e.shiftKey) return
-
-          if (this.$input.is(document.activeElement)) {
-            if (this.$input.val().length > 0) break
-
-            var prev = this.$input.hasClass('tt-query') ? this.$input.parent().prevAll('.token:last') : this.$input.prevAll('.token:last')
-            if (!prev.length) return
-
-            this.activate( prev )
-          }
-
-          var _self = this
-          this.firstActiveToken.nextAll('.token').each(function() {
-            _self.deactivate( $(this) )
-          })
-
-          this.activate( this.$wrapper.find('.token:first'), true, true )
-          e.preventDefault()
+          upDown('prev')
           break
 
         case 39: // right arrow
-          if (this.$input.is(document.activeElement)) {
-
-            if (this.$input.val().length > 0) break
-            
-            var next = this.$input.hasClass('tt-query') ? this.$input.parent().nextAll('.token:first') : this.$input.nextAll('.token:first')
-
-            if (!next.length) break
-
-            this.preventInputFocus = true
-            this.preventDeactivation = true
-
-            this.activate( next )
-            e.preventDefault()              
-
-          } else {
-            this.next( e.shiftKey )
-            e.preventDefault()
-          }
+          leftRight( this.textDirection === 'rtl' ? 'prev': 'next' )
           break
 
         case 40: // down arrow
-          if (!e.shiftKey) return
-
-          if (this.$input.is(document.activeElement)) {
-            if (this.$input.val().length > 0) break
-
-            var next = this.$input.hasClass('tt-query') ? this.$input.parent().nextAll('.token:first') : this.$input.nextAll('.token:first')
-            if (!next.length) return
-
-            this.activate( next )
-          }
-
-          var _self = this
-          this.firstActiveToken.prevAll('.token').each(function() {
-            _self.deactivate( $(this) )
-          })          
-
-          this.activate( this.$wrapper.find('.token:last'), true, true )
-          e.preventDefault()
+          upDown('next')
           break        
 
         case 65: // a (to handle ctrl + a)
@@ -531,6 +472,49 @@
             if (!this.$copyHelper.is(document.activeElement) || this.$wrapper.find('.token.active').length !== 1) break
             this.edit( this.$wrapper.find('.token.active') )
           }
+      }
+
+      function leftRight(direction) {
+        if (_self.$input.is(document.activeElement)) {
+          if (_self.$input.val().length > 0) return
+
+          direction += 'All'
+          var token = _self.$input.hasClass('tt-query') ? _self.$input.parent()[direction]('.token:first') : _self.$input[direction]('.token:first')
+          if (!token.length) return
+
+          _self.preventInputFocus = true
+          _self.preventDeactivation = true
+
+          _self.activate( token )
+          e.preventDefault()
+
+        } else {
+          _self[direction]( e.shiftKey )
+          e.preventDefault()
+        }
+      }
+
+      function upDown(direction) {
+        if (!e.shiftKey) return
+
+        if (_self.$input.is(document.activeElement)) {
+          if (_self.$input.val().length > 0) return
+
+          var token = _self.$input.hasClass('tt-query') ? _self.$input.parent()[direction + 'All']('.token:first') : _self.$input[direction + 'All']('.token:first')
+          if (!token.length) return
+
+          _self.activate( token )
+        }
+
+        var opposite = direction === 'prev' ? 'next' : 'prev'
+          , position = direction === 'prev' ? 'first' : 'last'
+
+        _self.firstActiveToken[opposite + 'All']('.token').each(function() {
+          _self.deactivate( $(this) )
+        })
+
+        _self.activate( _self.$wrapper.find('.token:' + position), true, true )
+        e.preventDefault()
       }
 
       this.lastKeyDown = e.keyCode
@@ -866,7 +850,7 @@
       }
       else {
         this.$input.css( 'width', this.options.minWidth + 'px' )
-        if (this.direction === 'right') {
+        if (this.textDirection === 'rtl') {
           return this.$input.width( this.$input.offset().left + this.$input.outerWidth() - this.$wrapper.offset().left - parseInt(this.$wrapper.css('padding-left'), 10) - 1 )
         }
         this.$input.width( this.$wrapper.offset().left + this.$wrapper.width() + parseInt(this.$wrapper.css('padding-left'), 10) - this.$input.offset().left )

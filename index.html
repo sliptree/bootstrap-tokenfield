@@ -156,6 +156,12 @@ $('.tokenfield').tokenfield()
                       <td>Whether to allow duplicate tokens or not. A token is considered a duplicated if it's value matches an existing token's value. Therefore, it is possible to enter multiple tokens with the same label, if their values are diefferent.</td>
                     </tr>
                     <tr>
+                      <td>limit</td>
+                      <td>int</td>
+                      <td><code>0</code></td>
+                      <td>Maximum number of tokens allowed. 0 = unlimited.</td>
+                    </tr>
+                    <tr>
                       <td>minLength</td>
                       <td>int</td>
                       <td><code>0</code></td>
@@ -552,6 +558,12 @@ $('#tokenfield')
                   <label for="example-fixed-tokenfield-2">Width: 400px (inline)</label>>
                   <input type="text" id="example-fixed-tokenfield-2" class="form-control token-example-field" value="red,green,blue" style="width:400px;" />
                 </div>
+              </form>
+              
+              <p>Tokenfield with RTL direction</p>
+
+              <form class="bs-example bs-example-form" role="form">
+                <input type="text" class="form-control token-example-field" value="red,green,blue" style="direction:rtl" />
               </form>
 
         </div>
