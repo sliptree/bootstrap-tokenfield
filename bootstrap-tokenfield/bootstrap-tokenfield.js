@@ -155,6 +155,8 @@
 
       if (!value.length || !label.length || value.length < this.options.minLength) return
 
+      if (this.options.limit && this.getTokens().length >= this.options.limit) return
+
       // Allow changing token data before creating it
       var beforeCreateEvent = $.Event('beforeCreateToken')
       beforeCreateEvent.token = {
@@ -938,6 +940,7 @@
     minWidth: 60,
     minLength: 0,
     allowDuplicates: false,
+    limit: 0,
     autocomplete: {},
     typeahead: {},
     showAutocompleteOnFocus: false,
