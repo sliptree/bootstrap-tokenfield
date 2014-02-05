@@ -1,4 +1,5 @@
 _site
 bower_components
+node_modules
 *.sublime-project
 *.sublime-workspace
