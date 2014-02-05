@@ -1,12 +1,17 @@
 {
   "name": "bootstrap-tokenfield",
-  "version": "0.10.0",
-  "main": ["bootstrap-tokenfield/bootstrap-tokenfield.js","bootstrap-tokenfield/bootstrap-tokenfield.css"],
+  "version": "0.11.0",
+  "main": [
+    "dist/bootstrap-tokenfield.js",
+    "dist/bootstrap-tokenfield.css"
+  ],
   "dependencies": {
-    "jquery": "~1.9.x"
+    "jquery": "~1.9.x",
+    "bootstrap": "~3.0.*"
   },
   "devDependecies": {
     "mocha": "~1.12.*",
-    "chai": "~1.7.*"
+    "chai": "~1.7.*",
+    "typeahead.js": "~0.9.3"
   }
 }

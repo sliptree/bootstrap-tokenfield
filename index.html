@@ -18,12 +18,12 @@ title: Tokenfield for Bootstrap
     <!-- jQuery UI CSS -->
     <link href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" type="text/css" rel="stylesheet">
     <!-- Bootstrap styling for Typeahead -->
-    <link href="assets/tokenfield-typeahead.css" type="text/css" rel="stylesheet">
+    <link href="dist/css/tokenfield-typeahead.css" type="text/css" rel="stylesheet">
     <!-- Tokenfield CSS -->
-    <link href="bootstrap-tokenfield/bootstrap-tokenfield.css" type="text/css" rel="stylesheet">
+    <link href="dist/css/bootstrap-tokenfield.css" type="text/css" rel="stylesheet">
     <!-- Docs CSS -->
-    <link href="assets/pygments-manni.css" type="text/css" rel="stylesheet">
-    <link href="assets/docs.css" type="text/css" rel="stylesheet">
+    <link href="docs-assets/css/pygments-manni.css" type="text/css" rel="stylesheet">
+    <link href="docs-assets/css/docs.css" type="text/css" rel="stylesheet">
 
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -154,6 +154,12 @@ $('.tokenfield').tokenfield()
                       <td>boolean</td>
                       <td><code>false</code></td>
                       <td>Whether to allow duplicate tokens or not. A token is considered a duplicated if it's value matches an existing token's value. Therefore, it is possible to enter multiple tokens with the same label, if their values are diefferent.</td>
+                    </tr>
+                    <tr>
+                      <td>limit</td>
+                      <td>int</td>
+                      <td><code>0</code></td>
+                      <td>Maximum number of tokens allowed. 0 = unlimited.</td>
                     </tr>
                     <tr>
                       <td>minLength</td>
@@ -554,6 +560,12 @@ $('#tokenfield')
                   <input type="text" id="example-fixed-tokenfield-2" class="form-control token-example-field" value="red,green,blue" style="width:400px;" />
                 </div>
               </form>
+              
+              <p>Tokenfield with RTL direction</p>
+
+              <form class="bs-example bs-example-form" role="form">
+                <input type="text" class="form-control token-example-field" value="red,green,blue" style="direction:rtl" />
+              </form>
 
         </div>
 
@@ -594,11 +606,11 @@ $('#tokenfield')
 
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
     <script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-    <script type="text/javascript" src="bootstrap-tokenfield/bootstrap-tokenfield.js" charset="UTF-8"></script>   
-    <script type="text/javascript" src="assets/scrollspy.js" charset="UTF-8"></script>   
-    <script type="text/javascript" src="assets/affix.js" charset="UTF-8"></script>   
-    <script type="text/javascript" src="assets/typeahead.min.js" charset="UTF-8"></script>   
-    <script type="text/javascript" src="assets/docs.min.js" charset="UTF-8"></script>   
+    <script type="text/javascript" src="dist/bootstrap-tokenfield.js" charset="UTF-8"></script>   
+    <script type="text/javascript" src="docs-assets/js/scrollspy.js" charset="UTF-8"></script>   
+    <script type="text/javascript" src="docs-assets/js/affix.js" charset="UTF-8"></script>   
+    <script type="text/javascript" src="docs-assets/js/typeahead.js" charset="UTF-8"></script>   
+    <script type="text/javascript" src="docs-assets/js/docs.min.js" charset="UTF-8"></script>   
 
     <script type="text/javascript">
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

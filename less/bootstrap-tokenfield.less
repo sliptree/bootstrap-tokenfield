@@ -1,26 +1,48 @@
+@import "../bower_components/bootstrap/less/mixins.less";
+@import "../bower_components/bootstrap/less/variables.less";
+
+.tokenfield-focus(@color: @input-border-focus) {
+  @color-rgba: rgba(red(@color), green(@color), blue(@color), .6);
+  border-color: @color;
+  outline: 0;
+  .box-shadow(~"inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px @{color-rgba}");
+}
+
+.tokenfield-validation(@border-color) {
+  border-color: darken(@border-color, 10%);
+  @shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px lighten(@border-color, 20%);
+  .box-shadow(@shadow);
+}
+
 .tokenfield {
   height: auto;
-  min-height: 34px;
+  min-height: @input-height-base;
   padding-bottom: 0px;
 }
 .tokenfield.focus {
-  border-color: #66afe9;
-  outline: 0;
-  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
-          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+  .tokenfield-focus();
+}
+.has-warning .tokenfield.focus {
+  .tokenfield-validation(@state-warning-text);
+}
+.has-error .tokenfield.focus {
+  .tokenfield-validation(@state-danger-text);
+}
+.has-success .tokenfield.focus {
+  .tokenfield-validation(@state-success-text);
 }
 
 .tokenfield .token {
   box-sizing: border-box;
-  -moz-box-sizing: border-box; /* Firefox */  
+  -moz-box-sizing: border-box;
   display: inline-block;
   border: 1px solid #d9d9d9;
   background-color: #ededed;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   border-radius: 3px;
-  white-space: nowrap; 
-  margin: -1px 5px 5px 0; 
+  white-space: nowrap;
+  margin: -1px 5px 5px 0;
   height: 22px;
   vertical-align: top;
   cursor: default;
@@ -40,20 +62,32 @@
   -webkit-animation-duration: 0.1s;
   -webkit-animation-iteration-count: infinite;
   -webkit-animation-name: blink;
-  -webkit-animation-timing-function: ease;    
+  -webkit-animation-timing-function: ease;
 }
 
 @-webkit-keyframes 'blink' {
-  0% { border-color: #ededed }
-  100% { border-color: #b94a48 }
+  0% {
+    border-color: #ededed;
+  }
+  100% {
+    border-color: #b94a48;
+  }
 }
 @-moz-keyframes 'blink' {
-  0% { border-color: #ededed }
-  100% { border-color: #b94a48 }
+  0% {
+    border-color: #ededed;
+  }
+  100% {
+    border-color: #b94a48;
+  }
 }
 @keyframes 'blink' {
-  0% { border-color: #ededed }
-  100% { border-color: #b94a48 }
+  0% {
+    border-color: #ededed;
+  }
+  100% {
+    border-color: #b94a48;
+  }
 }
 
 .tokenfield .token .token-label {
@@ -94,8 +128,8 @@
   outline: 0;
   /* IE6-9 */
   -webkit-box-shadow: none;
-     -moz-box-shadow: none;
-          box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
 }
 
 /* Invalid token */
@@ -104,7 +138,7 @@
   border: 1px solid transparent;
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
-  border-radius: 0;  
+  border-radius: 0;
   border-bottom: 1px dotted #b94a48;
 }
 .tokenfield .token.invalid.active {
@@ -168,4 +202,17 @@
   line-height: 23px;
   margin-bottom: 6px;
   vertical-align: top;
+}
+
+/* RTL */
+.tokenfield.rtl {
+  direction: rtl;
+  text-align: right;
+}
+.tokenfield.rtl .token {
+  margin: -1px 0 5px 5px;
+}
+.tokenfield.rtl .token .token-label {
+  padding-left: 0px;
+  padding-right: 4px;
 }

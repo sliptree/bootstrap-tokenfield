@@ -319,6 +319,22 @@ describe('Integration', function() {
           this.$field.tokenfield('getTokensList', null, null, true ).should.equal('red');
         });
       });
+
+      describe("when no tokens are selected and direction is RTL", function() {
+        before(function() {
+          TFT.template = '<input type="text" class="tokenize" value="red,green,blue" style="direction:rtl" />'
+        });
+
+        after(function() {
+          delete TFT.template;
+        });
+
+        it("should keep the focus on the input", function() {
+          this.$input.simulate("key-sequence", { sequence: "{leftarrow}" });
+          this.$field.tokenfield('getTokensList', null, null, true ).should.equal('');          
+          this.$input.is(document.activeElement).should.be.true;
+        });
+      });
     });
 
     describe("Pressing right arrow key", function() {
@@ -394,6 +410,21 @@ describe('Integration', function() {
           this.$input.is(document.activeElement).should.be.true;
         });
       });
+
+      describe("when no tokens are selected and direction is RTL", function() {
+        before(function() {
+          TFT.template = '<input type="text" class="tokenize" value="red,green,blue" style="direction:rtl" />'
+        });
+
+        after(function() {
+          delete TFT.template;
+        });
+
+        it("should move focus to the last token", function() {
+          this.$input.simulate("key-sequence", { sequence: "{rightarrow}" });
+          this.$field.tokenfield('getTokensList', null, null, true ).should.equal('blue');
+        });
+      });      
     });
 
     describe("Pressing Shift + left arrow key", function() {
@@ -748,6 +779,35 @@ describe('Integration', function() {
           submitted.should.equal(false);
           done();
         }, 1);
+      });
+    });
+
+  });
+
+  describe("Events", function() {
+
+    describe("beforeCreateToken", function() {
+      it("should allow changing token field and value", function() {
+        this.$field.on('beforeCreateToken', function (e) {
+          e.token.value = 'one';
+          e.token.label = 'two';
+        });
+        this.$field.tokenfield('createToken', 'zero');
+
+        var results = this.$field.tokenfield('getTokens');
+        results[0].label.should.equal('two');
+        results[0].value.should.equal('one');
+      });
+
+      it("should allow setting token value to an empty string", function() {
+        this.$field.on('beforeCreateToken', function (e) {
+          e.token.value = '';
+        });
+        this.$field.tokenfield('createToken', 'zero');
+
+        var results = this.$field.tokenfield('getTokens');
+        results[0].label.should.equal('zero');
+        results[0].value.should.equal('');        
       });
     });
 

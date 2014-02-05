@@ -38,6 +38,20 @@ describe('initializing tokenfield', function() {
 
   });
 
+  describe('with RTL', function() {
+    before(function() {
+      TFT.template = '<input type="text" class="tokenize" style="direction:rtl" value="red,green, blue" />';
+    });
+
+    after(function() {
+      TFT.template = null;
+    });
+
+    it('should set rtl class on tokenfield', function() {
+      this.$wrapper.hasClass('rtl').should.equal(true);
+    });
+  })
+
 });
 
 describe('Tokenfield public methods', function() {
