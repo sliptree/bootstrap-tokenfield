@@ -247,7 +247,7 @@
           _self.activate( token, e.shiftKey, e.shiftKey )          
         })
         .on('dblclick', function (e) {
-          if (_self.disabled) return false;
+          if (_self.disabled || !_self.options.allowEditing ) return false;
           _self.edit( token )
         })
 
@@ -919,6 +919,7 @@
     minWidth: 60,
     minLength: 0,
     allowDuplicates: false,
+    allowEditing: true,
     limit: 0,
     autocomplete: {},
     typeahead: {},
