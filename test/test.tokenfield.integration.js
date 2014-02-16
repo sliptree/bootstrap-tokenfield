@@ -547,6 +547,26 @@ describe('Integration', function() {
         });
       });
 
+      describe("when a token is selected and allowEditing is false", function() {
+        before(function() {
+          TFT.template = '<input type="text" class="tokenize" value="red,green,blue" />';
+          TFT.options = { allowEditing: false }
+        });
+
+        after(function() {
+          delete TFT.template;
+          delete TFT.options;
+        });
+
+        it("should not enter edit mode for the active token", function() {
+          this.$wrapper.find('.token')
+              .filter(':has(.token-label:contains(green))').addClass('active');
+
+          this.$copyHelper.simulate("key-sequence", { sequence: "{enter}" });
+          this.$input.data('edit').should.be.false;
+        });
+      });
+
       describe("when input has text", function() {
         before(function() {
           TFT.template = '<input type="text" class="tokenize" value="red,green,blue" />'
@@ -651,12 +671,8 @@ describe('Integration', function() {
      });
 
       it("should not enter the edit mode of the token", function() {
-        this.$wrapper.find('.token')
-            .filter(':has(.token-label:contains(green))').addClass('active');
-                
         this.$wrapper.find('.token:contains(red)').dblclick();
         this.$input.data('edit').should.be.false;
-        this.$input.next(':contains(green)').should.have.length(1);        
       });
     });
 
