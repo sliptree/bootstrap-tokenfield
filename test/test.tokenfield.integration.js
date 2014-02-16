@@ -639,6 +639,27 @@ describe('Integration', function() {
       });
     });
 
+    describe("Double-clicking on a token with allowEditing false", function() {
+      before(function() {
+        TFT.template = '<input type="text" class="tokenize" value="red,green,blue" />';
+        TFT.options = { allowEditing: false }
+      });
+
+      after(function() {
+        delete TFT.template;
+        delete TFT.options;
+     });
+
+      it("should not enter the edit mode of the token", function() {
+        this.$wrapper.find('.token')
+            .filter(':has(.token-label:contains(green))').addClass('active');
+                
+        this.$wrapper.find('.token:contains(red)').dblclick();
+        this.$input.data('edit').should.be.false;
+        this.$input.next(':contains(green)').should.have.length(1);        
+      });
+    });
+
     describe("Ctrl-clicking on a token when another token is selected", function() {
       before(function() {
         TFT.template = '<input type="text" class="tokenize" value="red,green,blue" />'
