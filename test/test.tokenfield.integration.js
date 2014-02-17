@@ -558,12 +558,12 @@ describe('Integration', function() {
           delete TFT.options;
         });
 
-        it("should not enter edit mode for the active token", function() {
+        it("should not enter edit mode for the active token [no data('edit') property]", function() {
           this.$wrapper.find('.token')
               .filter(':has(.token-label:contains(green))').addClass('active');
 
           this.$copyHelper.simulate("key-sequence", { sequence: "{enter}" });
-          this.$input.data('edit').should.be.false;
+          this.$input.data().should.not.have.property('edit');
         });
       });
 
@@ -672,7 +672,7 @@ describe('Integration', function() {
 
       it("should not enter the edit mode of the token", function() {
         this.$wrapper.find('.token:contains(red)').dblclick();
-        this.$input.data('edit').should.be.false;
+        this.$input.data().should.not.have.property('edit');
       });
     });
 
