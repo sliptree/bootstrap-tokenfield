@@ -659,7 +659,7 @@ describe('Integration', function() {
       });
     });
 
-    describe("Double-clicking on a token with allowEditing false", function() {
+    describe("should not enter the edit mode of the token when allowEditing false", function() {
       before(function() {
         TFT.template = '<input type="text" class="tokenize" value="red,green,blue" />';
         TFT.options = { allowEditing: false }
