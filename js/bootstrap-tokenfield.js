@@ -465,7 +465,7 @@
           // Edit token
           if (e.keyCode === 13) {
             if (!this.$copyHelper.is(document.activeElement) || this.$wrapper.find('.token.active').length !== 1) break
-      			if (!_self.options.allowEditing) break
+            if (!_self.options.allowEditing) break
             this.edit( this.$wrapper.find('.token.active') )
           }
       }
