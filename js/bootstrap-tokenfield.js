@@ -827,6 +827,9 @@
 
   , update: function (e) {
       var value = this.$input.val()
+        , inputLeftPadding = parseInt(this.$input.css('padding-left'), 10)
+        , inputRightPadding = parseInt(this.$input.css('padding-right'), 10)
+        , inputPadding = inputLeftPadding + inputRightPadding
 
       if (this.$input.data('edit')) {
 
@@ -847,9 +850,9 @@
       else {
         this.$input.css( 'width', this.options.minWidth + 'px' )
         if (this.textDirection === 'rtl') {
-          return this.$input.width( this.$input.offset().left + this.$input.outerWidth() - this.$wrapper.offset().left - parseInt(this.$wrapper.css('padding-left'), 10) - 1 )
+          return this.$input.width( this.$input.offset().left + this.$input.outerWidth() - this.$wrapper.offset().left - parseInt(this.$wrapper.css('padding-left'), 10) - inputPadding - 1 )
         }
-        this.$input.width( this.$wrapper.offset().left + this.$wrapper.width() + parseInt(this.$wrapper.css('padding-left'), 10) - this.$input.offset().left )
+        this.$input.width( this.$wrapper.offset().left + this.$wrapper.width() + parseInt(this.$wrapper.css('padding-left'), 10) - this.$input.offset().left - inputPadding )
       }
     }
 
