@@ -203,6 +203,12 @@ $('.tokenfield').tokenfield()
                       <td><code>','</code></td>
                       <td>A character or an array of characters that will trigger token creation on keypress event. Defaults to ',' (comma). Note - this does not affect Enter or Tab keys, as they are handled in the keydown event. The first delimiter will be used as a separator when getting the list of tokens or copy-pasting tokens.</td>
                     </tr>
+                    <tr>
+                      <td>beautify</td>
+                      <td>boolean</td>
+                      <td><code>true</code></td>
+                      <td>Whether to insert spaces after each token when getting a comma-separated list of tokens. This affects both value returned by <code>getTokensList()<code> and the value of the original input field.</td>
+                    </tr>
                   </tbody>
                 </table>
               </div>
@@ -239,14 +245,14 @@ $('#myField').tokenfield('createToken', 'purple');
 $('#myField').tokenfield('createToken', { value: 'violet', label: 'Violet' });
 {% endhighlight %}
 
-              <h4>.tokenfield('getTokens')</h4>
-              <p>Get an array of tokens from the input</p>
+              <h4>.tokenfield('getTokens', active)</h4>
+              <p>Get an array of tokens from the input. Set <code>active</code> to true to return only selected tokens.</p>
 {% highlight js %}
 $('#myField').tokenfield('getTokens');
 {% endhighlight %}
 
-              <h4>.tokenfield('getTokensList', separator)</h4>
-              <p>Get a comma-separated list of the tokens from the input. You can use an alternative separator by supplying also a <code>separator</code> argument.</p>
+              <h4>.tokenfield('getTokensList', delimiter, beautify, active)</h4>
+              <p>Get a comma-separated list of the tokens from the input. You can use an alternative separator by supplying also a <code>delimiter</code> argument. Setting <code>beautify</code> to false will prevent adding a space after each token. Set <code>active</code> to true to return only selected tokens.</p>
 {% highlight js %}
 $('#myField').tokenfield('getTokensList');
 $('#myField').tokenfield('getTokensList', '; ');
