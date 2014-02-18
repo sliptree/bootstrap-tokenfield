@@ -247,7 +247,7 @@
           _self.activate( token, e.shiftKey, e.shiftKey )          
         })
         .on('dblclick', function (e) {
-          if (_self.disabled) return false;
+          if (_self.disabled || !_self.options.allowEditing ) return false;
           _self.edit( token )
         })
 
@@ -465,6 +465,7 @@
           // Edit token
           if (e.keyCode === 13) {
             if (!this.$copyHelper.is(document.activeElement) || this.$wrapper.find('.token.active').length !== 1) break
+            if (!_self.options.allowEditing) break
             this.edit( this.$wrapper.find('.token.active') )
           }
       }
@@ -826,6 +827,9 @@
 
   , update: function (e) {
       var value = this.$input.val()
+        , inputLeftPadding = parseInt(this.$input.css('padding-left'), 10)
+        , inputRightPadding = parseInt(this.$input.css('padding-right'), 10)
+        , inputPadding = inputLeftPadding + inputRightPadding
 
       if (this.$input.data('edit')) {
 
@@ -846,9 +850,9 @@
       else {
         this.$input.css( 'width', this.options.minWidth + 'px' )
         if (this.textDirection === 'rtl') {
-          return this.$input.width( this.$input.offset().left + this.$input.outerWidth() - this.$wrapper.offset().left - parseInt(this.$wrapper.css('padding-left'), 10) - 1 )
+          return this.$input.width( this.$input.offset().left + this.$input.outerWidth() - this.$wrapper.offset().left - parseInt(this.$wrapper.css('padding-left'), 10) - inputPadding - 1 )
         }
-        this.$input.width( this.$wrapper.offset().left + this.$wrapper.width() + parseInt(this.$wrapper.css('padding-left'), 10) - this.$input.offset().left )
+        this.$input.width( this.$wrapper.offset().left + this.$wrapper.width() + parseInt(this.$wrapper.css('padding-left'), 10) - this.$input.offset().left - inputPadding )
       }
     }
 
@@ -919,6 +923,7 @@
     minWidth: 60,
     minLength: 0,
     allowDuplicates: false,
+    allowEditing: true,
     limit: 0,
     autocomplete: {},
     typeahead: {},
