@@ -247,7 +247,7 @@
           _self.activate( token, e.shiftKey, e.shiftKey )          
         })
         .on('dblclick', function (e) {
-          if (_self.disabled) return false;
+          if (_self.disabled || !_self.options.allowEditing ) return false;
           _self.edit( token )
         })
 
@@ -465,6 +465,7 @@
           // Edit token
           if (e.keyCode === 13) {
             if (!this.$copyHelper.is(document.activeElement) || this.$wrapper.find('.token.active').length !== 1) break
+            if (!_self.options.allowEditing) break
             this.edit( this.$wrapper.find('.token.active') )
           }
       }
@@ -919,6 +920,7 @@
     minWidth: 60,
     minLength: 0,
     allowDuplicates: false,
+    allowEditing: true,
     limit: 0,
     autocomplete: {},
     typeahead: {},
