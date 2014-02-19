@@ -70,6 +70,24 @@ describe('initializing tokenfield', function() {
 
 });
 
+describe('destroying tokenfield', function() {
+  before(function() {
+    TFT.template = '<div id="destroy-test-container"><label for="destroy-test"></label><input type="text" id="destroy-test" class="tokenize" value="red,green, blue" /></div>';
+  });
+
+  after(function() {
+    TFT.template = null;
+  });
+
+  it('should reset the original input to previous state', function() {
+    var $field = this.$field.tokenfield('destroy');
+    $field.should.be.an('object');
+    $field.data().should.not.have.property('bs.tokenfield');
+    $field.parent().prop('id').should.equal('destroy-test-container');
+    $field.val().should.equal('red, green, blue');
+  });
+});
+
 describe('Tokenfield public methods', function() {
 
   describe('.createToken()', function() {

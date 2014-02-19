@@ -48,8 +48,16 @@
     }
 
     // Move original input out of the way
-    var hidingPosition = $('body').css('direction') === 'rtl' ? 'right' : 'left';
-    this.$element.css('position', 'absolute').css(hidingPosition, '-10000px').prop('tabindex', -1)
+    var hidingPosition = $('body').css('direction') === 'rtl' ? 'right' : 'left',
+        originalStyles = { position: this.$element.css('position') };
+    originalStyles[hidingPosition] = this.$element.css(hidingPosition);
+    
+    this.$element
+      .data('original-styles', originalStyles)
+      .data('original-tabindex', this.$element.prop('tabindex'))
+      .css('position', 'absolute')
+      .css(hidingPosition, '-10000px')
+      .prop('tabindex', -1)
 
     // Create a wrapper
     this.$wrapper = $('<div class="tokenfield form-control" />')
@@ -889,6 +897,36 @@
       this.$wrapper.removeClass('disabled');
     }
 
+  , destroy: function() {
+      // Set field value
+      this.$element.val( this.getTokensList() );
+      // Restore styles and properties
+      this.$element.css( this.$element.data('original-styles') );
+      this.$element.prop( 'tabindex', this.$element.data('original-tabindex') );
+      
+      // Re-route tokenfield labele to original input
+      var $label = $( 'label[for="' + this.$input.prop('id') + '"]' )
+      if ( $label.length ) {
+        $label.prop( 'for', this.$element.prop('id') )
+      }
+
+      // Move original element outside of tokenfield wrapper
+      this.$element.insertBefore( this.$wrapper );
+
+      // Remove tokenfield-related data
+      this.$element.removeData('original-styles');
+      this.$element.removeData('original-tabindex');
+      this.$element.removeData('bs.tokenfield');
+
+      // Remove tokenfield from DOM
+      this.$wrapper.remove();
+
+      var $_element = this.$element;
+      delete this;
+
+      return $_element;
+  }
+
   }
 
 
@@ -912,7 +950,7 @@
         args.shift()
         value = data[option].apply(data, args)
       } else {
-        if (!data) $this.data('bs.tokenfield', (data = new Tokenfield(this, options)))
+        if (!data && typeof option !== 'string' && !param) $this.data('bs.tokenfield', (data = new Tokenfield(this, options)))
       }
     })
 

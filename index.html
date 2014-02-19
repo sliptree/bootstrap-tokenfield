@@ -270,6 +270,12 @@ $('#myField').tokenfield('disable');
 $('#myField').tokenfield('enable');
 {% endhighlight %}
 
+              <h4>.tokenfield('destroy')</h4>
+              <p>Destroy tokenfield and restore original input</p>
+{% highlight js %}
+$('#myField').tokenfield('destroy');
+{% endhighlight %}
+
               <div class="bs-callout bs-callout-info">
                 <h4>Accessing original input</h4>
                 <p>Though not recommended, you can access the original input field like so: <code>$('#tokenfield').data('bs.tokenfield').$input</code></p>
