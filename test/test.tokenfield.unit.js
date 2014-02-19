@@ -38,6 +38,22 @@ describe('initializing tokenfield', function() {
 
   });
 
+  describe('with an input with data-tokens values', function() {
+
+    before(function() {
+      TFT.template = '<input type="text" class="tokenize" data-tokens="red, green, blue" />';
+    });
+
+    after(function() {
+      TFT.template = null;
+    });
+
+    it('should create tokens for each comma-separated token', function() {
+      this.$wrapper.find('.token').length.should.equal(3);
+    });
+
+  });
+
   describe('with RTL', function() {
     before(function() {
       TFT.template = '<input type="text" class="tokenize" style="direction:rtl" value="red,green, blue" />';

@@ -25,7 +25,7 @@
     this.textDirection = this.$element.css('direction');
 
     // Extend options
-    this.options = $.extend({}, $.fn.tokenfield.defaults, { tokens: this.$element.val() }, options)
+    this.options = $.extend({}, $.fn.tokenfield.defaults, { tokens: this.$element.val() }, this.$element.data(), options)
     
     // Setup delimiters and trigger keys
     this._delimiters = (typeof this.options.delimiter === 'string') ? [this.options.delimiter] : this.options.delimiter
