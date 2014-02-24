@@ -133,7 +133,7 @@
     // Initialize typeahead, if necessary
     if ( ! $.isEmptyObject( this.options.typeahead ) ) {
       var typeaheadOptions = $.extend({}, this.options.typeahead, {})
-      this.$input.typeahead( typeaheadOptions )
+      this.$input.typeahead( null, typeaheadOptions )
       this.typeahead = true
     }
   }
@@ -386,7 +386,7 @@
           var valueKey = 'value'
 
           // Get the actual valueKey for this dataset
-          $.each(_self.$input.data('ttView').datasets, function (i, set) {
+          $.each(_self.$input.data('ttTypeahead').datasets, function (i, set) {
             if (set.name === dataset) {
               valueKey = set.valueKey
             }
@@ -394,7 +394,7 @@
 
           // Create token
           if (_self.createToken( datum[valueKey] )) {
-            _self.$input.typeahead('setQuery', '')
+            _self.$input.typeahead('val', '')
             if (_self.$input.data( 'edit' )) {
               _self.unedit(true)
             }
@@ -402,7 +402,7 @@
         })
         .on('typeahead:autocompleted', function (e, datum, dataset) {
           _self.createToken( _self.$input.val() )
-          _self.$input.typeahead('setQuery', '')
+          _self.$input.typeahead('val', '')
           if (_self.$input.data( 'edit' )) {
             _self.unedit(true)
           }
@@ -616,7 +616,7 @@
       if (this.$input.hasClass('tt-query')) {
         // Typeahead acts weird when simply setting input value to empty,
         // so we set the query to empty instead
-        this.$input.typeahead('setQuery', '')
+        this.$input.typeahead('val', '')
       } else {
         this.$input.val('')
       }
