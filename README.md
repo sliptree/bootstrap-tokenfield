@@ -5,6 +5,14 @@ A jQuery tagging / tokenizer input plugin for Twitter's Bootstrap, by the guys f
 
 Check out the [demo and docs](http://sliptree.github.io/bootstrap-tokenfield/)
 
+### Installation
+
+Requirements: jQuery 1.9+, Bootstrap 3+ (only CSS)
+
+1. Install via npm or bower (recommended) or manually download the package
+2. Include `dist/bootstrap-tokenfield.js` or `dist/bootstrap-tokenfield.min.js` in your HTML
+3. Include `dist/css/bootstrap-tokenfield.css` in your HTML
+
 ### Usage
 	
 	$('input').tokenfield()
