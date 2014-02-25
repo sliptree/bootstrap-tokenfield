@@ -18,6 +18,7 @@ beforeEach(function() {
 });
 
 afterEach( function() {
+  this.$field.tokenfield('destroy');
   this.$sandbox.remove();
 
   delete this.$field;

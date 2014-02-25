@@ -25,12 +25,31 @@
     this.textDirection = this.$element.css('direction');
 
     // Extend options
-    this.options = $.extend({}, $.fn.tokenfield.defaults, { tokens: this.$element.val() }, this.$element.data(), options)
+    this.options = $.extend(true, {}, $.fn.tokenfield.defaults, { tokens: this.$element.val() }, this.$element.data(), options)
     
     // Setup delimiters and trigger keys
     this._delimiters = (typeof this.options.delimiter === 'string') ? [this.options.delimiter] : this.options.delimiter
     this._triggerKeys = $.map(this._delimiters, function (delimiter) {
       return delimiter.charCodeAt(0);
+    });
+    this._firstDelimiter = this._delimiters[0];
+
+    // Check for whitespace, dash and special characters
+    var whitespace = $.inArray(' ', this._delimiters)
+      , dash = $.inArray('-', this._delimiters)
+
+    if (whitespace >= 0)
+      this._delimiters[whitespace] = '\\s'
+
+    if (dash >= 0) {
+      delete this._delimiters[dash]
+      this._delimiters.unshift('-')
+    }
+
+    var specialCharacters = ['\\', '$', '[', '{', '^', '.', '|', '?', '*', '+', '(', ')']
+    $.each(this._delimiters, function (index, char) {
+      var pos = $.inArray(char, specialCharacters)
+      if (pos >= 0) _self._delimiters[index] = '\\' + char;
     });
 
     // Store original input width
@@ -288,19 +307,6 @@
 
       if (typeof tokens === 'string') {
         if (this._delimiters.length) {
-
-          // Check for whitespace and dash delimiters
-          var whitespace = $.inArray(' ', this._delimiters)
-            , dash = $.inArray('-', this._delimiters)
-
-          if (whitespace >= 0)
-            this._delimiters[whitespace] = '\s'
-
-          if (dash >= 0) {
-            delete this._delimiters[dash]
-            this._delimiters.unshift('-')
-          }
-
           // Split based on delimiters
           tokens = tokens.split( new RegExp( '[' + this._delimiters.join('') + ']' ) )
         } else {
@@ -343,7 +349,7 @@
   }
 
   , getTokensList: function(delimiter, beautify, active) {
-      delimiter = delimiter || this._delimiters[0]
+      delimiter = delimiter || this._firstDelimiter
       beautify = ( typeof beautify !== 'undefined' && beautify !== null ) ? beautify : this.options.beautify
       
       var separator = delimiter + ( beautify && delimiter !== ' ' ? ' ' : '')

@@ -25,26 +25,64 @@ describe('Integration', function() {
   })
 
   describe('with multiple alternative delimiters', function() {
-    before(function() {
-      TFT.template = '<input type="text" class="tokenize" value="red green blue.yellow" />'
-      TFT.options = {
-        delimiter: [' ', '.']
-      }
+    describe("Delimiters: [' ', '.']", function() {
+      before(function() {
+        TFT.template = '<input type="text" class="tokenize" value="red green blue.yellow" />'
+        TFT.options = {
+          delimiter: [' ', '.']
+        }
+      });
+
+      after(function() {
+        delete TFT.template;
+        delete TFT.options;
+      });
+
+      it('should create tokens by splitting the original value with delimiters', function() {
+        this.$field.data('bs.tokenfield').$wrapper.find('.token').length.should.equal(4);
+      });
+
+      it('should create a token when the delimiting key is pressed and use the first delimiter for setting original input value', function() {
+        this.$input.focus().simulate("key-sequence", { sequence: "purple olive." });
+        this.$field.data('bs.tokenfield').$wrapper.find('.token').length.should.equal(6);
+        this.$field.val().should.equal('red green blue yellow purple olive');
+      });
     });
 
-    after(function() {
-      delete TFT.template;
-      delete TFT.options;
+    describe("Delimiters: [',', ' ', '-', '_'] (Regression test for #79)", function() {
+      before(function() {
+        TFT.template = '<input type="text" class="tokenize" value="red,green blue-yellow_123" />'
+        TFT.options = {
+          delimiter: [',', ' ', '-', '_']
+        }
+      });
+
+      after(function() {
+        delete TFT.template;
+        delete TFT.options;
+      });
+
+      it('should create tokens by splitting the original value with delimiters', function() {
+        this.$field.data('bs.tokenfield').$wrapper.find('.token').length.should.equal(5);
+      });
     });
 
-    it('should create tokens by splitting the original value with delimiters', function() {
-      this.$field.data('bs.tokenfield').$wrapper.find('.token').length.should.equal(4);
-    });
+    describe("Using regexp special characters as delimiters", function() {
+      before(function() {
+        TFT.template = '<input type="text" class="tokenize" value="red\\green$blue[yellow{orange^violet.purple|black?white*gray+silver(lime)navy" />'
+        TFT.options = {
+          delimiter: ['\\', '$', '[', '{', '^', '.', '|', '?', '*', '+', '(', ')']
+        }
+      });
 
-    it('should create a token when the delimiting key is pressed and use the first delimiter for setting original input value', function() {
-      this.$input.focus().simulate("key-sequence", { sequence: "purple olive." });
-      this.$field.data('bs.tokenfield').$wrapper.find('.token').length.should.equal(6);
-      this.$field.val().should.equal('red green blue yellow purple olive');
+      after(function() {
+        delete TFT.template;
+        delete TFT.options;
+      });
+
+      it('should create tokens by splitting the original value with delimiters', function() {
+        this.$field.data('bs.tokenfield').$wrapper.find('.token').length.should.equal(13);
+      });
     });
   });
 
