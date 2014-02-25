@@ -861,9 +861,9 @@ describe('Integration', function() {
 
   describe("Events", function() {
 
-    describe("beforeCreateToken", function() {
+    describe("create.token.bs.tokenfield", function() {
       it("should allow changing token field and value", function() {
-        this.$field.on('beforeCreateToken', function (e) {
+        this.$field.on('create.token.bs.tokenfield', function (e) {
           e.token.value = 'one';
           e.token.label = 'two';
         });
@@ -875,7 +875,7 @@ describe('Integration', function() {
       });
 
       it("should allow setting token value to an empty string", function() {
-        this.$field.on('beforeCreateToken', function (e) {
+        this.$field.on('create.token.bs.tokenfield', function (e) {
           e.token.value = '';
         });
         this.$field.tokenfield('createToken', 'zero');

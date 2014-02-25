@@ -304,23 +304,27 @@ $('#myField').tokenfield('destroy');
                   </thead>
                   <tbody>
                    <tr>
-                     <td>beforeCreateToken</td>
+                     <td>initialize.bs.tokenfield</td>
+                     <td>Fires after Tokenfield has been initialized.</td>
+                   </tr>
+                   <tr>
+                     <td>create.token.bs.tokenfield</td>
                      <td>This event fires when a token is all set up to be created, but before it is inserted into the DOM and event listeners are attached. You can use this event to manipulate token value and label by changing the appropriate values of <code>token</code> property of the event. See below for an example.</td>
                    </tr>
                    <tr>
-                     <td>afterCreateToken</td>
+                     <td>created.token.bs.tokenfield</td>
                      <td>This event is fired after the token has been created. Here, <code>token</code> property of the event is also available, but is basically read-only. You can also get a direct reference to the token DOM object via <code>e.relatedTarget</code>. The example below uses this to set an 'invalid' class on the newly created token if it does not pass validation.</td>
                    </tr>
                    <tr>
-                     <td>beforeEditToken</td>
+                     <td>edit.token.bs.tokenfield</td>
                      <td>This event is fired just before a token is about to be edited. This allows you to manipluate the input field value before it is created. Again, to do this, manipluate the <code>token</code> property of the event. Here you can also access the token DOM object with <code>e.relatedTarget</code>.</td>
                    </tr>
                    <tr>
-                     <td>removeToken</td>
+                     <td>remove.token.bs.tokenfield</td>
                      <td>This event is fired after a token is removed. You will have access to <code>token</code> property of the event. This way, you can determine which token was removed.</td>
                    </tr>
                    <tr>
-                     <td>preventDuplicateToken</td>
+                     <td>prevented.token.bs.tokenfield</td>
                      <td>This event is fired when <code>allowDuplicates</code> is set to <code>false</code> and a duplicate is being prevented from created. You can find out the offending token by looking at the <code>token</code> property of the event.</td>
                    </tr>
                   </tbody>

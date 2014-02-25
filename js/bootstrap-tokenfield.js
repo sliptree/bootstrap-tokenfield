@@ -163,6 +163,8 @@
       this.$input.typeahead( null, typeaheadOptions )
       this.typeahead = true
     }
+
+    this.$element.trigger('initialize.bs.tokenfield')
   }
 
   Tokenfield.prototype = {
@@ -187,7 +189,7 @@
       if (this.options.limit && this.getTokens().length >= this.options.limit) return
 
       // Allow changing token data before creating it
-      var beforeCreateEvent = $.Event('beforeCreateToken')
+      var beforeCreateEvent = $.Event('create.token.bs.tokenfield')
       beforeCreateEvent.token = {
         value: value,
         label: label
@@ -204,7 +206,7 @@
         return token.value === value
       }).length) {
         // Allow listening to when duplicates get prevented
-        var duplicateEvent = $.Event('preventDuplicateToken')
+        var duplicateEvent = $.Event('prevented.token.bs.tokenfield')
         duplicateEvent.token = {
           value: value,
           label: label
@@ -281,7 +283,7 @@
       closeButton
           .on('click',  $.proxy(this.remove, this))
 
-      var afterCreateEvent = $.Event('afterCreateToken')
+      var afterCreateEvent = $.Event('created.token.bs.tokenfield')
       afterCreateEvent.token = beforeCreateEvent.token
       afterCreateEvent.relatedTarget = token.get(0)
       this.$element.trigger( afterCreateEvent )
@@ -757,7 +759,7 @@
         , label = token.find('.token-label').text()
 
       // Allow changing input value before editing
-      var beforeEditEvent = $.Event('beforeEditToken')
+      var beforeEditEvent = $.Event('edit.token.bs.tokenfield')
       beforeEditEvent.token = {
         value: value,
         label: label
@@ -819,7 +821,7 @@
 
       // Prepare events
 
-      var removeEvent = $.Event('removeToken')
+      var removeEvent = $.Event('remove.token.bs.tokenfield')
       removeEvent.token = this.getTokenData( token )
 
       var changeEvent = $.Event('change')
