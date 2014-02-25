@@ -16,7 +16,7 @@ module.exports = function (grunt) {
           src: [
             'bower_components/bootstrap/js/affix.js',
             'bower_components/bootstrap/js/scrollspy.js',
-            'bower_components/typeahead.js/dist/typeahead.js'
+            'bower_components/typeahead.js/dist/typeahead.bundle.min.js'
           ],
           dest: 'docs-assets/js/'
         }]
@@ -69,8 +69,8 @@ module.exports = function (grunt) {
         tasks: ['less']
       },
       jekyll: {
-        files: ['dist/**/*', 'index.html'],
-        tasks: ['jekyll']
+        files: ['dist/**/*', 'index.html', 'docs-assets/**/*'],
+        tasks: ['uglify:docs', 'jekyll']
       },
       livereload: {
         options: { livereload: true },

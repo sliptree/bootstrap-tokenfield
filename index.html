@@ -75,7 +75,7 @@ title: Tokenfield for Bootstrap
             <div class="bs-docs-section">
               <div class="page-header">
                 <h1 id="tokenfield">Tokenfield</h1>
-              </div>             
+              </div>
 
               <h2 id="examples">Examples</h2>
               <p>Create elegant taggable fields with copy/paste and keyboard support.</p>
@@ -113,10 +113,19 @@ $('#tokenfield').tokenfield({
 {% endhighlight %}
 
 {% highlight js %}
+var engine = new Bloodhound({
+  local: [{value: 'red'}, {value: 'blue'}, {value: 'green'} , {value: 'yellow'}, {value: 'violet'}, {value: 'brown'}, {value: 'purple'}, {value: 'black'}, {value: 'white'}],
+  datumTokenizer: function(d) {
+    return Bloodhound.tokenizers.whitespace(d.value); 
+  },
+  queryTokenizer: Bloodhound.tokenizers.whitespace    
+});
+
+engine.initialize();
+
 $('#tokenfield-typeahead').tokenfield({
   typeahead: {
-    name: 'tags',
-    local: ['red','blue','green','yellow','violet','brown','purple','black','white'],
+    source: engine.ttAdapter()
   }
 });
 {% endhighlight %}
@@ -189,7 +198,7 @@ $('.tokenfield').tokenfield()
                       <td>typeahead</td>
                       <td>object</td>
                       <td><code>{}</code></td>
-                      <td>Twitter Typeahead options</td>
+                      <td>Twitter Typeahead options.</td>
                     </tr>
                     <tr>
                       <td>createTokensOnBlur</td>
@@ -621,7 +630,7 @@ $('#tokenfield')
     <script type="text/javascript" src="dist/bootstrap-tokenfield.js" charset="UTF-8"></script>   
     <script type="text/javascript" src="docs-assets/js/scrollspy.js" charset="UTF-8"></script>   
     <script type="text/javascript" src="docs-assets/js/affix.js" charset="UTF-8"></script>   
-    <script type="text/javascript" src="docs-assets/js/typeahead.js" charset="UTF-8"></script>   
+    <script type="text/javascript" src="docs-assets/js/typeahead.bundle.min.js" charset="UTF-8"></script>   
     <script type="text/javascript" src="docs-assets/js/docs.min.js" charset="UTF-8"></script>   
 
     <script type="text/javascript">

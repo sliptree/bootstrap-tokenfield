@@ -12,6 +12,6 @@
   "devDependecies": {
     "mocha": "~1.12.*",
     "chai": "~1.7.*",
-    "typeahead.js": "~0.9.3"
+    "typeahead.js": "~0.10.1"
   }
 }

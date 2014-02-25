@@ -161,7 +161,7 @@
       
       var _self = this
         , value = $.trim(attrs.value)
-        , label = attrs.label.length ? $.trim(attrs.label) : value
+        , label = attrs.label && attrs.label.length ? $.trim(attrs.label) : value
 
       if (!value.length || !label.length || value.length < this.options.minLength) return
 
@@ -205,7 +205,7 @@
             .append('<a href="#" class="close" tabindex="-1">&times;</a>')
 
       // Insert token into HTML
-      if (this.$input.hasClass('tt-query')) {
+      if (this.$input.hasClass('tt-input')) {
         this.$input.parent().before( token )
       } else {
         this.$input.before( token )
@@ -288,6 +288,20 @@
 
       if (typeof tokens === 'string') {
         if (this._delimiters.length) {
+
+          // Check for whitespace and dash delimiters
+          var whitespace = $.inArray(' ', this._delimiters)
+            , dash = $.inArray('-', this._delimiters)
+
+          if (whitespace >= 0)
+            this._delimiters[whitespace] = '\s'
+
+          if (dash >= 0) {
+            delete this._delimiters[dash]
+            this._delimiters.unshift('-')
+          }
+
+          // Split based on delimiters
           tokens = tokens.split( new RegExp( '[' + this._delimiters.join('') + ']' ) )
         } else {
           tokens = [tokens];
@@ -391,17 +405,8 @@
           return false
         })
         .on('typeahead:selected', function (e, datum, dataset) {
-          var valueKey = 'value'
-
-          // Get the actual valueKey for this dataset
-          $.each(_self.$input.data('ttTypeahead').datasets, function (i, set) {
-            if (set.name === dataset) {
-              valueKey = set.valueKey
-            }
-          })
-
           // Create token
-          if (_self.createToken( datum[valueKey] )) {
+          if (_self.createToken( datum )) {
             _self.$input.typeahead('val', '')
             if (_self.$input.data( 'edit' )) {
               _self.unedit(true)
@@ -462,8 +467,8 @@
           if (this.$input.data('ui-autocomplete') && this.$input.data('ui-autocomplete').menu.element.find("li:has(a.ui-state-focus)").length) break
           
           // We will handle creating tokens from typeahead in typeahead events
-          if (this.$input.hasClass('tt-query') && this.$wrapper.find('.tt-is-under-cursor').length ) break
-          if (this.$input.hasClass('tt-query') && this.$wrapper.find('.tt-hint').val().length) break
+          if (this.$input.hasClass('tt-input') && this.$wrapper.find('.tt-cursor').length ) break
+          if (this.$input.hasClass('tt-input') && this.$wrapper.find('.tt-hint').val().length) break
           
           // Create token
           if (this.$input.is(document.activeElement) && this.$input.val().length || this.$input.data('edit')) {
@@ -483,7 +488,7 @@
           if (_self.$input.val().length > 0) return
 
           direction += 'All'
-          var token = _self.$input.hasClass('tt-query') ? _self.$input.parent()[direction]('.token:first') : _self.$input[direction]('.token:first')
+          var token = _self.$input.hasClass('tt-input') ? _self.$input.parent()[direction]('.token:first') : _self.$input[direction]('.token:first')
           if (!token.length) return
 
           _self.preventInputFocus = true
@@ -504,7 +509,7 @@
         if (_self.$input.is(document.activeElement)) {
           if (_self.$input.val().length > 0) return
 
-          var token = _self.$input.hasClass('tt-query') ? _self.$input.parent()[direction + 'All']('.token:first') : _self.$input[direction + 'All']('.token:first')
+          var token = _self.$input.hasClass('tt-input') ? _self.$input.parent()[direction + 'All']('.token:first') : _self.$input[direction + 'All']('.token:first')
           if (!token.length) return
 
           _self.activate( token )
@@ -548,7 +553,7 @@
             if (this.$input.val().length || this.lastInputValue.length && this.lastKeyDown === 8) break
             
             this.preventDeactivation = true
-            var prev = this.$input.hasClass('tt-query') ? this.$input.parent().prevAll('.token:first') : this.$input.prevAll('.token:first')
+            var prev = this.$input.hasClass('tt-input') ? this.$input.parent().prevAll('.token:first') : this.$input.prevAll('.token:first')
 
             if (!prev.length) break
 
@@ -622,7 +627,7 @@
       if (tokensBefore == this.getTokensList() && this.$input.val().length)
         return false // No tokens were added, do nothing (prevent form submit)
 
-      if (this.$input.hasClass('tt-query')) {
+      if (this.$input.hasClass('tt-input')) {
         // Typeahead acts weird when simply setting input value to empty,
         // so we set the query to empty instead
         this.$input.typeahead('val', '')
@@ -762,7 +767,7 @@
       token.find('.token-label').text(value)
       var tokenWidth = token.outerWidth()
 
-      var $_input = this.$input.hasClass('tt-query') ? this.$input.parent() : this.$input
+      var $_input = this.$input.hasClass('tt-input') ? this.$input.parent() : this.$input
 
       token.replaceWith( $_input )
 
@@ -775,7 +780,7 @@
     }
 
   , unedit: function (focus) {
-      var $_input = this.$input.hasClass('tt-query') ? this.$input.parent() : this.$input
+      var $_input = this.$input.hasClass('tt-input') ? this.$input.parent() : this.$input
       $_input.appendTo( this.$wrapper )
       
       this.$input.data('edit', false)
