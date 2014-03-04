@@ -164,7 +164,7 @@
       this.typeahead = true
     }
 
-    this.$element.trigger('initialize.bs.tokenfield')
+    this.$element.trigger('tokenfield:initialize')
   }
 
   Tokenfield.prototype = {
@@ -189,29 +189,29 @@
       if (this.options.limit && this.getTokens().length >= this.options.limit) return
 
       // Allow changing token data before creating it
-      var beforeCreateEvent = $.Event('create.token.bs.tokenfield')
-      beforeCreateEvent.token = {
+      var prepareEvent = $.Event('tokenfield:preparetoken')
+      prepareEvent.token = {
         value: value,
         label: label
       }
-      this.$element.trigger( beforeCreateEvent )
+      this.$element.trigger( prepareEvent )
 
-      if (!beforeCreateEvent.token) return
+      if (!prepareEvent.token) return
 
-      value = beforeCreateEvent.token.value
-      label = beforeCreateEvent.token.label
+      value = prepareEvent.token.value
+      label = prepareEvent.token.label
 
       // Check for duplicates
       if (!this.options.allowDuplicates && $.grep(this.getTokens(), function (token) {
         return token.value === value
       }).length) {
         // Allow listening to when duplicates get prevented
-        var duplicateEvent = $.Event('prevented.token.bs.tokenfield')
-        duplicateEvent.token = {
+        var preventDuplicateEvent = $.Event('tokenfield:preventduplicate')
+        preventDuplicateEvent.token = {
           value: value,
           label: label
         }
-        this.$element.trigger( duplicateEvent )
+        this.$element.trigger( preventDuplicateEvent )
         // Add duplicate warning class to existing token for 250ms
         var duplicate = this.$wrapper.find( '.token[data-value="' + value + '"]' ).addClass('duplicate')
         setTimeout(function() {
@@ -283,10 +283,10 @@
       closeButton
           .on('click',  $.proxy(this.remove, this))
 
-      var afterCreateEvent = $.Event('created.token.bs.tokenfield')
-      afterCreateEvent.token = beforeCreateEvent.token
-      afterCreateEvent.relatedTarget = token.get(0)
-      this.$element.trigger( afterCreateEvent )
+      var createEvent = $.Event('tokenfield:createtoken')
+      createEvent.token = prepareEvent.token
+      createEvent.relatedTarget = token.get(0)
+      this.$element.trigger( createEvent )
 
       var changeEvent = $.Event('change')
       changeEvent.initiator = 'tokenfield'
@@ -759,18 +759,18 @@
         , label = token.find('.token-label').text()
 
       // Allow changing input value before editing
-      var beforeEditEvent = $.Event('edit.token.bs.tokenfield')
-      beforeEditEvent.token = {
+      var editEvent = $.Event('tokenfield:edittoken')
+      editEvent.token = {
         value: value,
         label: label
       }
-      beforeEditEvent.relatedTarget = token.get(0)
-      this.$element.trigger( beforeEditEvent )
+      editEvent.relatedTarget = token.get(0)
+      this.$element.trigger( editEvent )
       
-      if (!beforeEditEvent.token) return
+      if (!editEvent.token) return
 
-      value = beforeEditEvent.token.value
-      label = beforeEditEvent.token.label
+      value = editEvent.token.value
+      label = editEvent.token.label
 
       token.find('.token-label').text(value)
       var tokenWidth = token.outerWidth()
@@ -821,7 +821,7 @@
 
       // Prepare events
 
-      var removeEvent = $.Event('remove.token.bs.tokenfield')
+      var removeEvent = $.Event('tokenfield:removetoken')
       removeEvent.token = this.getTokenData( token )
 
       var changeEvent = $.Event('change')

@@ -64,12 +64,12 @@ jQuery(document).ready(function($) {
   });
 
   $('#tokenfield-2')
-    .on('beforeCreateToken', function (e) {
+    .on('tokenfield:preparetoken', function (e) {
       var token = e.token.value.split('|')
       e.token.value = token[1] || token[0]
       e.token.label = token[1] ? token[0] + ' (' + token[1] + ')' : token[0]
     })
-    .on('afterCreateToken', function (e) {
+    .on('tokenfield:createtoken', function (e) {
       // Über-simplistic e-mail validation
       var re = /\S+@\S+\.\S+/
       var valid = re.test(e.token.value)
@@ -77,13 +77,13 @@ jQuery(document).ready(function($) {
         $(e.relatedTarget).addClass('invalid')
       }
     })
-    .on('beforeEditToken', function (e) {
+    .on('tokenfield:edittoken', function (e) {
       if (e.token.label !== e.token.value) {
         var label = e.token.label.split(' (')
         e.token.value = label[0] + '|' + e.token.value
       }
     })
-    .on('removeToken', function (e) {
+    .on('tokenfield:removetoken', function (e) {
       if (e.token.length > 1) {
         var values = $.map(e.token, function (token) { return token.value });
         alert(e.token.length + ' tokens removed! Token values were: ' + values.join(', '))
@@ -91,7 +91,7 @@ jQuery(document).ready(function($) {
         alert('Token removed! Token value was: ' + e.token.value)
       } 
     })
-    .on('preventDuplicateToken', function (e) {
+    .on('tokenfield:preventduplicate', function (e) {
       alert('Duplicate detected! Token value is: ' + e.token.value)
     })
     .tokenfield()

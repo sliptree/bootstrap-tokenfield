@@ -50,7 +50,7 @@ Requirements: jQuery 1.9+, Bootstrap 3+ (only CSS)
 * Fixed: Removing multiple tokens returned wrong data #30
 * Fixed: If token is removed in beforeEdit event, no longer falls over #27, #28
 * Fixed: Change event was triggered on initialization #22
-* Fixed: When token is removed in beforeCreateToken event, no longer tries to create a token
+* Fixed: When token is removed in tokenfield:preparetoken event, no longer tries to create a token
 * Fixed: Pressing comma key was not handled reliably
 * New: `prevetDuplicateToken` event
 * Improved: Typeahead integration
