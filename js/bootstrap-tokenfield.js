@@ -5,13 +5,18 @@
  * Copyright 2013 Sliptree
  * ============================================================ */
 
-(function (root, factory) {
+(function (factory) {
   if (typeof define === 'function' && define.amd) {
+    // AMD. Register as an anonymous module.
     define(['jquery'], factory);
+  } else if (typeof exports === 'object') {
+    // Node/CommonJS
+    factory(require('jquery'));
   } else {
-    root.Tokenfield = factory(root.jQuery);
+    // Browser globals
+    factory(jQuery);
   }
-}(this, function ($) {
+}(function ($) {
 
   "use strict"; // jshint ;_;
 
