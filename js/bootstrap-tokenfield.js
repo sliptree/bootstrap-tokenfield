@@ -165,7 +165,7 @@
     // Initialize typeahead, if necessary
     if ( ! $.isEmptyObject( this.options.typeahead ) ) {
       var typeaheadOptions = $.extend({}, this.options.typeahead, {})
-      this.$input.typeahead( null, typeaheadOptions )
+      this.$input.typeahead( { hint: false }, typeaheadOptions )
       this.typeahead = true
     }
 
