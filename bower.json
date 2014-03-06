@@ -7,7 +7,7 @@
   ],
   "dependencies": {
     "jquery": "~1.9.x",
-    "bootstrap": "~3.0.*"
+    "bootstrap": "~3.1.*"
   },
   "devDependecies": {
     "mocha": "~1.12.*",

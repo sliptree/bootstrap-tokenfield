@@ -26,6 +26,10 @@ Requirements: jQuery 1.9+, Bootstrap 3+ (only CSS)
 
 ### Changelog
 
+See [release notes](https://github.com/sliptree/bootstrap-tokenfield/releases)
+
+Previous releases:
+
 0.10.0
 
 * Fixed: Entering a duplicate token does not submit the underlying form anymore
