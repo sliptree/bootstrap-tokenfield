@@ -875,7 +875,17 @@ describe('Integration', function() {
     });
   });
 
-  describe("Events", function() {
+  describe.only("Events", function() {
+    
+    describe("tokenfield:initialize", function() {
+      it("must must be triggered when tokenfield is created", function (done) {
+        $('<input type="text" />')
+          .on('tokenfield:initialize', function() {
+            done();
+          })
+          .tokenfield();
+      });
+    });
 
     describe("tokenfield:preparetoken", function() {
       it("must allow changing token field and value", function() {
