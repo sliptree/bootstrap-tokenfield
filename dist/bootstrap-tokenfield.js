@@ -155,16 +155,18 @@
     // Initialize autocomplete, if necessary
     if ( ! $.isEmptyObject( this.options.autocomplete ) ) {
       var side = this.textDirection === 'rtl' ? 'right' : 'left'
-      var autocompleteOptions = $.extend({}, this.options.autocomplete, {
+      var autocompleteOptions = $.extend({
         minLength: this.options.showAutocompleteOnFocus ? 0 : null,
         position: { my: side + " top", at: side + " bottom", of: this.$wrapper }
-      })
+      }, this.options.autocomplete )
       this.$input.autocomplete( autocompleteOptions )
     }
 
     // Initialize typeahead, if necessary
     if ( ! $.isEmptyObject( this.options.typeahead ) ) {
-      var typeaheadOptions = $.extend({}, this.options.typeahead, {})
+      var typeaheadOptions = $.extend({
+        minLength: this.options.showAutocompleteOnFocus ? 0 : null
+      }, this.options.typeahead)
       this.$input.typeahead( null, typeaheadOptions )
       this.typeahead = true
     }
