@@ -14,3 +14,9 @@ tests so that we do not have to simulate mouse and keyboard, but could actually
 control the browser. This will be on the roadmap in the future.
 
 For now - simply do `npm test`.
+
+### Writing tests
+
+Take care to follow the style of existing tests. ALl tests that require DOM
+manipulation and/or involve simulating user interaction, should go under
+integration tests. Testing tokenfield methods should go under unit tests.

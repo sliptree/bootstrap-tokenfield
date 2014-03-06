@@ -1,6 +1,5 @@
 var jsdom = require('jsdom');
-
-require('./jsdom-patch');
+require('./helpers/jsdom-patch');
 
 before(function (done) {
   jsdom.env({

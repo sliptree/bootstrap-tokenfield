@@ -1,4 +1,4 @@
-describe('unit', function() {
+describe('1. Unit tests:', function() {
 
   describe('initializing tokenfield', function() {
     describe('with an empty input', function() {

@@ -1,4 +1,4 @@
-describe('Integration', function() {
+describe('2. Integration tests:', function() {
 
   before(function() {
     require('../node_modules/jquery-simulate-ext/libs/bililiteRange');
@@ -911,6 +911,90 @@ describe('Integration', function() {
         results[0].value.must.equal('');        
       });
     });
+
+    describe("tokenfield:preventduplicate", function() {
+      before(function() {
+        TFT.template = '<input type="text" class="tokenize" value="red,green,blue" />';
+        TFT.options = { allowDuplicates: false }
+      });
+
+      after(function() {
+        delete TFT.template;
+        delete TFT.options;
+      });
+
+      it("must be triggered when a duplicate token is being prevented from created", function (done) {
+        this.$field.on('tokenfield:preventduplicate', function (e) {
+          e.token.must.be.an.object();
+          e.token.label.must.eql('red')
+          e.token.value.must.eql('red')
+          done();
+        });
+        
+        this.$field.tokenfield('createToken', 'red');
+      });
+    });
+
+    describe("tokenfield:createtoken", function() {
+      it("must be triggered when a token is created", function (done) {
+        this.$field.on('tokenfield:createtoken', function (e) {
+          e.token.must.be.an.object();
+          e.token.label.must.eql('red');
+          e.token.value.must.eql('red');
+          e.relatedTarget.must.be.an.object();
+          done();
+        });
+        
+        this.$field.tokenfield('createToken', 'red');
+      });
+    });
+
+    describe("tokenfield:edittoken", function() {
+      before(function() {
+        TFT.template = '<input type="text" class="tokenize" value="red,green,blue" />'
+      });
+
+      after(function() {
+        delete TFT.template;
+      });
+
+      it("must be triggered when a token is edited", function (done) {
+        this.$field.on('tokenfield:edittoken', function (e) {
+          e.token.must.be.an.object();
+          e.token.label.must.eql('red');
+          e.token.value.must.eql('red');
+          e.relatedTarget.must.be.an.object();
+          done();
+        });
+
+        this.$wrapper.find('.token')
+            .filter(':has(.token-label:contains(red))').addClass('active');
+
+        this.$copyHelper.simulate("key-sequence", { sequence: "{enter}" });
+      });
+    });
+
+    describe("tokenfield:removetoken", function() {
+      before(function() {
+        TFT.template = '<input type="text" class="tokenize" value="red,green,blue" />'
+      });
+
+      after(function() {
+        delete TFT.template;
+      });
+
+      it("must be triggered when a token is removed", function (done) {
+        this.$field.on('tokenfield:removetoken', function (e) {
+          e.token.must.be.an.object();
+          e.token.label.must.eql('red');
+          e.token.value.must.eql('red');
+          done();
+        });
+
+        this.$wrapper.find('.token:first').find('.close').click();
+      });
+    });
+
   });
 
 });
