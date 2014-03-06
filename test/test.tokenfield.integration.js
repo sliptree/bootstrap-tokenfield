@@ -3,6 +3,11 @@ describe('Integration', function() {
   before(function() {
     require('../node_modules/jquery-simulate-ext/libs/bililiteRange');
     require('../node_modules/jquery-simulate-ext/libs/jquery.simulate');
+    
+    // https://github.com/j-ulrich/jquery-simulate-ext/issues/9
+    // For us, it just saves a littlebit time
+    global.$.simulate.ext_disableQuirkDetection = true;
+    
     require('../node_modules/jquery-simulate-ext/src/jquery.simulate.ext');
     require('../node_modules/jquery-simulate-ext/src/jquery.simulate.key-combo');
     require('../node_modules/jquery-simulate-ext/src/jquery.simulate.key-sequence');
@@ -774,6 +779,7 @@ describe('Integration', function() {
         });
         // key-sequence does not trigger submit event on the form when pressing enter
         // so we need to trigger it manually. Not really a solid test-case, but oh well
+        // https://github.com/j-ulrich/jquery-simulate-ext/pull/14
         this.$input.focus().simulate("key-sequence", { sequence: "{enter}" }).trigger('submit');
       });
 
