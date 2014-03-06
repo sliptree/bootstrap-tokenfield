@@ -48,7 +48,7 @@ beforeEach(function() {
   this.$wrapper     = this.$field.data('bs.tokenfield').$wrapper;
   this.$copyHelper  = this.$field.data('bs.tokenfield').$copyHelper;
 
-  // Set an initial empty value for input (bypasses bililiteRange error)
+  // Set an initial empty value for inputs (workaround for bililiteRange `null` value error)
   this.$input.val('');
   this.$copyHelper.val('');
 });
