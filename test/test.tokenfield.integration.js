@@ -1,5 +1,13 @@
 describe('Integration', function() {
 
+  before(function() {
+    require('../node_modules/jquery-simulate-ext/libs/bililiteRange');
+    require('../node_modules/jquery-simulate-ext/libs/jquery.simulate');
+    require('../node_modules/jquery-simulate-ext/src/jquery.simulate.ext');
+    require('../node_modules/jquery-simulate-ext/src/jquery.simulate.key-combo');
+    require('../node_modules/jquery-simulate-ext/src/jquery.simulate.key-sequence');
+  });
+
   describe('Using an alternative delimiter', function() {
     before(function() {
       TFT.template = '<input type="text" class="tokenize" value="red;green;blue;yellow" />'
@@ -13,14 +21,14 @@ describe('Integration', function() {
       delete TFT.options;
     });
 
-    it('should create tokens by splitting the original value with delimiters', function() {
-      this.$field.data('bs.tokenfield').$wrapper.find('.token').length.should.equal(4);
+    it('must create tokens by splitting the original value with delimiters', function() {
+      this.$field.data('bs.tokenfield').$wrapper.find('.token').length.must.equal(4);
     });
 
-    it('should create a token when the delimiting key is pressed and use the first delimiter for setting original input value', function() {
+    it('must create a token when the delimiting key is pressed and use the first delimiter for setting original input value', function() {
       this.$input.focus().simulate("key-sequence", { sequence: "purple;olive;" })
-      this.$field.data('bs.tokenfield').$wrapper.find('.token').length.should.equal(6);
-      this.$field.val().should.equal('red; green; blue; yellow; purple; olive');
+      this.$field.data('bs.tokenfield').$wrapper.find('.token').length.must.equal(6);
+      this.$field.val().must.equal('red; green; blue; yellow; purple; olive');
     });    
   })
 
@@ -38,14 +46,14 @@ describe('Integration', function() {
         delete TFT.options;
       });
 
-      it('should create tokens by splitting the original value with delimiters', function() {
-        this.$field.data('bs.tokenfield').$wrapper.find('.token').length.should.equal(4);
+      it('must create tokens by splitting the original value with delimiters', function() {
+        this.$field.data('bs.tokenfield').$wrapper.find('.token').length.must.equal(4);
       });
 
-      it('should create a token when the delimiting key is pressed and use the first delimiter for setting original input value', function() {
+      it('must create a token when the delimiting key is pressed and use the first delimiter for setting original input value', function() {
         this.$input.focus().simulate("key-sequence", { sequence: "purple olive." });
-        this.$field.data('bs.tokenfield').$wrapper.find('.token').length.should.equal(6);
-        this.$field.val().should.equal('red green blue yellow purple olive');
+        this.$field.data('bs.tokenfield').$wrapper.find('.token').length.must.equal(6);
+        this.$field.val().must.equal('red green blue yellow purple olive');
       });
     });
 
@@ -62,8 +70,8 @@ describe('Integration', function() {
         delete TFT.options;
       });
 
-      it('should create tokens by splitting the original value with delimiters', function() {
-        this.$field.data('bs.tokenfield').$wrapper.find('.token').length.should.equal(5);
+      it('must create tokens by splitting the original value with delimiters', function() {
+        this.$field.data('bs.tokenfield').$wrapper.find('.token').length.must.equal(5);
       });
     });
 
@@ -80,8 +88,8 @@ describe('Integration', function() {
         delete TFT.options;
       });
 
-      it('should create tokens by splitting the original value with delimiters', function() {
-        this.$field.data('bs.tokenfield').$wrapper.find('.token').length.should.equal(13);
+      it('must create tokens by splitting the original value with delimiters', function() {
+        this.$field.data('bs.tokenfield').$wrapper.find('.token').length.must.equal(13);
       });
     });
   });
@@ -97,9 +105,9 @@ describe('Integration', function() {
         delete TFT.template;
       });
 
-      it("should select all tokens", function() {
+      it("must select all tokens", function() {
         this.$input.focus().simulate("key-combo", { combo: "ctrl+a" });
-        this.$field.tokenfield('getTokens', true).length.should.equal(3);
+        this.$field.tokenfield('getTokens', true).length.must.equal(3);
       });
     });
 
@@ -112,9 +120,9 @@ describe('Integration', function() {
         delete TFT.template;
       });
 
-      it("should select all tokens", function() {
+      it("must select all tokens", function() {
         this.$input.focus().simulate("key-combo", { combo: "meta+a" });
-        this.$field.tokenfield('getTokens', true).length.should.equal(3);
+        this.$field.tokenfield('getTokens', true).length.must.equal(3);
       });
     });
 
@@ -129,27 +137,27 @@ describe('Integration', function() {
         });
 
         describe('and there are more tokens to the right of selected token', function() {
-          it("should delete the selected token and move focus to the next token", function() {
+          it("must delete the selected token and move focus to the next token", function() {
             // Mark green as active
             this.$wrapper.find('.token')
                 .filter(':has(.token-label:contains(green))').addClass('active');
 
             this.$copyHelper.simulate("key-sequence", { sequence: "{del}" });
-            this.$field.tokenfield('getTokens').length.should.equal(3);
-            this.$field.tokenfield('getTokensList', null, null, true).should.equal('blue');
+            this.$field.tokenfield('getTokens').length.must.equal(3);
+            this.$field.tokenfield('getTokensList', null, null, true).must.equal('blue');
           });
         })
 
         describe('and there are no more tokens to the right of the selected token', function() {
-          it("should delete the selected token and move focus to input", function() {
+          it("must delete the selected token and move focus to input", function() {
             // Mark green as active
             this.$wrapper.find('.token')
                 .filter(':has(.token-label:contains(yellow))').addClass('active');
 
             this.$copyHelper.simulate("key-sequence", { sequence: "{del}" });
-            this.$field.tokenfield('getTokens').length.should.equal(3);
-            this.$field.tokenfield('getTokensList', null, null, true).should.equal('');
-            this.$input.is(document.activeElement).should.be.true;
+            this.$field.tokenfield('getTokens').length.must.equal(3);
+            this.$field.tokenfield('getTokensList', null, null, true).must.equal('');
+            this.$input.is(document.activeElement).must.be.true();
           });
         })
       });
@@ -164,7 +172,7 @@ describe('Integration', function() {
         });
 
         describe('and there are more tokens to the right of selected tokens', function() {
-          it("should delete the selected tokens and move focus to the next token of the rightmost selected token", function() {
+          it("must delete the selected tokens and move focus to the next token of the rightmost selected token", function() {
             // Mark green and yellow as active
             this.$wrapper.find('.token')
                 .filter(':has(.token-label:contains(green))').addClass('active');
@@ -172,13 +180,13 @@ describe('Integration', function() {
                 .filter(':has(.token-label:contains(yellow))').addClass('active');
 
             this.$copyHelper.simulate("key-sequence", { sequence: "{del}" });
-            this.$field.tokenfield('getTokens').length.should.equal(3);
-            this.$field.tokenfield('getTokensList', null, null, true).should.equal('purple');
+            this.$field.tokenfield('getTokens').length.must.equal(3);
+            this.$field.tokenfield('getTokensList', null, null, true).must.equal('purple');
           });
         });
 
         describe('and there are no more tokens to the right of selected tokens', function() {
-          it("should delete the selected tokens and move focus input", function() {
+          it("must delete the selected tokens and move focus input", function() {
             // Mark green and yellow as active
             this.$wrapper.find('.token')
                 .filter(':has(.token-label:contains(green))').addClass('active');
@@ -186,9 +194,9 @@ describe('Integration', function() {
                 .filter(':has(.token-label:contains(purple))').addClass('active');
 
             this.$copyHelper.simulate("key-sequence", { sequence: "{del}" });
-            this.$field.tokenfield('getTokens').length.should.equal(3);
-            this.$field.tokenfield('getTokensList').should.equal('red, blue, yellow');
-            this.$input.is(document.activeElement).should.be.true;
+            this.$field.tokenfield('getTokens').length.must.equal(3);
+            this.$field.tokenfield('getTokensList').must.equal('red, blue, yellow');
+            this.$input.is(document.activeElement).must.be.true();
 
           });
         });
@@ -206,27 +214,27 @@ describe('Integration', function() {
         });
 
         describe('and there are more tokens to the left of selected token', function() {
-          it("should delete the selected token and move focus to the previous token", function() {
+          it("must delete the selected token and move focus to the previous token", function() {
             // Mark green as active
             this.$wrapper.find('.token')
                 .filter(':has(.token-label:contains(blue))').addClass('active');
 
             this.$copyHelper.simulate("key-sequence", { sequence: "{backspace}" });
-            this.$field.tokenfield('getTokens').length.should.equal(3);
-            this.$field.tokenfield('getTokensList', null, null, true).should.equal('green');
+            this.$field.tokenfield('getTokens').length.must.equal(3);
+            this.$field.tokenfield('getTokensList', null, null, true).must.equal('green');
           });
         })
 
         describe('and there are no more tokens to the left of the selected token', function() {
-          it("should delete the selected token and move focus to input", function() {
+          it("must delete the selected token and move focus to input", function() {
             // Mark green as active
             this.$wrapper.find('.token')
                 .filter(':has(.token-label:contains(red))').addClass('active');
 
             this.$copyHelper.simulate("key-sequence", { sequence: "{backspace}" });
-            this.$field.tokenfield('getTokens').length.should.equal(3);
-            this.$field.tokenfield('getTokensList', null, null, true).should.equal('');
-            this.$input.is(document.activeElement).should.be.true;
+            this.$field.tokenfield('getTokens').length.must.equal(3);
+            this.$field.tokenfield('getTokensList', null, null, true).must.equal('');
+            this.$input.is(document.activeElement).must.be.true();
           });
         })
       });
@@ -241,7 +249,7 @@ describe('Integration', function() {
         });
 
         describe('and there are more tokens to the left of selected tokens', function() {
-          it("should delete the selected tokens and move focus to the previous token of the leftmost selected token", function() {
+          it("must delete the selected tokens and move focus to the previous token of the leftmost selected token", function() {
             // Mark green and yellow as active
             this.$wrapper.find('.token')
                 .filter(':has(.token-label:contains(green))').addClass('active');
@@ -249,13 +257,13 @@ describe('Integration', function() {
                 .filter(':has(.token-label:contains(yellow))').addClass('active');
 
             this.$copyHelper.simulate("key-sequence", { sequence: "{backspace}" });
-            this.$field.tokenfield('getTokens').length.should.equal(3);
-            this.$field.tokenfield('getTokensList', null, null, true).should.equal('red');
+            this.$field.tokenfield('getTokens').length.must.equal(3);
+            this.$field.tokenfield('getTokensList', null, null, true).must.equal('red');
           });
         });
 
         describe('and there are no more tokens to the left of selected tokens', function() {
-          it("should delete the selected tokens and move focus input", function() {
+          it("must delete the selected tokens and move focus input", function() {
             // Mark green and yellow as active
             this.$wrapper.find('.token')
                 .filter(':has(.token-label:contains(red))').addClass('active');
@@ -263,9 +271,9 @@ describe('Integration', function() {
                 .filter(':has(.token-label:contains(purple))').addClass('active');
 
             this.$copyHelper.simulate("key-sequence", { sequence: "{backspace}" });
-            this.$field.tokenfield('getTokens').length.should.equal(3);
-            this.$field.tokenfield('getTokensList').should.equal('green, blue, yellow');
-            this.$input.is(document.activeElement).should.be.true;
+            this.$field.tokenfield('getTokens').length.must.equal(3);
+            this.$field.tokenfield('getTokensList').must.equal('green, blue, yellow');
+            this.$input.is(document.activeElement).must.be.true();
           });
         });
       });
@@ -279,9 +287,9 @@ describe('Integration', function() {
           delete TFT.template;
         });
 
-        it("should move focus to the last token", function() {
+        it("must move focus to the last token", function() {
           this.$input.simulate("key-sequence", { sequence: "{backspace}" });
-          this.$field.tokenfield('getTokensList', null, null, true ).should.equal('blue');
+          this.$field.tokenfield('getTokensList', null, null, true ).must.equal('blue');
         });
       });
     });
@@ -296,9 +304,9 @@ describe('Integration', function() {
           delete TFT.template;
         });
 
-        it("should move focus to the last token", function() {
+        it("must move focus to the last token", function() {
           this.$input.simulate("key-sequence", { sequence: "{leftarrow}" });
-          this.$field.tokenfield('getTokensList', null, null, true ).should.equal('blue');
+          this.$field.tokenfield('getTokensList', null, null, true ).must.equal('blue');
         });
       });
 
@@ -311,12 +319,12 @@ describe('Integration', function() {
           delete TFT.template;
         });
 
-        it("should move focus to the previous token", function() {
+        it("must move focus to the previous token", function() {
           this.$wrapper.find('.token')
               .filter(':has(.token-label:contains(blue))').addClass('active');
 
           this.$copyHelper.simulate("key-sequence", { sequence: "{leftarrow}" });
-          this.$field.tokenfield('getTokensList', null, null, true ).should.equal('green');
+          this.$field.tokenfield('getTokensList', null, null, true ).must.equal('green');
         });
       });
 
@@ -329,14 +337,14 @@ describe('Integration', function() {
           delete TFT.template;
         });
 
-        it("should move focus to the previous token of the leftmost selected token", function() {
+        it("must move focus to the previous token of the leftmost selected token", function() {
           this.$wrapper.find('.token')
               .filter(':has(.token-label:contains(green))').addClass('active');
           this.$wrapper.find('.token')
               .filter(':has(.token-label:contains(yellow))').addClass('active');
                   
           this.$copyHelper.simulate("key-sequence", { sequence: "{leftarrow}" });
-          this.$field.tokenfield('getTokensList', null, null, true ).should.equal('red');
+          this.$field.tokenfield('getTokensList', null, null, true ).must.equal('red');
         });
       });
 
@@ -349,12 +357,12 @@ describe('Integration', function() {
           delete TFT.template;
         });
 
-        it("should keep the focus on the first token", function() {
+        it("must keep the focus on the first token", function() {
           this.$wrapper.find('.token')
               .filter(':has(.token-label:contains(red))').addClass('active');
 
           this.$copyHelper.simulate("key-sequence", { sequence: "{leftarrow}" });
-          this.$field.tokenfield('getTokensList', null, null, true ).should.equal('red');
+          this.$field.tokenfield('getTokensList', null, null, true ).must.equal('red');
         });
       });
 
@@ -367,10 +375,10 @@ describe('Integration', function() {
           delete TFT.template;
         });
 
-        it("should keep the focus on the input", function() {
+        it("must keep the focus on the input", function() {
           this.$input.simulate("key-sequence", { sequence: "{leftarrow}" });
-          this.$field.tokenfield('getTokensList', null, null, true ).should.equal('');          
-          this.$input.is(document.activeElement).should.be.true;
+          this.$field.tokenfield('getTokensList', null, null, true ).must.equal('');          
+          this.$input.is(document.activeElement).must.be.true();
         });
       });
     });
@@ -385,10 +393,10 @@ describe('Integration', function() {
           delete TFT.template;
         });
 
-        it("should keep the focus on the input", function() {
+        it("must keep the focus on the input", function() {
           this.$input.simulate("key-sequence", { sequence: "{rightarrow}" });
-          this.$field.tokenfield('getTokensList', null, null, true ).should.equal('');          
-          this.$input.is(document.activeElement).should.be.true;
+          this.$field.tokenfield('getTokensList', null, null, true ).must.equal('');          
+          this.$input.is(document.activeElement).must.be.true();
         });
       });
 
@@ -401,12 +409,12 @@ describe('Integration', function() {
           delete TFT.template;
         });
 
-        it("should move focus to the next token", function() {
+        it("must move focus to the next token", function() {
           this.$wrapper.find('.token')
               .filter(':has(.token-label:contains(red))').addClass('active');
                   
           this.$copyHelper.simulate("key-sequence", { sequence: "{rightarrow}" });
-          this.$field.tokenfield('getTokensList', null, null, true ).should.equal('green');
+          this.$field.tokenfield('getTokensList', null, null, true ).must.equal('green');
         });
       });
 
@@ -419,14 +427,14 @@ describe('Integration', function() {
           delete TFT.template;
         });
 
-        it("should move focus to the next token of the rightmost selected token", function() {
+        it("must move focus to the next token of the rightmost selected token", function() {
           this.$wrapper.find('.token')
               .filter(':has(.token-label:contains(red))').addClass('active');
           this.$wrapper.find('.token')
               .filter(':has(.token-label:contains(blue))').addClass('active');
                   
           this.$copyHelper.simulate("key-sequence", { sequence: "{rightarrow}" });
-          this.$field.tokenfield('getTokensList', null, null, true ).should.equal('yellow');
+          this.$field.tokenfield('getTokensList', null, null, true ).must.equal('yellow');
         });
       });
 
@@ -439,13 +447,13 @@ describe('Integration', function() {
           delete TFT.template;
         });
 
-        it("should move the focus to the input", function() {
+        it("must move the focus to the input", function() {
           this.$wrapper.find('.token')
               .filter(':has(.token-label:contains(blue))').addClass('active');
                   
           this.$copyHelper.simulate("key-sequence", { sequence: "{rightarrow}" });
-          this.$field.tokenfield('getTokensList', null, null, true ).should.equal('');
-          this.$input.is(document.activeElement).should.be.true;
+          this.$field.tokenfield('getTokensList', null, null, true ).must.equal('');
+          this.$input.is(document.activeElement).must.be.true();
         });
       });
 
@@ -458,9 +466,9 @@ describe('Integration', function() {
           delete TFT.template;
         });
 
-        it("should move focus to the last token", function() {
+        it("must move focus to the last token", function() {
           this.$input.simulate("key-sequence", { sequence: "{rightarrow}" });
-          this.$field.tokenfield('getTokensList', null, null, true ).should.equal('blue');
+          this.$field.tokenfield('getTokensList', null, null, true ).must.equal('blue');
         });
       });      
     });
@@ -475,9 +483,9 @@ describe('Integration', function() {
           delete TFT.template;
         });
 
-        it("should move focus to the last token", function() {
+        it("must move focus to the last token", function() {
           this.$input.focus().simulate("keydown", { keyCode: 37, charCode: 37, shiftKey: true });
-          this.$field.tokenfield('getTokensList', null, null, true ).should.equal('blue');
+          this.$field.tokenfield('getTokensList', null, null, true ).must.equal('blue');
         });
       });
 
@@ -490,14 +498,14 @@ describe('Integration', function() {
           delete TFT.template;
         });
 
-        it("should activate the previous token in addition to the already active token", function() {
+        it("must activate the previous token in addition to the already active token", function() {
           this.$wrapper.find('.token')
               .filter(':has(.token-label:contains(blue))').addClass('active');
 
           this.$copyHelper.focus()
                           .simulate("keydown", { keyCode: 37, shiftKey: true })
                           .simulate("keydown", { keyCode: 37, shiftKey: true });
-          this.$field.tokenfield('getTokensList', null, null, true ).should.equal('red, green, blue');
+          this.$field.tokenfield('getTokensList', null, null, true ).must.equal('red, green, blue');
         });
       });
 
@@ -510,14 +518,14 @@ describe('Integration', function() {
           delete TFT.template;
         });
 
-        it("should move select the previous token of the leftmost selected token in addition to the already selected tokens", function() {
+        it("must move select the previous token of the leftmost selected token in addition to the already selected tokens", function() {
           this.$wrapper.find('.token')
               .filter(':has(.token-label:contains(green))').addClass('active');
           this.$wrapper.find('.token')
               .filter(':has(.token-label:contains(yellow))').addClass('active');
 
           this.$copyHelper.focus().simulate("keydown", { keyCode: 37, shiftKey: true });
-          this.$field.tokenfield('getTokensList', null, null, true ).should.equal('red, green, yellow');
+          this.$field.tokenfield('getTokensList', null, null, true ).must.equal('red, green, yellow');
         });
       });     
     });
@@ -532,14 +540,14 @@ describe('Integration', function() {
           delete TFT.template;
         });
 
-        it("should activate the next token in addition to the already active token", function() {
+        it("must activate the next token in addition to the already active token", function() {
           this.$wrapper.find('.token')
               .filter(':has(.token-label:contains(red))').addClass('active');
 
           this.$copyHelper.focus()
                           .simulate("keydown", { keyCode: 39, shiftKey: true })
                           .simulate("keydown", { keyCode: 39, shiftKey: true });
-          this.$field.tokenfield('getTokensList', null, null, true ).should.equal('red, green, blue');
+          this.$field.tokenfield('getTokensList', null, null, true ).must.equal('red, green, blue');
         });
       });
 
@@ -552,14 +560,14 @@ describe('Integration', function() {
           delete TFT.template;
         });
 
-        it("should move select the next token of the rightmost selected token in addition to the already selected tokens", function() {
+        it("must move select the next token of the rightmost selected token in addition to the already selected tokens", function() {
           this.$wrapper.find('.token')
               .filter(':has(.token-label:contains(green))').addClass('active');
           this.$wrapper.find('.token')
               .filter(':has(.token-label:contains(yellow))').addClass('active');
 
           this.$copyHelper.focus().simulate("keydown", { keyCode: 39, shiftKey: true });
-          this.$field.tokenfield('getTokensList', null, null, true ).should.equal('green, yellow, purple');
+          this.$field.tokenfield('getTokensList', null, null, true ).must.equal('green, yellow, purple');
         });
       });
     });
@@ -574,14 +582,14 @@ describe('Integration', function() {
           delete TFT.template;
         });
 
-        it("should enter edit mode for the active token", function() {
+        it("must enter edit mode for the active token", function() {
           this.$wrapper.find('.token')
               .filter(':has(.token-label:contains(green))').addClass('active');
 
           this.$copyHelper.simulate("key-sequence", { sequence: "{enter}" });
-          this.$input.data('edit').should.be.true;
-          this.$input.prev(':contains(red)').should.have.length(1);
-          this.$input.next(':contains(blue)').should.have.length(1);
+          this.$input.data('edit').must.be.true();
+          this.$input.prev(':contains(red)').must.have.length(1);
+          this.$input.next(':contains(blue)').must.have.length(1);
         });
       });
 
@@ -596,12 +604,12 @@ describe('Integration', function() {
           delete TFT.options;
         });
 
-        it("should not enter edit mode for the active token [no data('edit') property]", function() {
+        it("must not enter edit mode for the active token [no data('edit') property]", function() {
           this.$wrapper.find('.token')
               .filter(':has(.token-label:contains(green))').addClass('active');
 
           this.$copyHelper.simulate("key-sequence", { sequence: "{enter}" });
-          this.$input.data().should.not.have.property('edit');
+          this.$input.data().must.not.have.property('edit');
         });
       });
 
@@ -614,10 +622,10 @@ describe('Integration', function() {
           delete TFT.template;
         });
 
-        it("should create a new token from the input", function() {
+        it("must create a new token from the input", function() {
 
           this.$input.simulate("key-sequence", { sequence: "purple{enter}" });
-          this.$field.tokenfield('getTokens').should.have.length(4);
+          this.$field.tokenfield('getTokens').must.have.length(4);
         });
       });
     });
@@ -632,15 +640,14 @@ describe('Integration', function() {
           delete TFT.template;
         });
 
-        it("should create a new token from the input", function() {
+        it("must create a new token from the input", function() {
 
           this.$input.focus().simulate("key-sequence", { sequence: "purple" });
           this.$input.simulate("keydown", { keyCode: 9 });
-          this.$field.tokenfield('getTokens').should.have.length(4);
+          this.$field.tokenfield('getTokens').must.have.length(4);
         });
       });
     });
-
   });
 
   describe("Mouse interaction", function() {
@@ -654,12 +661,12 @@ describe('Integration', function() {
         delete TFT.template;
       });
 
-      it("should select the token and deactivate any other active tokens", function() {
+      it("must select the token and deactivate any other active tokens", function() {
         this.$wrapper.find('.token')
             .filter(':has(.token-label:contains(green))').addClass('active');
 
         this.$wrapper.find('.token:contains(red)').click();
-        this.$field.tokenfield('getTokensList', null, null, true ).should.equal('red');
+        this.$field.tokenfield('getTokensList', null, null, true ).must.equal('red');
       });
     });
 
@@ -672,9 +679,9 @@ describe('Integration', function() {
         delete TFT.template;
       });
 
-      it("should remove the token", function() {                
+      it("must remove the token", function() {                
         this.$wrapper.find('.token:contains(red)').find('.close').click();
-        this.$field.tokenfield('getTokensList' ).should.equal('green, blue');
+        this.$field.tokenfield('getTokensList' ).must.equal('green, blue');
       });
     });
 
@@ -687,17 +694,17 @@ describe('Integration', function() {
         delete TFT.template;
       });
 
-      it("should enter the edit mode of the token", function() {
+      it("must enter the edit mode of the token", function() {
         this.$wrapper.find('.token')
             .filter(':has(.token-label:contains(green))').addClass('active');
                 
         this.$wrapper.find('.token:contains(red)').dblclick();
-        this.$input.data('edit').should.be.true;
-        this.$input.next(':contains(green)').should.have.length(1);        
+        this.$input.data('edit').must.be.true();
+        this.$input.next(':contains(green)').must.have.length(1);        
       });
     });
 
-    describe("should not enter the edit mode of the token when allowEditing false", function() {
+    describe("must not enter the edit mode of the token when allowEditing false", function() {
       before(function() {
         TFT.template = '<input type="text" class="tokenize" value="red,green,blue" />';
         TFT.options = { allowEditing: false }
@@ -708,9 +715,9 @@ describe('Integration', function() {
         delete TFT.options;
      });
 
-      it("should not enter the edit mode of the token", function() {
+      it("must not enter the edit mode of the token", function() {
         this.$wrapper.find('.token:contains(red)').dblclick();
-        this.$input.data().should.not.have.property('edit');
+        this.$input.data().must.not.have.property('edit');
       });
     });
 
@@ -723,12 +730,12 @@ describe('Integration', function() {
         delete TFT.template;
       });
 
-      it("should activate the token in addition to the already active token", function() {
+      it("must activate the token in addition to the already active token", function() {
         this.$wrapper.find('.token')
             .filter(':has(.token-label:contains(green))').addClass('active');
                 
         this.$wrapper.find('.token:contains(red)').simulate('click', { ctrlKey: true });
-        this.$field.tokenfield('getTokensList', null, null, true ).should.equal('red, green');
+        this.$field.tokenfield('getTokensList', null, null, true ).must.equal('red, green');
       });
     }); 
 
@@ -741,14 +748,14 @@ describe('Integration', function() {
         delete TFT.template;
       });
 
-      it("should activate the token and all the tokens between the already active token", function() {
+      it("must activate the token and all the tokens between the already active token", function() {
         this.$wrapper.find('.token:contains(blue)').simulate('click');
         this.$wrapper.find('.token:contains(red)').simulate('click', { shiftKey: true });
-        this.$field.tokenfield('getTokensList', null, null, true ).should.equal('red, green, blue');
+        this.$field.tokenfield('getTokensList', null, null, true ).must.equal('red, green, blue');
       });
     });
 
-    describe("Pressing enter with when there is no input", function() {
+    describe("Pressing enter when there is no input", function() {
       var submitted = false;
 
       before(function() {
@@ -762,17 +769,18 @@ describe('Integration', function() {
       beforeEach(function() {
         this.$sandbox.find('form').on('submit', function(e) {
           submitted = true;
-          event.preventDefault();
+          e.preventDefault();
           return false;
         });
-        this.$input.focus().simulate("key-sequence", { sequence: "{enter}" });
+        // key-sequence does not trigger submit event on the form when pressing enter
+        // so we need to trigger it manually. Not really a solid test-case, but oh well
+        this.$input.focus().simulate("key-sequence", { sequence: "{enter}" }).trigger('submit');
       });
 
-      it("should submit the underlying form", function() {
-        submitted.should.equal(true);
+      it("must submit the underlying form", function() {
+        submitted.must.equal(true);
       });
     });
-
   });
 
   describe("Duplicates", function() {
@@ -799,21 +807,24 @@ describe('Integration', function() {
         this.$input.focus().simulate("key-sequence", { sequence: "red{enter}" });
       });
 
-      it("should not create a duplicate token", function() {
-        this.$field.tokenfield('getTokensList').should.equal('red, green, blue');
+      it("must not create a duplicate token", function() {
+        this.$field.tokenfield('getTokensList').must.equal('red, green, blue');
       });
 
-      it("should add duplicate class to the existing token", function() {
-        this.$sandbox.find( '.token[data-value="red"]' ).hasClass('duplicate').should.equal(true);
+      it("must add duplicate class to the existing token", function() {
+        this.$sandbox.find( '.token[data-value="red"]' ).hasClass('duplicate').must.equal(true);
       });
 
-      it("should keep the duplicate value in the input", function() {
-        this.$input.val().should.equal('red');
+      it("must keep the duplicate value in the input", function() {
+        // key-sequnce acts a bit weird on node by adding a newline
+        // at the beginning when pressing enter. So we need to
+        // remove it by hand before comparing values
+        this.$input.val().replace(/\n/g, '').must.equal('red');
       });
 
-      it("should not submit the form when pressing enter", function(done) {
+      it("must not submit the form when pressing enter", function(done) {
         setTimeout(function() {
-          submitted.should.equal(false);
+          submitted.must.equal(false);
           done();
         }, 1);
       });
@@ -841,28 +852,27 @@ describe('Integration', function() {
         this.$input.focus().simulate("key-sequence", { sequence: "red{enter}" });
       });
 
-      it("should create a duplicate token", function() {
-        this.$field.tokenfield('getTokensList').should.equal('red, green, blue, red');
+      it("must create a duplicate token", function() {
+        this.$field.tokenfield('getTokensList').must.equal('red, green, blue, red');
       });
 
-      it("should not keep the duplicate value in the input", function() {
-        this.$input.val().should.equal('');
+      it("must not keep the duplicate value in the input", function() {
+        this.$input.val().must.equal('');
       });
 
-      it("should not submit the form when pressing enter", function(done) {
+      it("must not submit the form when pressing enter", function(done) {
         setTimeout(function() {
-          submitted.should.equal(false);
+          submitted.must.equal(false);
           done();
         }, 1);
       });
     });
-
   });
 
   describe("Events", function() {
 
     describe("tokenfield:preparetoken", function() {
-      it("should allow changing token field and value", function() {
+      it("must allow changing token field and value", function() {
         this.$field.on('tokenfield:preparetoken', function (e) {
           e.token.value = 'one';
           e.token.label = 'two';
@@ -870,22 +880,21 @@ describe('Integration', function() {
         this.$field.tokenfield('createToken', 'zero');
 
         var results = this.$field.tokenfield('getTokens');
-        results[0].label.should.equal('two');
-        results[0].value.should.equal('one');
+        results[0].label.must.equal('two');
+        results[0].value.must.equal('one');
       });
 
-      it("should allow setting token value to an empty string", function() {
+      it("must allow setting token value to an empty string", function() {
         this.$field.on('tokenfield:preparetoken', function (e) {
           e.token.value = '';
         });
         this.$field.tokenfield('createToken', 'zero');
 
         var results = this.$field.tokenfield('getTokens');
-        results[0].label.should.equal('zero');
-        results[0].value.should.equal('');        
+        results[0].label.must.equal('zero');
+        results[0].value.must.equal('');        
       });
     });
-
   });
 
 });

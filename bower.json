@@ -3,10 +3,16 @@
   "description": "Advanced tagging/tokenizing plugin for input fields with a focus on keyboard and copy-paste support.",
   "version": "0.11.0",
   "authors": [
-    { "name": "ragulka", "homepage": "https://github.com/ragulka" },
-    { "name": "sliptree", "homepage": "https://github.com/sliptree" }
+    {
+      "name": "ragulka",
+      "homepage": "https://github.com/ragulka"
+    },
+    {
+      "name": "sliptree",
+      "homepage": "https://github.com/sliptree"
+    }
   ],
-  "homepage": "http://sliptree.github.io/bootstrap-tokenfield/",  
+  "homepage": "http://sliptree.github.io/bootstrap-tokenfield/",
   "main": [
     "dist/bootstrap-tokenfield.js",
     "dist/bootstrap-tokenfield.css"
@@ -20,8 +26,8 @@
     "token",
     "input",
     "select",
-    "form"    
-  ],  
+    "form"
+  ],
   "dependencies": {
     "jquery": "~2.1.0",
     "bootstrap": "~3.1.1"

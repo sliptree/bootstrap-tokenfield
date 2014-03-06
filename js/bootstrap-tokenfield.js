@@ -10,13 +10,26 @@
     // AMD. Register as an anonymous module.
     define(['jquery'], factory);
   } else if (typeof exports === 'object') {
-    // Node/CommonJS
-    factory(require('jquery'));
+    // For CommonJS and CommonJS-like environments where a proper window is present,
+    // execute the factory and get jQuery
+    // For environments that do not inherently posses a window with a document
+    // (such as Node.js), expose a jQuery-making factory as module.exports
+    // This accentuates the need for the creation of a real window
+    // e.g. var jQuery = require("jquery")(window);
+    // See ticket #14549 for more info
+    module.exports = global.window && global.window.$ ?
+      factory( global.window.$ ) :
+      function( input ) {
+        if ( !input.$ && !input.fn ) {
+          throw new Error( "Tokenfield requires a window object with jQuery or a jQuery instance" );
+        }
+        return factory( input.$ || input );
+      };
   } else {
     // Browser globals
     factory(jQuery);
   }
-}(function ($) {
+}(function ($, window) {
 
   "use strict"; // jshint ;_;
 
@@ -58,7 +71,7 @@
     });
 
     // Store original input width
-    var elRules = (typeof window.getMatchedCSSRules === 'function') ? window.getMatchedCSSRules( element ) : null
+    var elRules = (window && typeof window.getMatchedCSSRules === 'function') ? window.getMatchedCSSRules( element ) : null
       , elStyleWidth = element.style.width
       , elCSSWidth
       , elWidth = this.$element.width()
