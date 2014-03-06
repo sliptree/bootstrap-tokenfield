@@ -1,5 +1,7 @@
 Bootstrap Tokenfield
 ====================
+[![Build status][travis-badge]](https://travis-ci.org/sliptree/bootstrap-tokenfield)
+[travis-badge]: https://travis-ci.org/sliptree/bootstrap-tokenfield.png?branch=master
 
 A jQuery tagging / tokenizer input plugin for Twitter's Bootstrap, by the guys from [Sliptree](https://sliptree.com)
 

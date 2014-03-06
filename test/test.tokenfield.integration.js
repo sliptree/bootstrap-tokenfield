@@ -875,7 +875,7 @@ describe('Integration', function() {
     });
   });
 
-  describe.only("Events", function() {
+  describe("Events", function() {
     
     describe("tokenfield:initialize", function() {
       it("must must be triggered when tokenfield is created", function (done) {
