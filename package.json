@@ -22,8 +22,8 @@
     "token",
     "input",
     "select",
-    "form"    
-  ],  
+    "form"
+  ],
   "bugs": {
     "url": "https://github.com/sliptree/bootstrap-tokenfield/issues"
   },
@@ -32,7 +32,7 @@
       "type": "MIT",
       "url": "https://github.com/jquery/jquery/blob/2.1.0/MIT-LICENSE.txt"
     }
-  ],  
+  ],
   "devDependencies": {
     "grunt": "~0.4.2",
     "grunt-less": "~0.1.7",
@@ -40,6 +40,9 @@
     "grunt-contrib-uglify": "~0.2.7",
     "grunt-contrib-copy": "~0.4.1",
     "grunt-contrib-watch": "~0.5.3",
-    "grunt-jekyll": "~0.4.1"
+    "grunt-jekyll": "~0.4.1",
+    "mocha": "^1.17.1",
+    "must": "^0.11.0",
+    "jsdom": "^0.10.1"
   }
 }
