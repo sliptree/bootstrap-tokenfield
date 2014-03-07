@@ -112,7 +112,7 @@ module.exports = function (grunt) {
       git_push: {
         cmd: 'git push && git push --tags'
       },
-      publish_docs: {
+      update_docs: {
         cmd: [
           'git checkout gh-pages',
           'git reset master --hard',
@@ -122,6 +122,9 @@ module.exports = function (grunt) {
           'git commit -m "Update docs to <%= version %>"',
           'git checkout master'
         ].join(' && ')
+      },
+      npm_publish: {
+        cmd: 'npm publish'
       }
     }
 
@@ -186,8 +189,9 @@ module.exports = function (grunt) {
       'exec:git_add',
       'exec:git_commit:' + version,
       'exec:git_tag:' + version,
-      'exec:publish_docs'
+      'exec:update_docs'
       //'exec:git_push',
+      //'exec:npm_publish',
     ]);
   });  
 
