@@ -9,13 +9,12 @@
     // AMD. Register as an anonymous module.
     define(['jquery'], factory);
   } else if (typeof exports === 'object') {
-    // For CommonJS and CommonJS-like environments where a proper window is present,
-    // execute the factory and get jQuery
+    // For CommonJS and CommonJS-like environments where a window with jQuery
+    // is present, execute the factory with the jQuery instance from the window object
     // For environments that do not inherently posses a window with a document
-    // (such as Node.js), expose a jQuery-making factory as module.exports
-    // This accentuates the need for the creation of a real window
-    // e.g. var jQuery = require("jquery")(window);
-    // See ticket #14549 for more info
+    // (such as Node.js), expose a Tokenfield-making factory as module.exports
+    // This accentuates the need for the creation of a real window or passing in a jQuery instance
+    // e.g. require("bootstrap-tokenfield")(window); or require("bootstrap-tokenfield")($);
     module.exports = global.window && global.window.$ ?
       factory( global.window.$ ) :
       function( input ) {
