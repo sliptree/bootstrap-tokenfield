@@ -46,7 +46,7 @@
     "mocha": "^1.17.1",
     "must": "^0.11.0",
     "jsdom": "^0.10.1",
-    "jquery-simulate-ext": "git://github.com/j-ulrich/jquery-simulate-ext",
+    "jquery-simulate-ext": "^1.3.0",
     "grunt-exec": "^0.4.5",
     "semver": "^2.2.1"
   },
