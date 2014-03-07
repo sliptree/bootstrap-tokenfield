@@ -803,6 +803,8 @@
                 .select()
                 .data( 'edit', true )
                 .width( tokenWidth )
+
+      this.update();
     }
 
   , unedit: function (focus) {
@@ -810,6 +812,7 @@
       $_input.appendTo( this.$wrapper )
       
       this.$input.data('edit', false)
+      this.$mirror.text('')
 
       this.update()
 
