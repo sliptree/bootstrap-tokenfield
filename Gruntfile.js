@@ -1,6 +1,7 @@
 module.exports = function (grunt) {
 
-  var semver = require('semver');
+  var semver = require('semver'),
+      f = require('util').format;
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),

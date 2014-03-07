@@ -20,10 +20,10 @@
     "bootstrap",
     "tokenfield",
     "tags",
-    "token"  
+    "token",
     "input",
     "select",
-    "form",
+    "form"
   ],
   "homepage": "http://sliptree.github.io/bootstrap-tokenfield/",
   "docs": "http://sliptree.github.io/bootstrap-tokenfield/",
