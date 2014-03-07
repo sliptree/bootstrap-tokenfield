@@ -117,6 +117,8 @@ module.exports = function (grunt) {
           'git reset master --hard',
           'sed -i.bak \'s/%VERSION%/v<%= version %>/\' index.html',
           'rm -rf index.html.bak',
+          'git add index.html',
+          'git commit -m "Update docs to <%= version %>"',
           'git checkout master'
         ].join(' && ')
       }
