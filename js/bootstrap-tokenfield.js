@@ -95,7 +95,7 @@
       .prop('tabindex', -1)
 
     // Create a wrapper
-    this.$wrapper = $('<div class="tokenfield form-control" />')
+    this.$wrapper = $('<div class="tokenfield form-control" />').prop('tabindex', this.$element.data('original-tabindex'))
     if (this.$element.hasClass('input-lg')) this.$wrapper.addClass('input-lg')
     if (this.$element.hasClass('input-sm')) this.$wrapper.addClass('input-sm')
     if (this.textDirection === 'rtl') this.$wrapper.addClass('rtl')
