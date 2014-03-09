@@ -95,7 +95,7 @@
       .prop('tabindex', -1)
 
     // Create a wrapper
-    this.$wrapper = $('<div class="tokenfield form-control" />').prop('tabindex', this.$element.data('original-tabindex'))
+    this.$wrapper = $('<div class="tokenfield form-control" />')
     if (this.$element.hasClass('input-lg')) this.$wrapper.addClass('input-lg')
     if (this.$element.hasClass('input-sm')) this.$wrapper.addClass('input-sm')
     if (this.textDirection === 'rtl') this.$wrapper.addClass('rtl')
@@ -106,6 +106,7 @@
                     .appendTo( this.$wrapper )
                     .prop( 'placeholder',  this.$element.prop('placeholder') )
                     .prop( 'id', id + '-tokenfield' )
+                    .prop( 'tabindex', this.$element.data('original-tabindex') )
 
     // Re-route original input label to new input
     var $label = $( 'label[for="' + this.$element.prop('id') + '"]' )
