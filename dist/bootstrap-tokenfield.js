@@ -106,6 +106,7 @@
                     .appendTo( this.$wrapper )
                     .prop( 'placeholder',  this.$element.prop('placeholder') )
                     .prop( 'id', id + '-tokenfield' )
+                    .prop( 'tabindex', this.$element.data('original-tabindex') )
 
     // Re-route original input label to new input
     var $label = $( 'label[for="' + this.$element.prop('id') + '"]' )
@@ -803,6 +804,8 @@
                 .select()
                 .data( 'edit', true )
                 .width( tokenWidth )
+
+      this.update();
     }
 
   , unedit: function (focus) {
@@ -810,6 +813,7 @@
       $_input.appendTo( this.$wrapper )
       
       this.$input.data('edit', false)
+      this.$mirror.text('')
 
       this.update()
 

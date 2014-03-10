@@ -80,7 +80,7 @@
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
   border-radius: 0;
-  border-bottom: 1px dotted #ebccd1;
+  border-bottom: 1px dotted #d9534f;
 }
 .tokenfield .token.invalid.active {
   background: #ededed;
