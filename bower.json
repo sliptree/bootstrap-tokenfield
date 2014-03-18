@@ -15,7 +15,7 @@
   "homepage": "http://sliptree.github.io/bootstrap-tokenfield/",
   "main": [
     "dist/bootstrap-tokenfield.js",
-    "dist/bootstrap-tokenfield.css"
+    "dist/css/bootstrap-tokenfield.css"
   ],
   "keywords": [
     "jquery",

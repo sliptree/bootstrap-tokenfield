@@ -17,6 +17,6 @@ For now - simply do `npm test`.
 
 ### Writing tests
 
-Take care to follow the style of existing tests. ALl tests that require DOM
+Take care to follow the style of existing tests. All tests that require DOM
 manipulation and/or involve simulating user interaction, should go under
 integration tests. Testing tokenfield methods should go under unit tests.
