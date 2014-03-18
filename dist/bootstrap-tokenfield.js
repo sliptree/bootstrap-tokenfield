@@ -716,8 +716,6 @@
 
       if (!token) return
 
-      if (this.$wrapper.find('.token.active').length === this.$wrapper.find('.token').length) return
-
       if (typeof remember === 'undefined') var remember = true
 
       if (multi) var add = true
