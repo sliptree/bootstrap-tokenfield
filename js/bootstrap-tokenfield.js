@@ -203,7 +203,7 @@
         , value = $.trim(attrs.value)
         , label = attrs.label && attrs.label.length ? $.trim(attrs.label) : value
 
-      if (!value.length || !label.length || value.length < this.options.minLength) return
+      if (!value.length || !label.length || label.length <= this.options.minLength) return
 
       if (this.options.limit && this.getTokens().length >= this.options.limit) return
 
