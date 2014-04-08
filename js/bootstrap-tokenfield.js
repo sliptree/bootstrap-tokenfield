@@ -431,20 +431,13 @@
           }
           return false
         })
-        .on('typeahead:selected', function (e, datum, dataset) {
+        .on('typeahead:selected typeahead:autocompleted', function (e, datum, dataset) {
           // Create token
           if (_self.createToken( datum )) {
             _self.$input.typeahead('val', '')
             if (_self.$input.data( 'edit' )) {
               _self.unedit(true)
             }
-          }
-        })
-        .on('typeahead:autocompleted', function (e, datum, dataset) {
-          _self.createToken( _self.$input.val() )
-          _self.$input.typeahead('val', '')
-          if (_self.$input.data( 'edit' )) {
-            _self.unedit(true)
           }
         })
 
