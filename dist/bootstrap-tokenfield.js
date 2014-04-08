@@ -898,7 +898,7 @@
     }
 
   , focusInput: function (e) {
-      if ($(e.target).closest('.token').length || $(e.target).closest('.token-input').length) return
+      if ( $(e.target).closest('.token').length || $(e.target).closest('.token-input').length || $(e.target).closest('.tt-dropdown-menu').length ) return
       // Focus only after the current call stack has cleared,
       // otherwise has no effect.
       // Reason: mousedown is too early - input will lose focus
