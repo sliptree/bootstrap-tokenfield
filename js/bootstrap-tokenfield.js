@@ -203,7 +203,7 @@
         , value = $.trim(attrs.value)
         , label = attrs.label && attrs.label.length ? $.trim(attrs.label) : value
 
-      if (!value.length || !label.length || value.length < this.options.minLength) return
+      if (!value.length || !label.length || label.length <= this.options.minLength) return
 
       if (this.options.limit && this.getTokens().length >= this.options.limit) return
 
@@ -431,20 +431,13 @@
           }
           return false
         })
-        .on('typeahead:selected', function (e, datum, dataset) {
+        .on('typeahead:selected typeahead:autocompleted', function (e, datum, dataset) {
           // Create token
           if (_self.createToken( datum )) {
             _self.$input.typeahead('val', '')
             if (_self.$input.data( 'edit' )) {
               _self.unedit(true)
             }
-          }
-        })
-        .on('typeahead:autocompleted', function (e, datum, dataset) {
-          _self.createToken( _self.$input.val() )
-          _self.$input.typeahead('val', '')
-          if (_self.$input.data( 'edit' )) {
-            _self.unedit(true)
           }
         })
 
