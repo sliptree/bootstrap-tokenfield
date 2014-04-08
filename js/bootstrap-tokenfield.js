@@ -955,9 +955,9 @@
       this.$element.insertBefore( this.$wrapper );
 
       // Remove tokenfield-related data
-      this.$element.removeData('original-styles');
-      this.$element.removeData('original-tabindex');
-      this.$element.removeData('bs.tokenfield');
+      this.$element.removeData('original-styles')
+                   .removeData('original-tabindex')
+                   .removeData('bs.tokenfield');
 
       // Remove tokenfield from DOM
       this.$wrapper.remove();
