@@ -134,6 +134,11 @@
       this.disable();
     }
 
+    // Set tokenfield readonly, if original input is readonly
+    if (this.$element.prop('readonly')) {
+      this.readonly();
+    }
+
     // Set up mirror for input auto-sizing
     this.$mirror = $('<span style="position:absolute; top:-999px; left:0; white-space:pre;"/>');
     this.$input.css('min-width', this.options.minWidth + 'px')
@@ -203,7 +208,7 @@
         , value = $.trim(attrs.value)
         , label = attrs.label && attrs.label.length ? $.trim(attrs.label) : value
 
-      if (!value.length || !label.length || value.length < this.options.minLength) return
+      if (!value.length || !label.length || label.length <= this.options.minLength) return
 
       if (this.options.limit && this.getTokens().length >= this.options.limit) return
 
@@ -280,11 +285,11 @@
       // Listen to events
       token
         .on('mousedown',  function (e) {
-          if (_self.disabled) return false;
+          if (_self._disabled || _self._readonly) return false;
           _self.preventDeactivation = true
         })
         .on('click',    function (e) {
-          if (_self.disabled) return false;
+          if (_self._disabled || _self._readonly) return false;
           _self.preventDeactivation = false
 
           if (e.ctrlKey || e.metaKey) {
@@ -295,7 +300,7 @@
           _self.activate( token, e.shiftKey, e.shiftKey )          
         })
         .on('dblclick', function (e) {
-          if (_self.disabled || !_self.options.allowEditing ) return false;
+          if (_self._disabled || _self._readonly || !_self.options.allowEditing ) return false;
           _self.edit( token )
         })
 
@@ -431,20 +436,13 @@
           }
           return false
         })
-        .on('typeahead:selected', function (e, datum, dataset) {
+        .on('typeahead:selected typeahead:autocompleted', function (e, datum, dataset) {
           // Create token
           if (_self.createToken( datum )) {
             _self.$input.typeahead('val', '')
             if (_self.$input.data( 'edit' )) {
               _self.unedit(true)
             }
-          }
-        })
-        .on('typeahead:autocompleted', function (e, datum, dataset) {
-          _self.createToken( _self.$input.val() )
-          _self.$input.typeahead('val', '')
-          if (_self.$input.data( 'edit' )) {
-            _self.unedit(true)
           }
         })
 
@@ -827,7 +825,8 @@
     }
 
   , remove: function (e, direction) {
-      if (this.$input.is(document.activeElement) || this.disabled) return
+      console.log('remove', this._readonly)
+      if (this.$input.is(document.activeElement) || this._disabled || this._readonly) return
 
       var token = (e.type === 'click') ? $(e.target).closest('.token') : this.$wrapper.find('.token.active')
       
@@ -917,18 +916,27 @@
     }
 
   , disable: function () {
-      this.disabled = true;
-      this.$input.prop('disabled', true);
-      this.$element.prop('disabled', true);
-      this.$wrapper.addClass('disabled');
+      this.setProperty('disabled', true);
     }
 
   , enable: function () {
-      this.disabled = false;
-      this.$input.prop('disabled', false);
-      this.$element.prop('disabled', false);
-      this.$wrapper.removeClass('disabled');
+      this.setProperty('disabled', false);
     }
+
+  , readonly: function () {
+      this.setProperty('readonly', true);
+    }
+
+  , writeable: function () {
+      this.setProperty('readonly', false);
+    }
+
+  , setProperty: function(property, value) {
+      this['_' + property] = value;
+      this.$input.prop(property, value);
+      this.$element.prop(property, value);
+      this.$wrapper[ value ? 'addClass' : 'removeClass' ](property);
+  }
 
   , destroy: function() {
       // Set field value

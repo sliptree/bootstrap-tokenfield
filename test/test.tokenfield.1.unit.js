@@ -390,7 +390,42 @@ describe('1. Unit tests:', function() {
         this.$wrapper.hasClass('disabled').must.be.false();
       });
 
-    });  
+    });
+
+    describe('readonly()', function() {
+
+      beforeEach(function() {
+        this.$field.tokenfield('readonly');
+      });
+
+      it('must make both original and token input readonly', function() {
+        this.$field.prop('readonly').must.be.true();
+        this.$input.prop('readonly').must.be.true();
+      });
+
+      it('must add "readonly" class to tokenfield', function() {
+        this.$wrapper.hasClass('readonly').must.be.true();
+      });
+
+    });
+
+    describe('writeable()', function() {
+
+      beforeEach(function() {
+        this.$field.tokenfield('readonly');
+        this.$field.tokenfield('writeable');
+      });
+
+      it('must make both original and token input writeable', function() {
+        this.$field.prop('readonly').must.be.false();
+        this.$input.prop('readonly').must.be.false();
+      });
+
+      it('must remove "readonly" class from tokenfield', function() {
+        this.$wrapper.hasClass('readonly').must.be.false();
+      });
+
+    });
   });
 
 });

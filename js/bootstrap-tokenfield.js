@@ -285,11 +285,11 @@
       // Listen to events
       token
         .on('mousedown',  function (e) {
-          if (_self.disabled || _self.readonly) return false;
+          if (_self._disabled || _self._readonly) return false;
           _self.preventDeactivation = true
         })
         .on('click',    function (e) {
-          if (_self.disabled || _self.readonly) return false;
+          if (_self._disabled || _self._readonly) return false;
           _self.preventDeactivation = false
 
           if (e.ctrlKey || e.metaKey) {
@@ -300,7 +300,7 @@
           _self.activate( token, e.shiftKey, e.shiftKey )          
         })
         .on('dblclick', function (e) {
-          if (_self.disabled || _self.readonly || !_self.options.allowEditing ) return false;
+          if (_self._disabled || _self._readonly || !_self.options.allowEditing ) return false;
           _self.edit( token )
         })
 
@@ -825,7 +825,8 @@
     }
 
   , remove: function (e, direction) {
-      if (this.$input.is(document.activeElement) || this.disabled || this.readonly) return
+      console.log('remove', this._readonly)
+      if (this.$input.is(document.activeElement) || this._disabled || this._readonly) return
 
       var token = (e.type === 'click') ? $(e.target).closest('.token') : this.$wrapper.find('.token.active')
       
@@ -915,32 +916,27 @@
     }
 
   , disable: function () {
-      this.disabled = true;
-      this.$input.prop('disabled', true);
-      this.$element.prop('disabled', true);
-      this.$wrapper.addClass('disabled');
+      this.setProperty('disabled', true);
     }
 
   , enable: function () {
-      this.disabled = false;
-      this.$input.prop('disabled', false);
-      this.$element.prop('disabled', false);
-      this.$wrapper.removeClass('disabled');
+      this.setProperty('disabled', false);
     }
 
   , readonly: function () {
-      this.readonly = true;
-      this.$input.prop('readonly', true);
-      this.$element.prop('readonly', true);
-      this.$wrapper.removeClass('readonly');
+      this.setProperty('readonly', true);
     }
 
   , writeable: function () {
-      this.readonly = false;
-      this.$input.prop('readonly', false);
-      this.$element.prop('readonly', false);
-      this.$wrapper.removeClass('readonly');
+      this.setProperty('readonly', false);
     }
+
+  , setProperty: function(property, value) {
+      this['_' + property] = value;
+      this.$input.prop(property, value);
+      this.$element.prop(property, value);
+      this.$wrapper[ value ? 'addClass' : 'removeClass' ](property);
+  }
 
   , destroy: function() {
       // Set field value
