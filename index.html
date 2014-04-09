@@ -124,9 +124,7 @@ var engine = new Bloodhound({
 engine.initialize();
 
 $('#tokenfield-typeahead').tokenfield({
-  typeahead: {
-    source: engine.ttAdapter()
-  }
+  typeahead: [null, { source: engine.ttAdapter() }]
 });
 {% endhighlight %}
 
@@ -196,9 +194,9 @@ $('.tokenfield').tokenfield()
                     </tr>
                     <tr>
                       <td>typeahead</td>
-                      <td>object</td>
-                      <td><code>{}</code></td>
-                      <td>Twitter Typeahead options.</td>
+                      <td>array</td>
+                      <td><code>[]</code></td>
+                      <td>Arguments for Twitter Typeahead. The first argument should be an options hash (or <code>null</code> if you want to use the defaults). The second argument should be a dataset. You can add multiple datasets: <code>typeahead: [options, dataset1, dataset2]</code></td>
                     </tr>
                     <tr>
                       <td>createTokensOnBlur</td>
@@ -277,6 +275,18 @@ $('#myField').tokenfield('disable');
               <p>Enable tokenfield (just like a normal input field)</p>
 {% highlight js %}
 $('#myField').tokenfield('enable');
+{% endhighlight %}
+
+              <h4>.tokenfield('readonly')</h4>
+              <p>Make tokenfield a readonly field (just like a normal input field)</p>
+{% highlight js %}
+$('#myField').tokenfield('readonly');
+{% endhighlight %}
+
+              <h4>.tokenfield('writeable')</h4>
+              <p>Make tokenfield writeable (just like a normal input field)</p>
+{% highlight js %}
+$('#myField').tokenfield('writeable');
 {% endhighlight %}
 
               <h4>.tokenfield('destroy')</h4>

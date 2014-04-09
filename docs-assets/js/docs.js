@@ -58,9 +58,7 @@ jQuery(document).ready(function($) {
   engine.initialize();
 
   $('#tokenfield-typeahead').tokenfield({
-    typeahead: {
-      source: engine.ttAdapter()
-    }
+    typeahead: [null, { source: engine.ttAdapter() }]
   });
 
   $('#tokenfield-2')
