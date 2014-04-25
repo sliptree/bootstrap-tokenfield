@@ -319,7 +319,7 @@ $('#myField').tokenfield('destroy');
                    </tr>
                    <tr>
                      <td>tokenfield:preparetoken</td>
-                     <td>This event fires when a token is all set up to be created, but before it is inserted into the DOM and event listeners are attached. You can use this event to manipulate token value and label by changing the appropriate values of <code>token</code> property of the event. See below for an example.</td>
+                     <td>This event fires when a token is all set up to be created, but before it is inserted into the DOM and event listeners are attached. You can use this event to manipulate token value and label by changing the appropriate values of <code>token</code> property of the event. See below for an example. Calling <code>event.preventDefault()</code> or doing <code>return false</code> in the event handler will prevent the token from being created.</td>
                    </tr>
                    <tr>
                      <td>tokenfield:createtoken</td>
@@ -327,7 +327,7 @@ $('#myField').tokenfield('destroy');
                    </tr>
                    <tr>
                      <td>tokenfield:edittoken</td>
-                     <td>This event is fired just before a token is about to be edited. This allows you to manipluate the input field value before it is created. Again, to do this, manipluate the <code>token</code> property of the event. Here you can also access the token DOM object with <code>e.relatedTarget</code>.</td>
+                     <td>This event is fired just before a token is about to be edited. This allows you to manipluate the input field value before it is created. Again, to do this, manipluate the <code>token</code> property of the event. Here you can also access the token DOM object with <code>e.relatedTarget</code>. Calling <code>event.preventDefault()</code> or doing <code>return false</code> in the event handler will prevent the token from being edited.</td>
                    </tr>
                    <tr>
                      <td>tokenfield:removetoken</td>
