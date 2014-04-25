@@ -888,7 +888,7 @@ describe('2. Integration tests:', function() {
     });
 
     describe("tokenfield:preparetoken", function() {
-      it("must allow changing token field and value", function() {
+      it("must allow changing token label and value", function() {
         this.$field.on('tokenfield:preparetoken', function (e) {
           e.token.value = 'one';
           e.token.label = 'two';
@@ -909,6 +909,36 @@ describe('2. Integration tests:', function() {
         var results = this.$field.tokenfield('getTokens');
         results[0].label.must.equal('zero');
         results[0].value.must.equal('');        
+      });
+
+      it("must allow canceling createtoken by setting token to a falsy value", function() {
+        this.$field.on('tokenfield:preparetoken', function (e) {
+          e.token = false;
+        });
+        this.$field.tokenfield('createToken', 'yellow');
+
+        var results = this.$field.tokenfield('getTokens');
+        results.must.have.length(0);
+      });
+
+      it("must allow canceling createtoken by calling event.preventDefault()", function() {
+        this.$field.on('tokenfield:preparetoken', function (e) {
+          e.preventDefault();
+        });
+        this.$field.tokenfield('createToken', 'yellow');
+
+        var results = this.$field.tokenfield('getTokens');
+        results.must.have.length(0);
+      });
+
+      it("must allow canceling createtoken by returning false in the event handler", function() {
+        this.$field.on('tokenfield:preparetoken', function (e) {
+          return false;
+        });
+        this.$field.tokenfield('createToken', 'yellow');
+
+        var results = this.$field.tokenfield('getTokens');
+        results.must.have.length(0);
       });
     });
 
@@ -972,6 +1002,45 @@ describe('2. Integration tests:', function() {
 
         this.$copyHelper.simulate("key-sequence", { sequence: "{enter}" });
       });
+
+      it("must allow canceling the default event handler by setting the event token to a falsy value", function() {
+        this.$field.on('tokenfield:edittoken', function (e) {
+          e.token = false;
+        });
+
+        this.$wrapper.find('.token')
+            .filter(':has(.token-label:contains(red))').addClass('active');
+        
+        this.$copyHelper.simulate("key-sequence", { sequence: "{enter}" });
+
+        this.$input.data().must.not.have.property('edit');
+      });
+
+      it("must allow canceling the default event handler by calling event.preventDefault()", function() {
+        this.$field.on('tokenfield:edittoken', function (e) {
+          e.preventDefault();
+        });
+
+        this.$wrapper.find('.token')
+            .filter(':has(.token-label:contains(red))').addClass('active');
+        
+        this.$copyHelper.simulate("key-sequence", { sequence: "{enter}" });
+
+        this.$input.data().must.not.have.property('edit');
+      });
+
+      it("must allow canceling the default event handler by returning false in the event handler", function() {
+        this.$field.on('tokenfield:edittoken', function (e) {
+          return false;
+        });
+
+        this.$wrapper.find('.token')
+            .filter(':has(.token-label:contains(red))').addClass('active');
+        
+        this.$copyHelper.simulate("key-sequence", { sequence: "{enter}" });
+
+        this.$input.data().must.not.have.property('edit');
+      });      
     });
 
     describe("tokenfield:removetoken", function() {

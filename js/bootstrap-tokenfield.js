@@ -227,7 +227,7 @@
       }
       this.$element.trigger( prepareEvent )
 
-      if (!prepareEvent.token) return
+      if (!prepareEvent.token || prepareEvent.isDefaultPrevented()) return
 
       value = prepareEvent.token.value
       label = prepareEvent.token.label
@@ -789,7 +789,7 @@
       editEvent.relatedTarget = token.get(0)
       this.$element.trigger( editEvent )
       
-      if (!editEvent.token) return
+      if (!editEvent.token || editEvent.isDefaultPrevented()) return
 
       value = editEvent.token.value
       label = editEvent.token.label
