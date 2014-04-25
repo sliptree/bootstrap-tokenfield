@@ -832,7 +832,6 @@
     }
 
   , remove: function (e, direction) {
-      console.log('remove', this._readonly)
       if (this.$input.is(document.activeElement) || this._disabled || this._readonly) return
 
       var token = (e.type === 'click') ? $(e.target).closest('.token') : this.$wrapper.find('.token.active')
@@ -841,7 +840,7 @@
         if (!direction) var direction = 'prev'
         this[direction]()
 
-        // Was this the first token?
+        // Was it the first token?
         if (direction === 'prev') var firstToken = token.first().prevAll('.token:first').length === 0
       }
 
