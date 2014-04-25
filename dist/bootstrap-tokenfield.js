@@ -232,25 +232,6 @@
       value = prepareEvent.token.value
       label = prepareEvent.token.label
 
-      // Check for duplicates
-      if (!this.options.allowDuplicates && $.grep(this.getTokens(), function (token) {
-        return token.value === value
-      }).length) {
-        // Allow listening to when duplicates get prevented
-        var preventDuplicateEvent = $.Event('tokenfield:preventduplicate')
-        preventDuplicateEvent.token = {
-          value: value,
-          label: label
-        }
-        this.$element.trigger( preventDuplicateEvent )
-        // Add duplicate warning class to existing token for 250ms
-        var duplicate = this.$wrapper.find( '.token[data-value="' + value + '"]' ).addClass('duplicate')
-        setTimeout(function() {
-          duplicate.removeClass('duplicate');
-        }, 250)
-        return false
-      }
-
       var token = $('<div class="token" />')
             .attr('data-value', value)
             .append('<span class="token-label" />')
@@ -1007,7 +988,6 @@
   $.fn.tokenfield.defaults = {
     minWidth: 60,
     minLength: 0,
-    allowDuplicates: false,
     allowEditing: true,
     limit: 0,
     autocomplete: {},

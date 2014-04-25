@@ -157,12 +157,6 @@ $('.tokenfield').tokenfield()
                       <td>Tokens (or tags). Can be a string with comma-separated values (<code>"one,two,three"</code>), an array of strings (<code>["one","two","three"]</code>), or an array of objects (<code>[{ value: "one", label: "Einz" }, { value: "two", label: "Zwei" }]</code>)</td>
                     </tr>
                     <tr>
-                      <td>allowDuplicates</td>
-                      <td>boolean</td>
-                      <td><code>false</code></td>
-                      <td>Whether to allow duplicate tokens or not. A token is considered a duplicated if it's value matches an existing token's value. Therefore, it is possible to enter multiple tokens with the same label, if their values are diefferent.</td>
-                    </tr>
-                    <tr>
                       <td>limit</td>
                       <td>int</td>
                       <td><code>0</code></td>
@@ -332,10 +326,6 @@ $('#myField').tokenfield('destroy');
                    <tr>
                      <td>tokenfield:removetoken</td>
                      <td>This event is fired after a token is removed. You will have access to <code>token</code> property of the event. This way, you can determine which token was removed.</td>
-                   </tr>
-                   <tr>
-                     <td>tokenfield:preventduplicate</td>
-                     <td>This event is fired when <code>allowDuplicates</code> is set to <code>false</code> and a duplicate is being prevented from created. You can find out the offending token by looking at the <code>token</code> property of the event.</td>
                    </tr>
                   </tbody>
                 </table>
