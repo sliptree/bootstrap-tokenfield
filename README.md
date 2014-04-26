@@ -28,6 +28,23 @@ Requirements: jQuery 1.9+, Bootstrap 3+ (only CSS)
 * Select specific tokens with Ctrl + click and Shift + click
 * Twitter Typeahead and jQuery UI Autocomplete support
 
+### FAQ
+
+#### How can I prevent duplicate tokens from being entered?
+
+You can use the `tokenfield:createtoken` event for that. Check the `event.attrs` property for token value and label,
+and the run your duplicate detection logic. If it's a duplicate token, simply do `event.preventDefault()`.
+
+Here's a simple example that checks if token's value is equal to any of the existing tokens' values.
+
+	$('#my-tokenfield').on('tokenfield:createtoken', function (event) {
+		var existingTokens = $(this).tokenfield('getTokens');
+		$.each(existingTokens, function(index, token) {
+			if (token.value === event.attrs.value)
+				event.preventDefault();
+		});
+	});
+
 ### Changelog
 
 See [release notes](https://github.com/sliptree/bootstrap-tokenfield/releases)
