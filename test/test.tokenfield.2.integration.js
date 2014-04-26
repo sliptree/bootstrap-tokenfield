@@ -801,11 +801,11 @@ describe('2. Integration tests:', function() {
       });
     });
 
-    describe("tokenfield:preparetoken", function() {
+    describe("tokenfield:createtoken", function() {
       it("must allow changing token label and value", function() {
-        this.$field.on('tokenfield:preparetoken', function (e) {
-          e.token.value = 'one';
-          e.token.label = 'two';
+        this.$field.on('tokenfield:createtoken', function (e) {
+          e.attrs.value = 'one';
+          e.attrs.label = 'two';
         });
         this.$field.tokenfield('createToken', 'zero');
 
@@ -815,8 +815,8 @@ describe('2. Integration tests:', function() {
       });
 
       it("must allow setting token value to an empty string", function() {
-        this.$field.on('tokenfield:preparetoken', function (e) {
-          e.token.value = '';
+        this.$field.on('tokenfield:createtoken', function (e) {
+          e.attrs.value = '';
         });
         this.$field.tokenfield('createToken', 'zero');
 
@@ -826,8 +826,8 @@ describe('2. Integration tests:', function() {
       });
 
       it("must allow canceling createtoken by setting token to a falsy value", function() {
-        this.$field.on('tokenfield:preparetoken', function (e) {
-          e.token = false;
+        this.$field.on('tokenfield:createtoken', function (e) {
+          e.attrs = false;
         });
         this.$field.tokenfield('createToken', 'yellow');
 
@@ -836,7 +836,7 @@ describe('2. Integration tests:', function() {
       });
 
       it("must allow canceling createtoken by calling event.preventDefault()", function() {
-        this.$field.on('tokenfield:preparetoken', function (e) {
+        this.$field.on('tokenfield:createtoken', function (e) {
           e.preventDefault();
         });
         this.$field.tokenfield('createToken', 'yellow');
@@ -846,7 +846,7 @@ describe('2. Integration tests:', function() {
       });
 
       it("must allow canceling createtoken by returning false in the event handler", function() {
-        this.$field.on('tokenfield:preparetoken', function (e) {
+        this.$field.on('tokenfield:createtoken', function (e) {
           return false;
         });
         this.$field.tokenfield('createToken', 'yellow');
@@ -856,13 +856,18 @@ describe('2. Integration tests:', function() {
       });
     });
 
-    describe("tokenfield:createtoken", function() {
-      it("must be triggered when a token is created", function (done) {
-        this.$field.on('tokenfield:createtoken', function (e) {
-          e.token.must.be.an.object();
-          e.token.label.must.eql('red');
-          e.token.value.must.eql('red');
+    describe("tokenfield:createdtoken", function() {
+      it("must be triggered when a token is created and in the DOM", function (done) {
+        var self = this;
+
+        this.$field.on('tokenfield:createdtoken', function (e) {
+          e.attrs.must.be.an.object();
+          e.attrs.label.must.eql('red');
+          e.attrs.value.must.eql('red');
           e.relatedTarget.must.be.an.object();
+
+          self.$wrapper.find(e.relatedTarget).must.have.length(1);
+
           done();
         });
         
@@ -881,9 +886,9 @@ describe('2. Integration tests:', function() {
 
       it("must be triggered when a token is edited", function (done) {
         this.$field.on('tokenfield:edittoken', function (e) {
-          e.token.must.be.an.object();
-          e.token.label.must.eql('red');
-          e.token.value.must.eql('red');
+          e.attrs.must.be.an.object();
+          e.attrs.label.must.eql('red');
+          e.attrs.value.must.eql('red');
           e.relatedTarget.must.be.an.object();
           done();
         });
@@ -892,19 +897,6 @@ describe('2. Integration tests:', function() {
             .filter(':has(.token-label:contains(red))').addClass('active');
 
         this.$copyHelper.simulate("key-sequence", { sequence: "{enter}" });
-      });
-
-      it("must allow canceling the default event handler by setting the event token to a falsy value", function() {
-        this.$field.on('tokenfield:edittoken', function (e) {
-          e.token = false;
-        });
-
-        this.$wrapper.find('.token')
-            .filter(':has(.token-label:contains(red))').addClass('active');
-        
-        this.$copyHelper.simulate("key-sequence", { sequence: "{enter}" });
-
-        this.$input.data().must.not.have.property('edit');
       });
 
       it("must allow canceling the default event handler by calling event.preventDefault()", function() {
@@ -931,7 +923,37 @@ describe('2. Integration tests:', function() {
         this.$copyHelper.simulate("key-sequence", { sequence: "{enter}" });
 
         this.$input.data().must.not.have.property('edit');
-      });      
+      });
+    });
+
+    describe("tokenfield:editedtoken", function() {
+      before(function() {
+        TFT.template = '<input type="text" class="tokenize" value="red,green,blue" />'
+      });
+
+      after(function() {
+        delete TFT.template;
+      });
+
+      it("must be triggered when a token is now being edited (replaced with an input in the DOM)", function (done) {
+        var self = this;
+
+        this.$field.on('tokenfield:editedtoken', function (e) {
+          e.attrs.must.be.an.object();
+          e.attrs.label.must.eql('red');
+          e.attrs.value.must.eql('red');
+          e.relatedTarget.must.be.an.object();
+
+          self.$wrapper.find(e.relatedTarget).must.have.length(0);
+
+          done();
+        });
+
+        this.$wrapper.find('.token')
+            .filter(':has(.token-label:contains(red))').addClass('active');
+
+        this.$copyHelper.simulate("key-sequence", { sequence: "{enter}" });
+      });
     });
 
     describe("tokenfield:removetoken", function() {
@@ -943,11 +965,57 @@ describe('2. Integration tests:', function() {
         delete TFT.template;
       });
 
-      it("must be triggered when a token is removed", function (done) {
+      it("must be triggered when a token is about to be removed", function (done) {
         this.$field.on('tokenfield:removetoken', function (e) {
-          e.token.must.be.an.object();
-          e.token.label.must.eql('red');
-          e.token.value.must.eql('red');
+          e.attrs.must.be.an.object();
+          e.attrs.label.must.eql('red');
+          e.attrs.value.must.eql('red');
+          done();
+        });
+
+        this.$wrapper.find('.token:first').find('.close').click();
+      });
+
+      it("must allow canceling the default event handler by calling event.preventDefault()", function() {
+        this.$field.on('tokenfield:removetoken', function (e) {
+          e.preventDefault();
+        });
+
+        this.$wrapper.find('.token:first').find('.close').click();
+
+        this.$field.tokenfield('getTokens').must.have.length(3);
+      });
+
+      it("must allow canceling the default event handler by returning false in the event handler", function() {
+        this.$field.on('tokenfield:removetoken', function (e) {
+          return false;
+        });
+
+        this.$wrapper.find('.token:first').find('.close').click();
+
+        this.$field.tokenfield('getTokens').must.have.length(3);
+      });      
+    });
+
+    describe("tokenfield:removedtoken", function() {
+      before(function() {
+        TFT.template = '<input type="text" class="tokenize" value="red,green,blue" />'
+      });
+
+      after(function() {
+        delete TFT.template;
+      });
+
+      it("must be triggered when a token is removed from the DOM", function (done) {
+        var self = this;
+
+        this.$field.on('tokenfield:removedtoken', function (e) {
+          e.attrs.must.be.an.object();
+          e.attrs.label.must.eql('red');
+          e.attrs.value.must.eql('red');
+
+          self.$wrapper.find(e.relatedTarget).length.must.equal(0);
+
           done();
         });
 

@@ -312,20 +312,28 @@ $('#myField').tokenfield('destroy');
                      <td>Fires after Tokenfield has been initialized.</td>
                    </tr>
                    <tr>
-                     <td>tokenfield:preparetoken</td>
-                     <td>This event fires when a token is all set up to be created, but before it is inserted into the DOM and event listeners are attached. You can use this event to manipulate token value and label by changing the appropriate values of <code>token</code> property of the event. See below for an example. Calling <code>event.preventDefault()</code> or doing <code>return false</code> in the event handler will prevent the token from being created.</td>
+                     <td>tokenfield:createtoken</td>
+                     <td>This event fires when a token is all set up to be created, but before it is inserted into the DOM and event listeners are attached. You can use this event to manipulate token value and label by changing the appropriate values of <code>attrs</code> property of the event. See below for an example. Calling <code>event.preventDefault()</code> or doing <code>return false</code> in the event handler will prevent the token from being created.</td>
                    </tr>
                    <tr>
-                     <td>tokenfield:createtoken</td>
-                     <td>This event is fired after the token has been created. Here, <code>token</code> property of the event is also available, but is basically read-only. You can also get a direct reference to the token DOM object via <code>e.relatedTarget</code>. The example below uses this to set an 'invalid' class on the newly created token if it does not pass validation.</td>
+                     <td>tokenfield:createdtoken</td>
+                     <td>This event is fired after the token has been created. Here, <code>attrs</code> property of the event is also available, but is basically read-only. You can also get a direct reference to the token DOM object via <code>e.relatedTarget</code>. The example below uses this to set an 'invalid' class on the newly created token if it does not pass validation.</td>
                    </tr>
                    <tr>
                      <td>tokenfield:edittoken</td>
-                     <td>This event is fired just before a token is about to be edited. This allows you to manipluate the input field value before it is created. Again, to do this, manipluate the <code>token</code> property of the event. Here you can also access the token DOM object with <code>e.relatedTarget</code>. Calling <code>event.preventDefault()</code> or doing <code>return false</code> in the event handler will prevent the token from being edited.</td>
+                     <td>This event is fired just before a token is about to be edited. This allows you to manipluate the input field value before it is created. Again, to do this, manipluate the <code>attrs</code> property of the event. Here you can also access the token DOM object with <code>e.relatedTarget</code>. Calling <code>event.preventDefault()</code> or doing <code>return false</code> in the event handler will prevent the token from being edited.</td>
+                   </tr>
+                   <tr>
+                     <td>tokenfield:editedtoken</td>
+                     <td>This event is fired when a token is ready for being edited. It means that the token has been replaced by an input field.</td>
                    </tr>
                    <tr>
                      <td>tokenfield:removetoken</td>
-                     <td>This event is fired after a token is removed. You will have access to <code>token</code> property of the event. This way, you can determine which token was removed.</td>
+                     <td>This event is fired right before a token is removed. Here you can also access the token DOM object with <code>e.relatedTarget</code>. Calling <code>event.preventDefault()</code> or doing <code>return false</code> in the event handler will prevent the token from being removed. You can access token label and value by checking the <code>attrs</code> property of the event. Also, <code>e.relatedTarget</code> is a reference to the token DOM object.</td>
+                   </tr>
+                   <tr>
+                     <td>tokenfield:removedtoken</td>
+                     <td>This event is fired right after a token is removed from the DOM. You can access token label and value by checking the <code>attrs</code> property of the event.</td>
                    </tr>
                   </tbody>
                 </table>
@@ -341,34 +349,30 @@ $('#myField').tokenfield('destroy');
 {% highlight js %}
 $('#tokenfield')
 
-  .on('tokenfield:preparetoken', function (e) {
-    var token = e.token.value.split('|')
-    e.token.value = token[1] || token[0]
-    e.token.label = token[1] ? token[0] + ' (' + token[1] + ')' : token[0]
+  .on('tokenfield:createtoken', function (e) {
+    var data = e.attrs.value.split('|')
+    e.attrs.value = data[1] || data[0]
+    e.attrs.label = data[1] ? data[0] + ' (' + data[1] + ')' : data[0]
   })
 
-  .on('tokenfield:createtoken', function (e) {
+  .on('tokenfield:createdtoken', function (e) {
     // Über-simplistic e-mail validation
     var re = /\S+@\S+\.\S+/
-    var valid = re.test(e.token.value)
+    var valid = re.test(e.attrs.value)
     if (!valid) {
       $(e.relatedTarget).addClass('invalid')
     }
   })
 
   .on('tokenfield:edittoken', function (e) {
-    if (e.token.label !== e.token.value) {
-      var label = e.token.label.split(' (')
-      e.token.value = label[0] + '|' + e.token.value
+    if (e.attrs.label !== e.attrs.value) {
+      var label = e.attrs.label.split(' (')
+      e.attrs.value = label[0] + '|' + e.attrs.value
     }
   })
 
-  .on('tokenfield:removetoken', function (e) {
-    alert('Token removed! Token value was: ' + e.token.value)
-  })
-
-  .on('tokenfield:preventduplicate', function (e) {
-    alert('Duplicate detected! Token value is: ' + e.token.value)
+  .on('tokenfield:removedtoken', function (e) {
+    alert('Token removed! Token value was: ' + e.attrs.value)
   })
 
   .tokenfield()
