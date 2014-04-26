@@ -18,8 +18,10 @@ Requirements: jQuery 1.9+, Bootstrap 3+ (only CSS)
 3. Include `dist/css/bootstrap-tokenfield.css` in your HTML
 
 ### Usage
-	
-	$('input').tokenfield()
+
+```js	
+$('input').tokenfield()
+```
 
 ### Features
 
@@ -37,13 +39,15 @@ and the run your duplicate detection logic. If it's a duplicate token, simply do
 
 Here's a simple example that checks if token's value is equal to any of the existing tokens' values.
 
-	$('#my-tokenfield').on('tokenfield:createtoken', function (event) {
-		var existingTokens = $(this).tokenfield('getTokens');
-		$.each(existingTokens, function(index, token) {
-			if (token.value === event.attrs.value)
-				event.preventDefault();
-		});
+```js
+$('#my-tokenfield').on('tokenfield:createtoken', function (event) {
+	var existingTokens = $(this).tokenfield('getTokens');
+	$.each(existingTokens, function(index, token) {
+		if (token.value === event.attrs.value)
+			event.preventDefault();
 	});
+});
+```
 
 ### Changelog
 
