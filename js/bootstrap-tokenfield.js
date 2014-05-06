@@ -234,9 +234,9 @@
       if (!createEvent.attrs || createEvent.isDefaultPrevented()) return
 
       var $token = $('<div class="token" />')
-            .attr('data-value', attrs.value)
             .append('<span class="token-label" />')
             .append('<a href="#" class="close" tabindex="-1">&times;</a>')
+            .data('attrs', attrs)
 
       // Insert token into HTML
       if (this.$input.hasClass('tt-input')) {
@@ -347,10 +347,7 @@
   , getTokenData: function($token) {
       var data = $token.map(function() {
         var $token = $(this);
-        return {
-          value: $token.attr('data-value'),
-          label: $token.find('.token-label').text()
-        }
+        return $token.data('attrs')
       }).get();
 
       if (data.length == 1) {
@@ -766,10 +763,7 @@
   , edit: function ($token) {
       if (!$token) return
 
-      var attrs = {
-        value: $token.data('value'),
-        label: $token.find('.token-label').text()
-      }
+      var attrs = $token.data('attrs')
 
       // Allow changing input value before editing
       var options = { attrs: attrs, relatedTarget: $token.get(0) }
