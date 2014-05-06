@@ -431,6 +431,7 @@
         })
         .on('typeahead:selected typeahead:autocompleted', function (e, datum, dataset) {
           // Create token
+          datum.value = _self.$input.typeahead('val')
           if (_self.createToken( datum )) {
             _self.$input.typeahead('val', '')
             if (_self.$input.data( 'edit' )) {
