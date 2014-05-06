@@ -207,6 +207,9 @@
 
       if (typeof attrs === 'string') {
         attrs = { value: attrs, label: attrs }
+      } else {
+        // Copy objects to prevent contamination of data sources.
+        attrs = $.extend( {}, attrs )
       }
 
       if (typeof triggerChange === 'undefined') {
