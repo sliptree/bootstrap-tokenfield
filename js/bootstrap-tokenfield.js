@@ -795,7 +795,7 @@
 
       this.update();
 
-      // Indicate that token in snow being edited, and is replaced with an input field in the DOM
+      // Indicate that token is now being edited, and is replaced with an input field in the DOM
       this.$element.trigger($.Event('tokenfield:editedtoken', options ))
     }
 
@@ -947,7 +947,7 @@
       this.$element.css( this.$element.data('original-styles') );
       this.$element.prop( 'tabindex', this.$element.data('original-tabindex') );
       
-      // Re-route tokenfield labele to original input
+      // Re-route tokenfield label to original input
       var $label = $( 'label[for="' + this.$input.prop('id') + '"]' )
       if ( $label.length ) {
         $label.prop( 'for', this.$element.prop('id') )
