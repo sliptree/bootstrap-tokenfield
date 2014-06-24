@@ -887,11 +887,14 @@
         this.$input.width( mirrorWidth )
       }
       else {
-        this.$input.css( 'width', this.options.minWidth + 'px' )
-        if (this.textDirection === 'rtl') {
-          return this.$input.width( this.$input.offset().left + this.$input.outerWidth() - this.$wrapper.offset().left - parseInt(this.$wrapper.css('padding-left'), 10) - inputPadding - 1 )
-        }
-        this.$input.width( this.$wrapper.offset().left + this.$wrapper.width() + parseInt(this.$wrapper.css('padding-left'), 10) - this.$input.offset().left - inputPadding )
+        var w = (this.textDirection === 'rtl')
+              ? this.$input.offset().left + this.$input.outerWidth() - this.$wrapper.offset().left - parseInt(this.$wrapper.css('padding-left'), 10) - inputPadding - 1
+              : this.$wrapper.offset().left + this.$wrapper.width() + parseInt(this.$wrapper.css('padding-left'), 10) - this.$input.offset().left - inputPadding;
+        //
+        // some usecases pre-render widget before attaching to DOM,
+        // dimensions returned by jquery will be NaN -> we default to 100%
+        // so placeholder won't be cut off.
+        isNaN(w) ? this.$input.width('100%') : this.$input.width(w);
       }
     }
 
