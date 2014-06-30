@@ -25,7 +25,7 @@
       };
   } else {
     // Browser globals
-    factory(jQuery);
+    factory(jQuery, window);
   }
 }(function ($, window) {
 
