@@ -31,6 +31,50 @@
 
   "use strict"; // jshint ;_;
 
+
+
+
+  // rewrite autocomplete
+  $.widget( "ui.autocomplete", $.ui.autocomplete, {
+   
+     options: {
+        renderItem: null,
+        renderMenu: null
+     },
+   
+     _renderItem: function( ul, item ) {
+        if ( $.isFunction( this.options.renderItem ) )
+           return this.options.renderItem( ul, item );
+        else
+           return this._super( ul, item );
+     },
+   
+     _renderMenu: function( ul, items ) {
+   
+        if ( $.isFunction( this.options.renderMenu ) ) {
+   
+           this.options.renderMenu( ul, items );
+   
+        }
+   
+        this._super( ul, items );
+     },
+   
+  });
+
+
+
+  // format template text
+  var formatText = function(msg, values, filter) {
+      var pattern = /\{\{([\w\s\.\(\)"',-\[\]]+)?\}\}/g;
+      return msg.replace(pattern, function(match, key) {
+          var value = values[key] || eval('(values.' + key + ')');
+          return _.isFunction(filter)  ? filter(value, key) : value;
+      });
+  }
+
+
+
  /* TOKENFIELD PUBLIC CLASS DEFINITION
   * ============================== */
 
@@ -1008,7 +1052,11 @@
     showAutocompleteOnFocus: false,
     createTokensOnBlur: false,
     delimiter: ',',
-    beautify: true
+    beautify: true,
+    template:{
+      taken:'',
+      listItem:''
+    }
   }
 
   $.fn.tokenfield.Constructor = Tokenfield
