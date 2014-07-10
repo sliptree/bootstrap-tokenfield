@@ -25,7 +25,7 @@
       };
   } else {
     // Browser globals
-    factory(jQuery);
+    factory(jQuery, window);
   }
 }(function ($, window) {
 
@@ -620,9 +620,11 @@
       var _self = this
 
       // Add tokens to existing ones
-      setTimeout(function () {
-        _self.createTokensFromInput(e)
-      }, 1)
+      if (_self.options.allowPasting) {
+        setTimeout(function () {
+          _self.createTokensFromInput(e)
+        }, 1)
+      }
     }
 
   , change: function (e) {
@@ -1004,6 +1006,7 @@
     minWidth: 60,
     minLength: 0,
     allowEditing: true,
+    allowPasting: true,
     limit: 0,
     autocomplete: {},
     typeahead: {},
