@@ -25,11 +25,70 @@
       };
   } else {
     // Browser globals
-    factory(jQuery);
+    factory(window.jQuery);
+    // 
   }
-}(function ($, window) {
+}(function ($, undefined) {
+  // 
 
   "use strict"; // jshint ;_;
+
+
+
+
+  // rewrite autocomplete
+  $.widget( "ui.autocomplete", $.ui.autocomplete, {
+   
+     options: {
+        renderItem: null,
+        renderMenu: null
+     },
+   
+     _renderItem: function( ul, item ) {
+        if ( $.isFunction( this.options.renderItem ) )
+           return this.options.renderItem( ul, item );
+        else
+           return this._super( ul, item );
+     },
+
+     // _renderItemData: function( ul, item ) {
+     //  return this._renderItem( ul, item ).data( "ui-autocomplete-item", item );
+     // },
+
+     _renderMenu: function( ul, items ) {
+        if ( $.isFunction( this.options.renderMenu ) ) 
+           this.options.renderMenu.call(this, ul, items );
+        else
+          this._super( ul, items );
+     },
+
+     _resizeMenu: function(){
+        var ul = this.menu.element;
+        ul.outerWidth( Math.max(
+          // Firefox wraps long text (possibly a rounding bug)
+          // so we add 1px to avoid the wrapping (#7513)
+          // remove minWidth attribute 
+          ul.width( "" ).css('minWidth',0).outerWidth() + 1,
+          this.element.outerWidth()
+        ) );
+
+     }
+   
+  });
+
+
+
+  // format template text
+  var pattern = /\{\{([\w\s\.\(\)"',-\[\]]+)?\}\}/g;
+  var formatText = function(msg, data, filter) {
+      return msg.replace(pattern, function(match, key) {
+        var keys = key.split('.'), value = data[keys.shift()];
+          $.each(keys, function() { value = value[this]; });
+          return Object.prototype.toString.call(filter) == "[object Function]"  ? filter(value, key) : 
+            (value === null || value === undefined) ? '' : value;
+      });
+  }
+
 
  /* TOKENFIELD PUBLIC CLASS DEFINITION
   * ============================== */
@@ -40,9 +99,11 @@
     this.$element = $(element)
     this.textDirection = this.$element.css('direction');
 
+
+
     // Extend options
     this.options = $.extend(true, {}, $.fn.tokenfield.defaults, { tokens: this.$element.val() }, this.$element.data(), options)
-    
+
     // Setup delimiters and trigger keys
     this._delimiters = (typeof this.options.delimiter === 'string') ? [this.options.delimiter] : this.options.delimiter
     this._triggerKeys = $.map(this._delimiters, function (delimiter) {
@@ -230,10 +291,12 @@
       // Bail out if there if attributes are empty or event was defaultPrevented
       if (!createEvent.attrs || createEvent.isDefaultPrevented()) return
 
-      var $token = $('<div class="token" />')
-            .attr('data-value', attrs.value)
-            .append('<span class="token-label" />')
-            .append('<a href="#" class="close" tabindex="-1">&times;</a>')
+
+      var template = formatText(this.options.template.token,attrs);  
+      var $token = $(template);
+            // .attr('data-value', attrs.value)
+            // .append('<span class="token-label" />')
+            // .append('<a href="#" class="close" tabindex="-1">&times;</a>')
 
       // Insert token into HTML
       if (this.$input.hasClass('tt-input')) {
@@ -268,7 +331,7 @@
       }
 
       $tokenLabel
-        .text(attrs.label)
+        //.text(attrs.label)
         .css('max-width', this.maxTokenWidth)
 
       // Listen to events on token
@@ -316,8 +379,6 @@
     }    
 
   , setTokens: function (tokens, add, triggerChange) {
-      if (!tokens) return
-
       if (!add) this.$wrapper.find('.token').remove()
 
       if (typeof triggerChange === 'undefined') {
@@ -410,10 +471,14 @@
         .on('keyup',    $.proxy(this.update, this))
 
       this.$input
-        .on('autocompletecreate', function() {
+        .on('autocompletecreate autocompleteopen', function() {
+
+          // detect on autocompleteopen fix resize window menu too long bug.
+          // ex. body>div.row>div.col-md-12>input.form-control
+
           // Set minimum autocomplete menu width
           var $_menuElement = $(this).data('ui-autocomplete').menu.element
-          
+
           var minWidth = _self.$wrapper.outerWidth() -
               parseInt( $_menuElement.css('border-left-width'), 10 ) -
               parseInt( $_menuElement.css('border-right-width'), 10 )
@@ -865,6 +930,10 @@
      * Update tokenfield dimensions
      */
   , update: function (e) {
+
+        this.$input.css('width', this.options.minWidth + 'px')
+        // resize double rows 
+
       var value = this.$input.val()
         , inputPaddingLeft = parseInt(this.$input.css('padding-left'), 10)
         , inputPaddingRight = parseInt(this.$input.css('padding-right'), 10)
@@ -887,11 +956,14 @@
         this.$input.width( mirrorWidth )
       }
       else {
-        this.$input.css( 'width', this.options.minWidth + 'px' )
-        if (this.textDirection === 'rtl') {
-          return this.$input.width( this.$input.offset().left + this.$input.outerWidth() - this.$wrapper.offset().left - parseInt(this.$wrapper.css('padding-left'), 10) - inputPadding - 1 )
-        }
-        this.$input.width( this.$wrapper.offset().left + this.$wrapper.width() + parseInt(this.$wrapper.css('padding-left'), 10) - this.$input.offset().left - inputPadding )
+        var w = (this.textDirection === 'rtl')
+              ? this.$input.offset().left + this.$input.outerWidth() - this.$wrapper.offset().left - parseInt(this.$wrapper.css('padding-left'), 10) - inputPadding - 1
+              : this.$wrapper.offset().left + this.$wrapper.width() + parseInt(this.$wrapper.css('padding-left'), 10) - this.$input.offset().left - inputPadding;
+        //
+        // some usecases pre-render widget before attaching to DOM,
+        // dimensions returned by jquery will be NaN -> we default to 100%
+        // so placeholder won't be cut off.
+        isNaN(w) ? this.$input.width('100%') : this.$input.width(w);
       }
     }
 
@@ -1007,7 +1079,10 @@
     showAutocompleteOnFocus: false,
     createTokensOnBlur: false,
     delimiter: ',',
-    beautify: true
+    beautify: true,
+    template:{
+      token:'<div class="token" data-value="{{value}}"><span class="token-label">{{label}}</span><a href="#" data-bind="close" class="close" tabindex="-1">×</a></div>'
+    }
   }
 
   $.fn.tokenfield.Constructor = Tokenfield

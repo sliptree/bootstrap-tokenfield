@@ -93,8 +93,8 @@
   display: inline-block;
   overflow: hidden;
   text-overflow: ellipsis;
-  padding-left: 4px;
   vertical-align: top;
+  padding-left: 4px;
 }
 .tokenfield .token .close {
   font-family: Arial;
@@ -107,6 +107,19 @@
   height: 100%;
   vertical-align: top;
   padding-right: 4px;
+}
+.tokenfield .token.square {
+  border-radius: 0px;
+  background: #F4F4F4;
+}
+.tokenfield .token.square .token-label {
+  padding-left: 0px;
+}
+.tokenfield .token.square .token-label > span {
+  padding-left: 4px;
+}
+.tokenfield .token.square .token-label > img {
+  vertical-align: top;
 }
 .tokenfield .token-input {
   background: none;

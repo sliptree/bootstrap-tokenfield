@@ -112,13 +112,13 @@
         border: 1px solid @token-active-invalid-border;
         .border-radius(3px);
       }
-    }   
+    }
     .token-label {
       display: inline-block;
       overflow: hidden;
       text-overflow: ellipsis;
-      padding-left: 4px;
       vertical-align: top;
+      padding-left: 4px;
     }
     .close {
       font-family: Arial;
@@ -131,6 +131,20 @@
       height: 100%;
       vertical-align: top;
       padding-right: 4px;
+    }
+    &.square{
+      border-radius: 0px;
+      background:#F4F4F4;
+      .token-label{
+        padding-left: 0px;
+        > span{
+          padding-left: 4px;
+        }
+        > img{
+          vertical-align: top;
+        }
+
+      }
     }    
   }
 
