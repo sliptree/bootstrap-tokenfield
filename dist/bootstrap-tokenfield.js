@@ -959,6 +959,7 @@
 
       // Remove tokenfield from DOM
       this.$wrapper.remove();
+      this.$mirror.remove();
 
       var $_element = this.$element;
       delete this;
