@@ -63,9 +63,9 @@
     }
 
     var specialCharacters = ['\\', '$', '[', '{', '^', '.', '|', '?', '*', '+', '(', ')']
-    $.each(this._delimiters, function (index, char) {
-      var pos = $.inArray(char, specialCharacters)
-      if (pos >= 0) _self._delimiters[index] = '\\' + char;
+    $.each(this._delimiters, function (index, character) {
+      var pos = $.inArray(character, specialCharacters)
+      if (pos >= 0) _self._delimiters[index] = '\\' + character;
     });
 
     // Store original input width
