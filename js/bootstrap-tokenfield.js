@@ -379,6 +379,9 @@
     }    
 
   , setTokens: function (tokens, add, triggerChange) {
+    
+      if (!tokens) return
+
       if (!add) this.$wrapper.find('.token').remove()
 
       if (typeof triggerChange === 'undefined') {
