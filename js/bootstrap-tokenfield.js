@@ -205,6 +205,9 @@
 
       if (typeof attrs === 'string') {
         attrs = { value: attrs, label: attrs }
+      } else {
+        // Copy objects to prevent contamination of data sources.
+        attrs = $.extend( {}, attrs )
       }
 
       if (typeof triggerChange === 'undefined') {
@@ -229,9 +232,9 @@
       if (!createEvent.attrs || createEvent.isDefaultPrevented()) return
 
       var $token = $('<div class="token" />')
-            .attr('data-value', attrs.value)
             .append('<span class="token-label" />')
             .append('<a href="#" class="close" tabindex="-1">&times;</a>')
+            .data('attrs', attrs)
 
       // Insert token into HTML
       if (this.$input.hasClass('tt-input')) {
@@ -314,6 +317,8 @@
     }
 
   , setTokens: function (tokens, add, triggerChange) {
+      if (!tokens) return
+
       if (!add) this.$wrapper.find('.token').remove()
 
       if (typeof triggerChange === 'undefined') {
@@ -340,10 +345,7 @@
   , getTokenData: function($token) {
       var data = $token.map(function() {
         var $token = $(this);
-        return {
-          value: $token.attr('data-value'),
-          label: $token.find('.token-label').text()
-        }
+        return $token.data('attrs')
       }).get();
 
       if (data.length == 1) {
@@ -761,10 +763,7 @@
   , edit: function ($token) {
       if (!$token) return
 
-      var attrs = {
-        value: $token.data('value'),
-        label: $token.find('.token-label').text()
-      }
+      var attrs = $token.data('attrs')
 
       // Allow changing input value before editing
       var options = { attrs: attrs, relatedTarget: $token.get(0) }
@@ -790,7 +789,7 @@
 
       this.update();
 
-      // Indicate that token in snow being edited, and is replaced with an input field in the DOM
+      // Indicate that token is now being edited, and is replaced with an input field in the DOM
       this.$element.trigger($.Event('tokenfield:editedtoken', options ))
     }
 
@@ -945,7 +944,7 @@
       this.$element.css( this.$element.data('original-styles') );
       this.$element.prop( 'tabindex', this.$element.data('original-tabindex') );
 
-      // Re-route tokenfield labele to original input
+      // Re-route tokenfield label to original input
       var $label = $( 'label[for="' + this.$input.prop('id') + '"]' )
       if ( $label.length ) {
         $label.prop( 'for', this.$element.prop('id') )
