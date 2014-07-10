@@ -34,7 +34,7 @@ jQuery(document).ready(function($) {
         }
       }
     })
-  }, 100)  
+  }, 100)
 
   /* Run examples */
   $('.token-example-field').tokenfield();
@@ -51,9 +51,9 @@ jQuery(document).ready(function($) {
   var engine = new Bloodhound({
     local: [{value: 'red'}, {value: 'blue'}, {value: 'green'} , {value: 'yellow'}, {value: 'violet'}, {value: 'brown'}, {value: 'purple'}, {value: 'black'}, {value: 'white'}],
     datumTokenizer: function(d) {
-      return Bloodhound.tokenizers.whitespace(d.value); 
+      return Bloodhound.tokenizers.whitespace(d.value);
     },
-    queryTokenizer: Bloodhound.tokenizers.whitespace    
+    queryTokenizer: Bloodhound.tokenizers.whitespace
   });
   engine.initialize();
 
@@ -87,8 +87,8 @@ jQuery(document).ready(function($) {
         alert(e.attrs.length + ' tokens removed! Token values were: ' + values.join(', '))
       } else {
         alert('Token removed! Token value was: ' + e.attrs.value)
-      } 
+      }
     })
     .tokenfield()
-  
+
 });

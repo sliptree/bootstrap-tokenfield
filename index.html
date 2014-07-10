@@ -45,7 +45,7 @@ title: Tokenfield for Bootstrap
           <li>Responsive</li>
         </ul>
         <div id="main-links">
-          <a id="download-master" href="https://github.com/sliptree/bootstrap-tokenfield/zipball/master" class="btn btn-primary">Download Development</a>     
+          <a id="download-master" href="https://github.com/sliptree/bootstrap-tokenfield/zipball/master" class="btn btn-primary">Download Development</a>
         </div>
       </div>
     </div>
@@ -62,9 +62,9 @@ title: Tokenfield for Bootstrap
               <li><a href="#methods">Methods</a></li>
               <li><a href="#events">Events</a></li>
               <li><a href="#keyboard">Keyboard support</a></li>
-              <li><a href="#copy-paste">Copy &amp; paste support</a></li>          
-              <li><a href="#validation-states">Validation states</a></li>              
-              <li><a href="#various-examples">Various examples</a></li>              
+              <li><a href="#copy-paste">Copy &amp; paste support</a></li>
+              <li><a href="#validation-states">Validation states</a></li>
+              <li><a href="#various-examples">Various examples</a></li>
             </ul>
           </div>
         </div>
@@ -116,9 +116,9 @@ $('#tokenfield').tokenfield({
 var engine = new Bloodhound({
   local: [{value: 'red'}, {value: 'blue'}, {value: 'green'} , {value: 'yellow'}, {value: 'violet'}, {value: 'brown'}, {value: 'purple'}, {value: 'black'}, {value: 'white'}],
   datumTokenizer: function(d) {
-    return Bloodhound.tokenizers.whitespace(d.value); 
+    return Bloodhound.tokenizers.whitespace(d.value);
   },
-  queryTokenizer: Bloodhound.tokenizers.whitespace    
+  queryTokenizer: Bloodhound.tokenizers.whitespace
 });
 
 engine.initialize();
@@ -343,7 +343,7 @@ $('#myField').tokenfield('destroy');
               <p>When the user starts to edit the token, we merge token value and label together again.</p>
 
               <div class="bs-example">
-                <input type="text" class="form-control" id="tokenfield-2" value="me|me@example.com,you@example.com,not really an email" />
+                <input type="text" class="form-control" id="tokenfield-2" data-tokens="me|me@example.com,you@example.com,not really an email" />
               </div>
 
 {% highlight js %}
@@ -441,7 +441,7 @@ $('#tokenfield')
                   <span class="input-group-addon"><span class="glyphicon glyphicon-star"></span></span>
                 </div>
               </form>
-              
+
               <p>Using tokenfield with input group checkboxes and radio buttons</p>
 
               <form class="bs-example bs-example-form" role="form">
@@ -464,7 +464,7 @@ $('#tokenfield')
                   </div><!-- /.col-lg-6 -->
                 </div>
               </form>
-              
+
               <p>Using tokenfield with buttons in input groups</p>
 
               <form class="bs-example bs-example-form" role="form">
@@ -544,7 +544,7 @@ $('#tokenfield')
                 </div>
                 <button type="submit" class="btn btn-default">Search</button>
               </form>
-              
+
               <p>Tokenfield in horizontal form</p>
 
               <form class="bs-example form-horizontal">
@@ -572,7 +572,7 @@ $('#tokenfield')
                   </div>
                 </div>
               </form>
-              
+
               <p>Tokenfield with fluid and fixed widths (50%, 300px, etc...)</p>
 
               <form class="bs-example bs-example-form" role="form">
@@ -589,7 +589,7 @@ $('#tokenfield')
                   <input type="text" id="example-fixed-tokenfield-2" class="form-control token-example-field" value="red,green,blue" style="width:400px;" />
                 </div>
               </form>
-              
+
               <p>Tokenfield with RTL direction</p>
 
               <form class="bs-example bs-example-form" role="form">
@@ -600,7 +600,7 @@ $('#tokenfield')
 
       </div><!-- // row -->
 
-    </div><!-- //container --> 
+    </div><!-- //container -->
 
     <footer class="bs-footer" role="contentinfo">
       <div class="container">
@@ -614,7 +614,7 @@ $('#tokenfield')
             </li>
             <li class="follow-btn">
               <a href="https://twitter.com/sliptree" class="twitter-follow-button" data-show-count="false">Follow @sliptree</a>
-              <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script> 
+              <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
             </li>
             <li class="tweet-btn">
               <a href="https://twitter.com/share" class="twitter-share-button" data-via="sliptree" data-hashtags="bootstrap-tokenfield">Tweet</a>
@@ -635,11 +635,11 @@ $('#tokenfield')
 
     <script type="text/javascript" src="//code.jquery.com/jquery-1.9.1.js"></script>
     <script type="text/javascript" src="//code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-    <script type="text/javascript" src="dist/bootstrap-tokenfield.js" charset="UTF-8"></script>   
-    <script type="text/javascript" src="docs-assets/js/scrollspy.js" charset="UTF-8"></script>   
-    <script type="text/javascript" src="docs-assets/js/affix.js" charset="UTF-8"></script>   
-    <script type="text/javascript" src="docs-assets/js/typeahead.bundle.min.js" charset="UTF-8"></script>   
-    <script type="text/javascript" src="docs-assets/js/docs.min.js" charset="UTF-8"></script>   
+    <script type="text/javascript" src="dist/bootstrap-tokenfield.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="docs-assets/js/scrollspy.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="docs-assets/js/affix.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="docs-assets/js/typeahead.bundle.min.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="docs-assets/js/docs.min.js" charset="UTF-8"></script>
 
     <script type="text/javascript">
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
