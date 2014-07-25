@@ -37,7 +37,8 @@
   var Tokenfield = function (element, options) {
     var _self = this
 
-    this.$element = $(element)
+    this.$element = $(element);
+    this.$element.data('bs.tokenfield', _self);
     this.textDirection = this.$element.css('direction');
 
     // Extend options
@@ -992,7 +993,7 @@
         value = data[option].apply(data, args)
       } else {
         if (!data && typeof option !== 'string' && !param) {
-          $this.data('bs.tokenfield', (data = new Tokenfield(this, options)))
+          data = new Tokenfield(this, options);
           $this.trigger('tokenfield:initialize')
         }
       }
