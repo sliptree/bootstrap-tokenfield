@@ -98,7 +98,10 @@
     this.$element.closest('form').on('reset', function (e) {
       // Set a timeout to run code after the reset event is finished
       window.setTimeout(function(){
-        _self.setTokens(_self.$element.val(), false, false)
+        var newValue = _self.$element.val();
+        // Convert empty string to empty array because setTokens() ignores falsy values (like empty string)
+        newValue = ( newValue === '' ? [] : newValue );
+        _self.setTokens(newValue, false, false)
       }, 0);
     })
 
