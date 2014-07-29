@@ -95,7 +95,6 @@
       .prop('tabindex', -1)
 
     // Update tokens on form reset
-    // Update tokens on form reset
     this.$element.closest('form').on('reset', function (e) {
       // Set a timeout to run code after the reset event is finished
       window.setTimeout(function(){
