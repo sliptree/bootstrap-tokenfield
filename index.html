@@ -210,6 +210,12 @@ $('.tokenfield').tokenfield()
                       <td><code>true</code></td>
                       <td>Whether to insert spaces after each token when getting a comma-separated list of tokens. This affects both value returned by <code>getTokensList()<code> and the value of the original input field.</td>
                     </tr>
+                    <tr>
+                      <td>inputType</td>
+                      <td>string</td>
+                      <td><code>'text'</code></td>
+                      <td>HTML type attribute for the token input. This is useful for specifying an HTML5 input type like <code>'email'</code>, <code>'url'</code> or <code>'tel'</code> which allows mobile browsers to show a specialized virtual keyboard optimized for different types of input. This only sets the type of the visible token input but does not touch the original input field. So you may set the original input to have <code>type="text"</code> but set this inputType option to <code>'email'</code> if you only want to take advantage of the email style keyboard on mobile, but don't want to enable HTML5 native email validation on the original hidden input.</td>
+                    </tr>
                   </tbody>
                 </table>
               </div>
