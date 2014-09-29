@@ -3,7 +3,7 @@
  * https://github.com/sliptree/bootstrap-tokenfield
  * Copyright 2013-2014 Sliptree and other contributors; Licensed MIT
  */
-@-webkit-keyframes 'blink' {
+@-webkit-keyframes blink {
   0% {
     border-color: #ededed;
   }
@@ -11,7 +11,7 @@
     border-color: #b94a48;
   }
 }
-@-moz-keyframes 'blink' {
+@-moz-keyframes blink {
   0% {
     border-color: #ededed;
   }
@@ -19,7 +19,7 @@
     border-color: #b94a48;
   }
 }
-@keyframes 'blink' {
+@keyframes blink {
   0% {
     border-color: #ededed;
   }
