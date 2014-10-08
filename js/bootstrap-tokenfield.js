@@ -335,8 +335,17 @@
       }
 
       var _self = this
+      var typeaheadOptions = this.options.typeahead[1]
+
       $.each(tokens, function (i, attrs) {
-        _self.createToken(attrs, triggerChange)
+        if ( ! $.isEmptyObject( typeaheadOptions ) ) {
+          typeaheadOptions.source(attrs, function(value) {
+            _self.createToken(value[0], triggerChange)
+          });
+        }
+        else {
+          _self.createToken(attrs, triggerChange)
+        }
       })
 
       return this.$element.get(0)
