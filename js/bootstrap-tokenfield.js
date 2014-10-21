@@ -546,11 +546,9 @@
     }
 
   , keypress: function(e) {
-      this.lastKeyPressCode = e.keyCode
-      this.lastKeyPressCharCode = e.charCode
 
       // Comma
-      if ($.inArray( e.charCode, this._triggerKeys) !== -1 && this.$input.is(document.activeElement)) {
+      if ($.inArray( e.which, this._triggerKeys) !== -1 && this.$input.is(document.activeElement)) {
         if (this.$input.val()) {
           this.createTokensFromInput(e)
         }
