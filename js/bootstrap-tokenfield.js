@@ -534,7 +534,7 @@
         var opposite = direction === 'prev' ? 'next' : 'prev'
           , position = direction === 'prev' ? 'first' : 'last'
 
-        _self.firstActiveToken[opposite + 'All']('.token').each(function() {
+        _self.$firstActiveToken[opposite + 'All']('.token').each(function() {
           _self.deactivate( $(this) )
         })
 
