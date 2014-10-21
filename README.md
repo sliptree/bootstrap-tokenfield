@@ -49,6 +49,26 @@ $('#my-tokenfield').on('tokenfield:createtoken', function (event) {
 });
 ```
 
+#### And how about limiting tokens to my typeahead/autocomplete data?
+
+Similarly, using `tokenfield:createtoken`, you can check to see if a token exists in your autocomplete/typeahead
+data. This example checks if the given token already exists and stops its entry if it doesn't.
+
+```js
+$('#my-tokenfield').on('tokenfield:createtoken', function (event) {
+	var available_tokens = bloodhound_tokens.index.datums
+	var exists = true;
+	$.each(available_tokens, function(index, token) {
+		if (token.value === event.attrs.value)
+			exists = false;
+	});
+	if(exists === true)
+		event.preventDefault();
+})
+```
+
+
+
 ### Changelog
 
 See [release notes](https://github.com/sliptree/bootstrap-tokenfield/releases)
