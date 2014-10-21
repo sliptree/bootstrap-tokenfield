@@ -215,7 +215,7 @@
       }
 
       // Normalize label and value
-      attrs.value = $.trim(attrs.value);
+      attrs.value = $.trim(attrs.value.toString());
       attrs.label = attrs.label && attrs.label.length ? $.trim(attrs.label) : attrs.value
 
       // Bail out if has no value or label, or label is too short
