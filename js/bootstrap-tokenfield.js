@@ -963,7 +963,6 @@
       this.$mirror.remove();
 
       var $_element = this.$element;
-      delete this;
 
       return $_element;
   }
