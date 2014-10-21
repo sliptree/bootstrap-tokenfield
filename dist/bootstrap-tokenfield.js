@@ -102,7 +102,7 @@
 
     // Create a new input
     var id = this.$element.prop('id') || new Date().getTime() + '' + Math.floor((1 + Math.random()) * 100)
-    this.$input = $('<input type="text" class="token-input" autocomplete="off" />')
+    this.$input = $('<input type="'+this.options.inputType+'" class="token-input" autocomplete="off" />')
                     .appendTo( this.$wrapper )
                     .prop( 'placeholder',  this.$element.prop('placeholder') )
                     .prop( 'id', id + '-tokenfield' )
@@ -215,7 +215,7 @@
       }
 
       // Normalize label and value
-      attrs.value = $.trim(attrs.value);
+      attrs.value = $.trim(attrs.value.toString());
       attrs.label = attrs.label && attrs.label.length ? $.trim(attrs.label) : attrs.value
 
       // Bail out if has no value or label, or label is too short
@@ -480,11 +480,11 @@
         case 13: // enter
 
           // We will handle creating tokens from autocomplete in autocomplete events
-          if (this.$input.data('ui-autocomplete') && this.$input.data('ui-autocomplete').menu.element.find("li:has(a.ui-state-focus)").length) break
+          if (this.$input.data('ui-autocomplete') && this.$input.data('ui-autocomplete').menu.element.find("li:has(a.ui-state-focus), li.ui-state-focus").length) break
 
           // We will handle creating tokens from typeahead in typeahead events
           if (this.$input.hasClass('tt-input') && this.$wrapper.find('.tt-cursor').length ) break
-          if (this.$input.hasClass('tt-input') && this.$wrapper.find('.tt-hint').val().length) break
+          if (this.$input.hasClass('tt-input') && this.$wrapper.find('.tt-hint').val() && this.$wrapper.find('.tt-hint').val().length) break
 
           // Create token
           if (this.$input.is(document.activeElement) && this.$input.val().length || this.$input.data('edit')) {
@@ -534,7 +534,7 @@
         var opposite = direction === 'prev' ? 'next' : 'prev'
           , position = direction === 'prev' ? 'first' : 'last'
 
-        _self.firstActiveToken[opposite + 'All']('.token').each(function() {
+        _self.$firstActiveToken[opposite + 'All']('.token').each(function() {
           _self.deactivate( $(this) )
         })
 
@@ -546,11 +546,9 @@
     }
 
   , keypress: function(e) {
-      this.lastKeyPressCode = e.keyCode
-      this.lastKeyPressCharCode = e.charCode
 
       // Comma
-      if ($.inArray( e.charCode, this._triggerKeys) !== -1 && this.$input.is(document.activeElement)) {
+      if ($.inArray( e.which, this._triggerKeys) !== -1 && this.$input.is(document.activeElement)) {
         if (this.$input.val()) {
           this.createTokensFromInput(e)
         }
@@ -963,7 +961,6 @@
       this.$mirror.remove();
 
       var $_element = this.$element;
-      delete this;
 
       return $_element;
   }
@@ -1012,7 +1009,8 @@
     showAutocompleteOnFocus: false,
     createTokensOnBlur: false,
     delimiter: ',',
-    beautify: true
+    beautify: true,
+    inputType: 'text'
   }
 
   $.fn.tokenfield.Constructor = Tokenfield
