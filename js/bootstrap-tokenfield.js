@@ -268,9 +268,11 @@
           parseInt($tokenLabel.css('margin-right'), 10)
       }
 
-      $tokenLabel
-        .text(attrs.label)
-        .css('max-width', this.maxTokenWidth)
+      $tokenLabel.css('max-width', this.maxTokenWidth)
+      if (this.options.html)
+        $tokenLabel.html(attrs.label)
+      else
+        $tokenLabel.text(attrs.label)
 
       // Listen to events on token
       $token
@@ -1001,6 +1003,7 @@
   $.fn.tokenfield.defaults = {
     minWidth: 60,
     minLength: 0,
+    html: true,
     allowEditing: true,
     allowPasting: true,
     limit: 0,
