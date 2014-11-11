@@ -192,7 +192,7 @@
       args[0] = $.extend( {}, defaults, args[0] )
 
       this.$input.typeahead.apply( this.$input, args )
-      this.$hint = this.$input.prev()
+      this.$hint = this.$input.prev('.tt-hint')
       this.typeahead = true
     }
   }
