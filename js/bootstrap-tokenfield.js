@@ -310,7 +310,10 @@
       }
 
       // Update tokenfield dimensions
-      this.update()
+      var _self = this
+      setTimeout(function () {
+        _self.update()
+      }, 0)
 
       // Return original element
       return this.$element.get(0)
