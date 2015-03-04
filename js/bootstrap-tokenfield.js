@@ -6,8 +6,13 @@
 
 (function (factory) {
   if (typeof define === 'function' && define.amd) {
+    //small fix for window object being undefined
+    define('windowObj', [], function(){
+      return window;
+    });
+    
     // AMD. Register as an anonymous module.
-    define(['jquery'], factory);
+    define(['jquery', 'windowObj'], factory);
   } else if (typeof exports === 'object') {
     // For CommonJS and CommonJS-like environments where a window with jQuery
     // is present, execute the factory with the jQuery instance from the window object
