@@ -887,6 +887,9 @@
         this.$input.width( mirrorWidth )
       }
       else {
+        //temporary reset width to minimal value to get proper results
+        this.$input.width(this.options.minWidth);
+        
         var w = (this.textDirection === 'rtl')
               ? this.$input.offset().left + this.$input.outerWidth() - this.$wrapper.offset().left - parseInt(this.$wrapper.css('padding-left'), 10) - inputPadding - 1
               : this.$wrapper.offset().left + this.$wrapper.width() + parseInt(this.$wrapper.css('padding-left'), 10) - this.$input.offset().left - inputPadding;
