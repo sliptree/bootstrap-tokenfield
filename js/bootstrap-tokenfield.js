@@ -383,6 +383,16 @@
   , getInput: function() {
     return this.$input.val()
   }
+      
+  , setInput: function (val) {
+      if (this.$input.hasClass('tt-input')) {
+          // Typeahead acts weird when simply setting input value to empty,
+          // so we set the query to empty instead
+          this.$input.typeahead('val', val)
+      } else {
+          this.$input.val(val)
+      }
+  }
 
   , listen: function () {
       var _self = this
@@ -648,13 +658,7 @@
       if (tokensBefore == this.getTokensList() && this.$input.val().length)
         return false // No tokens were added, do nothing (prevent form submit)
 
-      if (this.$input.hasClass('tt-input')) {
-        // Typeahead acts weird when simply setting input value to empty,
-        // so we set the query to empty instead
-        this.$input.typeahead('val', '')
-      } else {
-        this.$input.val('')
-      }
+      this.setInput('')
 
       if (this.$input.data( 'edit' )) {
         this.unedit(focus)
