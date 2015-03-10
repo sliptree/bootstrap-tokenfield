@@ -6,8 +6,13 @@
 
 (function (factory) {
   if (typeof define === 'function' && define.amd) {
+    //small fix for window object being undefined
+    define('windowObj', [], function(){
+      return window;
+    });
+    
     // AMD. Register as an anonymous module.
-    define(['jquery'], factory);
+    define(['jquery', 'windowObj'], factory);
   } else if (typeof exports === 'object') {
     // For CommonJS and CommonJS-like environments where a window with jQuery
     // is present, execute the factory with the jQuery instance from the window object
@@ -891,6 +896,9 @@
         this.$input.width( mirrorWidth )
       }
       else {
+        //temporary reset width to minimal value to get proper results
+				this.$input.width(this.options.minWidth);
+				
         var w = (this.textDirection === 'rtl')
               ? this.$input.offset().left + this.$input.outerWidth() - this.$wrapper.offset().left - parseInt(this.$wrapper.css('padding-left'), 10) - inputPadding - 1
               : this.$wrapper.offset().left + this.$wrapper.width() + parseInt(this.$wrapper.css('padding-left'), 10) - this.$input.offset().left - inputPadding;
@@ -898,7 +906,8 @@
         // some usecases pre-render widget before attaching to DOM,
         // dimensions returned by jquery will be NaN -> we default to 100%
         // so placeholder won't be cut off.
-        isNaN(w) ? this.$input.width('100%') : this.$input.width(w);
+        w = isNaN(w) ? '100%' : w;
+        this.$input.width(w);
       }
     }
 
