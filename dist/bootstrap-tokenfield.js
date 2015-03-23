@@ -383,9 +383,6 @@
   , listen: function () {
       var _self = this
 
-      this.$element
-        .on('change',   $.proxy(this.change, this))
-
       this.$wrapper
         .on('mousedown',$.proxy(this.focusInput, this))
 
@@ -626,12 +623,6 @@
           _self.createTokensFromInput(e)
         }, 1)
       }
-    }
-
-  , change: function (e) {
-      if ( e.initiator === 'tokenfield' ) return // Prevent loops
-
-      this.setTokens( this.$element.val() )
     }
 
   , createTokensFromInput: function (e, focus) {

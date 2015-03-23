@@ -383,7 +383,7 @@
   , getInput: function() {
     return this.$input.val()
   }
-      
+
   , setInput: function (val) {
       if (this.$input.hasClass('tt-input')) {
           // Typeahead acts weird when simply setting input value to empty,
@@ -396,9 +396,6 @@
 
   , listen: function () {
       var _self = this
-
-      this.$element
-        .on('change',   $.proxy(this.change, this))
 
       this.$wrapper
         .on('mousedown',$.proxy(this.focusInput, this))
@@ -640,12 +637,6 @@
           _self.createTokensFromInput(e)
         }, 1)
       }
-    }
-
-  , change: function (e) {
-      if ( e.initiator === 'tokenfield' ) return // Prevent loops
-
-      this.setTokens( this.$element.val() )
     }
 
   , createTokensFromInput: function (e, focus) {
@@ -893,7 +884,7 @@
       else {
         //temporary reset width to minimal value to get proper results
         this.$input.width(this.options.minWidth);
-        
+
         var w = (this.textDirection === 'rtl')
               ? this.$input.offset().left + this.$input.outerWidth() - this.$wrapper.offset().left - parseInt(this.$wrapper.css('padding-left'), 10) - inputPadding - 1
               : this.$wrapper.offset().left + this.$wrapper.width() + parseInt(this.$wrapper.css('padding-left'), 10) - this.$input.offset().left - inputPadding;
