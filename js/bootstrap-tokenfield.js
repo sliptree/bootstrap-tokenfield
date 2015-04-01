@@ -216,7 +216,7 @@
 
       // Normalize label and value
       attrs.value = $.trim(attrs.value.toString());
-      attrs.label = attrs.label && attrs.label.length ? $.trim(attrs.label) : attrs.value
+      attrs.label = this.options.label(attrs);
 
       // Bail out if has no value or label, or label is too short
       if (!attrs.value.length || !attrs.label.length || attrs.label.length <= this.options.minLength) return
@@ -1023,6 +1023,9 @@
     createTokensOnBlur: false,
     delimiter: ',',
     beautify: true,
+    label: function(attrs) {
+      return attrs.label && attrs.label.length ? $.trim(attrs.label) : attrs.value;
+    },
     inputType: 'text'
   }
 
