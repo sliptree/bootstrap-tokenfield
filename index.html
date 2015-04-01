@@ -211,6 +211,12 @@ $('.tokenfield').tokenfield()
                       <td>Whether to insert spaces after each token when getting a comma-separated list of tokens. This affects both value returned by <code>getTokensList()<code> and the value of the original input field.</td>
                     </tr>
                     <tr>
+                      <td>label</td>
+                      <td>function(attrs)</td>
+                      <td>returns <code>attrs.label</code> if exists, otherwise <code>attrs.value.trim()</code></td>
+                      <td>The template to use to generate the content inside tags.</td>
+                    </tr>
+                    <tr>
                       <td>inputType</td>
                       <td>string</td>
                       <td><code>'text'</code></td>
