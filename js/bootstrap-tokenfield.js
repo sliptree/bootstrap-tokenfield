@@ -100,6 +100,9 @@
     if (this.$element.hasClass('input-sm')) this.$wrapper.addClass('input-sm')
     if (this.textDirection === 'rtl') this.$wrapper.addClass('rtl')
 
+    //Create a div for token (used for sortable)
+    this.$tokenblock=$('<div class="tokenblock"/>') .appendTo( this.$wrapper )
+
     // Create a new input
     var id = this.$element.prop('id') || new Date().getTime() + '' + Math.floor((1 + Math.random()) * 100)
     this.$input = $('<input type="'+this.options.inputType+'" class="token-input" autocomplete="off" />')
@@ -194,6 +197,11 @@
       this.$input.typeahead.apply( this.$input, args )
       this.typeahead = true
     }
+
+     //aply sortable on token div
+    if (this.options.sortable && $.fn.sortable){ 
+        this.$tokenblock.sortable({ distance: 5, helper: 'clone'});
+    }
   }
 
   Tokenfield.prototype = {
@@ -236,13 +244,18 @@
             .append('<a href="#" class="close" tabindex="-1">&times;</a>')
             .data('attrs', attrs)
 
-      // Insert token into HTML
-      if (this.$input.hasClass('tt-input')) {
-        // If the input has typeahead enabled, insert token before it's parent
-        this.$input.parent().before( $token )
-      } else {
-        this.$input.before( $token )
+     //Check if the input is inside the label block (edit of a label)
+     //if so insert token before input otherwise insert as last element
+     //of the tokenblock div
+      if (notnulleditingtag.length && notnulleditingtag[0]===this.$tokenblock){
+          if (this.$input.hasClass('tt-input')) {
+        // If the input has typeahead e$tokenblnabled, insert token before it's parent
+          this.$input.parent().before( $token )
+        } else {
+          this.$input.before( $token )
+        }
       }
+      else  $token.appendTo(this.$tokenblock)
 
       // Temporarily set input width to minimum
       this.$input.css('width', this.options.minWidth + 'px')
