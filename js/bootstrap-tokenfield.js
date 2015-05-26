@@ -247,8 +247,8 @@
      //Check if the input is inside the label block (edit of a label)
      //if so insert token before input otherwise insert as last element
      //of the tokenblock div
-      var notnulleditingtag = $token.parents('.tokenblock');
-      if (notnulleditingtag.length && notnulleditingtag[0]===this.$tokenblock){
+      var notnulleditingtag = this.$input.parents('.tokenblock')
+      if (notnulleditingtag.length && notnulleditingtag[0]===this.$tokenblock[0]){
           if (this.$input.hasClass('tt-input')) {
         // If the input has typeahead e$tokenblnabled, insert token before it's parent
           this.$input.parent().before( $token )
@@ -533,7 +533,11 @@
           if (_self.$input.val().length > 0) return
 
           direction += 'All'
-          var $token = _self.$input.hasClass('tt-input') ? _self.$input.parent()[direction]('.token:first') : _self.$input[direction]('.token:first')
+          var $tokenblock = _self.$input.hasClass('tt-input') ? _self.$input.parent()[direction]('.tokenblock') : _self.$input[direction]('.tokenblock')
+          if (!$tokenblock.length) return
+
+          var $token = _self.$tokenblock.find('.token:'+ (direction==='prevAll'? 'last':'first')) 
+
           if (!$token.length) return
 
           _self.preventInputFocus = true
@@ -554,8 +558,13 @@
         if (_self.$input.is(document.activeElement)) {
           if (_self.$input.val().length > 0) return
 
-          var $token = _self.$input.hasClass('tt-input') ? _self.$input.parent()[direction + 'All']('.token:first') : _self.$input[direction + 'All']('.token:first')
+	      direction += 'All'
+          var $tokenblock = _self.$input.hasClass('tt-input') ? _self.$input.parent()[direction]('.tokenblock') : _self.$input[direction]('.tokenblock')
+          if (!$tokenblock.length) return
+
+          var $token = _self.$tokenblock.find('.token:'+ (direction==='prevAll'? 'last':'first')) 
           if (!$token.length) return
+
 
           _self.activate( $token )
         }
@@ -567,7 +576,7 @@
           _self.deactivate( $(this) )
         })
 
-        _self.activate( _self.$wrapper.find('.token:' + position), true, true )
+        _self.activate( _self.$tokenblock.find('.token:' + position), true, true )
         e.preventDefault()
       }
 
@@ -596,7 +605,8 @@
             if (this.$input.val().length || this.lastInputValue.length && this.lastKeyDown === 8) break
 
             this.preventDeactivation = true
-            var $prevToken = this.$input.hasClass('tt-input') ? this.$input.parent().prevAll('.token:first') : this.$input.prevAll('.token:first')
+            //var $prevToken = this.$input.hasClass('tt-input') ? this.$input.parent().prevAll('.token:first') : this.$input.prevAll('.token:first')
+			var $prevToken = this.$tokenblock.find('.token:last')
 
             if (!$prevToken.length) break
 
@@ -745,12 +755,11 @@
 
       if (multi && this.$firstActiveToken) {
         // Determine first active token and the current tokens indicies
-        // Account for the 1 hidden textarea by subtracting 1 from both
-        var i = this.$firstActiveToken.index() - 2
-          , a = $token.index() - 2
+        var i = this.$firstActiveToken.index() 
+          , a = $token.index()
           , _self = this
 
-        this.$wrapper.find('.token').slice( Math.min(i, a) + 1, Math.max(i, a) ).each( function() {
+        this.$tokenblock.find('.token').slice( Math.min(i, a) + 1, Math.max(i, a) ).each( function() {
           _self.activate( $(this), true )
         })
       }
