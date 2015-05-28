@@ -198,9 +198,35 @@
       this.typeahead = true
     }
 
+	var self=this;
      //aply sortable on token div
     if (this.options.sortable && $.fn.sortable){ 
-        this.$tokenblock.sortable({ distance: 5, helper: 'clone'});
+        this.$tokenblock.sortable({ 
+        	distance: 5, 
+        	helper: 'clone',
+			start: function(event, ui) {
+	            var start_pos = ui.item.index();
+	            ui.item.data('start_pos', start_pos);
+	        },
+			update: function(event, ui) {
+            	var start_pos = ui.item.data('start_pos');
+            	var end_pos = ui.item.index();
+
+            	//send sortevent
+            	var options = { attrs: self.getTokenData(ui.item), oldPosition: start_pos, newPosition: end_pos}
+      			var sortEvent = $.Event('tokenfield:sorttoken', options)
+      			self.$element.trigger( sortEvent )
+
+				if (sortEvent.isDefaultPrevented()){
+					$(this).sortable('cancel')
+      			  	return
+				}
+
+				//send sorted event
+				var sortedEvent = $.Event('tokenfield:sortedtoken', options)
+      			self.$element.trigger( sortedEvent )
+        	}
+    	});
     }
   }
 

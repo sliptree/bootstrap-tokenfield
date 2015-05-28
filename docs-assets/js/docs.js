@@ -45,7 +45,10 @@ jQuery(document).ready(function($) {
       delay: 100
     },
     showAutocompleteOnFocus: true,
-    delimiter: [',',' ', '-', '_']
+    delimiter: [',',' ', '-', '_'],
+    sortable:true
+  }).on('tokenfield:sorttoken', function (e) {
+    alert('tag value: '+ e.attrs.value+',tag label: '+e.attrs.label+',old position: '+e.oldPosition+',new position: '+ e.newPosition);
   });
 
   var engine = new Bloodhound({
