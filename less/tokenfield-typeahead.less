@@ -106,9 +106,12 @@
   display: block;
   padding: 3px 20px;
 }
-.tt-suggestion.tt-cursor {
+.tt-suggestion.tt-cursor, 
+.tt-suggestion:hover
+{
   color: @dropdown-link-hover-color;
   #gradient > .vertical(@dropdown-link-hover-bg, darken(@dropdown-link-hover-bg, 5%));
+  cursor:pointer;
 }
 .tt-suggestion.tt-cursor a {
   color: @dropdown-bg;
