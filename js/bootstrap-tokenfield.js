@@ -101,7 +101,7 @@
     if (this.textDirection === 'rtl') this.$wrapper.addClass('rtl')
 
     //Create a div for token (used for sortable)
-    this.$tokenblock=$('<div class="tokenblock"/>') .appendTo( this.$wrapper )
+    this.$tokendiv=$('<div class="tokendiv"/>') .appendTo( this.$wrapper )
 
     // Create a new input
     var id = this.$element.prop('id') || new Date().getTime() + '' + Math.floor((1 + Math.random()) * 100)
@@ -201,7 +201,7 @@
 	var self=this;
      //aply sortable on token div
     if (this.options.sortable && $.fn.sortable){ 
-        this.$tokenblock.sortable({ 
+        this.$tokendiv.sortable({ 
         	distance: 5, 
         	helper: 'clone',
 			    start: function(event, ui) {
@@ -272,9 +272,9 @@
 
      //Check if the input is inside the label block (edit of a label)
      //if so insert token before input otherwise insert as last element
-     //of the tokenblock div
-      var notnulleditingtag = this.$input.parents('.tokenblock')
-      if (notnulleditingtag.length && notnulleditingtag[0]===this.$tokenblock[0]){
+     //of the tokendiv div
+      var notnulleditingtag = this.$input.parents('.tokendiv')
+      if (notnulleditingtag.length && notnulleditingtag[0]===this.$tokendiv[0]){
           if (this.$input.hasClass('tt-input')) {
         // If the input has typeahead e$tokenblnabled, insert token before it's parent
           this.$input.parent().before( $token )
@@ -282,7 +282,7 @@
           this.$input.before( $token )
         }
       }
-      else  $token.appendTo(this.$tokenblock)
+      else  $token.appendTo(this.$tokendiv)
 
       // Temporarily set input width to minimum
       this.$input.css('width', this.options.minWidth + 'px')
@@ -559,10 +559,10 @@
           if (_self.$input.val().length > 0) return
 
           direction += 'All'
-          var $tokenblock = _self.$input.hasClass('tt-input') ? _self.$input.parent()[direction]('.tokenblock') : _self.$input[direction]('.tokenblock')
-          if (!$tokenblock.length) return
+          var $tokendiv = _self.$input.hasClass('tt-input') ? _self.$input.parent()[direction]('.tokendiv') : _self.$input[direction]('.tokendiv')
+          if (!$tokendiv.length) return
 
-          var $token = _self.$tokenblock.find('.token:'+ (direction==='prevAll'? 'last':'first')) 
+          var $token = _self.$tokendiv.find('.token:'+ (direction==='prevAll'? 'last':'first')) 
 
           if (!$token.length) return
 
@@ -585,10 +585,10 @@
           if (_self.$input.val().length > 0) return
 
 	      direction += 'All'
-          var $tokenblock = _self.$input.hasClass('tt-input') ? _self.$input.parent()[direction]('.tokenblock') : _self.$input[direction]('.tokenblock')
-          if (!$tokenblock.length) return
+          var $tokendiv = _self.$input.hasClass('tt-input') ? _self.$input.parent()[direction]('.tokendiv') : _self.$input[direction]('.tokendiv')
+          if (!$tokendiv.length) return
 
-          var $token = _self.$tokenblock.find('.token:'+ (direction==='prevAll'? 'last':'first')) 
+          var $token = _self.$tokendiv.find('.token:'+ (direction==='prevAll'? 'last':'first')) 
           if (!$token.length) return
 
 
@@ -602,7 +602,7 @@
           _self.deactivate( $(this) )
         })
 
-        _self.activate( _self.$tokenblock.find('.token:' + position), true, true )
+        _self.activate( _self.$tokendiv.find('.token:' + position), true, true )
         e.preventDefault()
       }
 
@@ -632,7 +632,7 @@
 
             this.preventDeactivation = true
             //var $prevToken = this.$input.hasClass('tt-input') ? this.$input.parent().prevAll('.token:first') : this.$input.prevAll('.token:first')
-			var $prevToken = this.$tokenblock.find('.token:last')
+			var $prevToken = this.$tokendiv.find('.token:last')
 
             if (!$prevToken.length) break
 
@@ -785,7 +785,7 @@
           , a = $token.index()
           , _self = this
 
-        this.$tokenblock.find('.token').slice( Math.min(i, a) + 1, Math.max(i, a) ).each( function() {
+        this.$tokendiv.find('.token').slice( Math.min(i, a) + 1, Math.max(i, a) ).each( function() {
           _self.activate( $(this), true )
         })
       }
