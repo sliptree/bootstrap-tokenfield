@@ -870,7 +870,7 @@
     }
 
   , remove: function (e, direction) {
-      if (this.$input.is(document.activeElement) || this._disabled || this._readonly) return
+      if (this._disabled || this._readonly) return
 
       var $token = (e.type === 'click') ? $(e.target).closest('.token') : this.$wrapper.find('.token.active')
 
