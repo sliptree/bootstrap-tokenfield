@@ -743,6 +743,9 @@
 
       $token.addClass('active')
       this.$copyHelper.val( this.getTokensList( null, null, true ) ).select()
+
+      var options = { attrs: this.getTokenData( $token ), relatedTarget: $token.get(0) }
+      this.$element.trigger($.Event('tokenfield:activatedtoken', options))
     }
 
   , activateAll: function() {
