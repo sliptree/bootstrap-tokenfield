@@ -161,7 +161,7 @@
     this.$element.prependTo( this.$wrapper )
 
     // Calculate inner input width
-    this.update()
+    setTimeout(this.update.bind(this), 0);
 
     // Create initial tokens, if any
     this.setTokens(this.options.tokens, false, ! this.$element.val() && this.options.tokens )
