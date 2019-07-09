@@ -1,5 +1,5 @@
 {
-  "name": "bootstrap-tokenfield",
+  "name": "bootstrap-tokenfield-jquery3",
   "title": "Bootstrap Tokenfield",
   "description": "Advanced tagging/tokenizing plugin for input fields with a focus on keyboard and copy-paste support.",
   "version": "0.12.1",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/sliptree/bootstrap-tokenfield.git"
+    "url": "git://github.com/natalan/bootstrap-tokenfield.git"
   },
   "keywords": [
     "jquery",
@@ -25,7 +25,7 @@
     "form"
   ],
   "bugs": {
-    "url": "https://github.com/sliptree/bootstrap-tokenfield/issues"
+    "url": "https://github.com/natalan/bootstrap-tokenfield/issues"
   },
   "licenses": [
     {
@@ -45,12 +45,12 @@
     "grunt-jekyll": "~0.4.1",
     "mocha": "^1.17.1",
     "must": "^0.11.0",
-    "jsdom": "^0.10.1",
+    "jsdom": "15.1.1",
     "jquery-simulate-ext": "^1.3.0",
     "grunt-exec": "^0.4.5",
     "semver": "^2.2.1"
   },
   "dependencies": {
-    "jquery": "^3.1.0"
+    "jquery": "3.4.1"
   }
 }
