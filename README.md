@@ -44,6 +44,7 @@ $('#my-tokenfield').on('tokenfield:createtoken', function (event) {
 		if (token.value === event.attrs.value)
 			event.preventDefault();
 	});
+	$(this).focus();
 });
 ```
 
