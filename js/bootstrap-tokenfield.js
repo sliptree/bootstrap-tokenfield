@@ -94,6 +94,17 @@
       .css(hidingPosition, '-10000px')
       .prop('tabindex', -1)
 
+    // Update tokens on form reset
+    this.$element.closest('form').on('reset', function (e) {
+      // Set a timeout to run code after the reset event is finished
+      window.setTimeout(function(){
+        var newValue = _self.$element.val();
+        // Convert empty string to empty array because setTokens() ignores falsy values (like empty string)
+        newValue = ( newValue === '' ? [] : newValue );
+        _self.setTokens(newValue, false, false)
+      }, 0);
+    })
+
     // Create a wrapper
     this.$wrapper = $('<div class="tokenfield form-control" />')
     if (this.$element.hasClass('input-lg')) this.$wrapper.addClass('input-lg')
