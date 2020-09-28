@@ -398,7 +398,7 @@
       var _self = this
 
       this.$element
-        .on('change',   $.proxy(this.change, this))
+        .on('change.tokenfield',   $.proxy(this.change, this))
 
       this.$wrapper
         .on('mousedown',$.proxy(this.focusInput, this))
@@ -962,6 +962,9 @@
 
       // Move original element outside of tokenfield wrapper
       this.$element.insertBefore( this.$wrapper );
+
+      // Remove tokenfield-related events
+      this.$element.off('.tokenfield');
 
       // Remove tokenfield-related data
       this.$element.removeData('original-styles')
