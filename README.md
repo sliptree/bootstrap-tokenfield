@@ -99,7 +99,7 @@ Previous releases:
 * Fixed: Change event was triggered on initialization #22
 * Fixed: When token is removed in tokenfield:preparetoken event, no longer tries to create a token
 * Fixed: Pressing comma key was not handled reliably
-* New: `prevetDuplicateToken` event
+* New: `preventDuplicateToken` event
 * Improved: Typeahead integration
 * Improved: styling
 * Minor tweaks, fixes, improvements 
