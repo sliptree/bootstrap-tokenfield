@@ -434,6 +434,9 @@
           $_menuElement.css( 'min-width', minWidth + 'px' )
         })
         .on('autocompleteselect', function (e, ui) {
+          if (e.keyCode === 13) {
+            return false;
+          }
           if (_self.createToken( ui.item )) {
             _self.$input.val('')
             if (_self.$input.data( 'edit' )) {
