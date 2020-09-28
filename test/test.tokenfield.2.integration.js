@@ -875,6 +875,66 @@ describe('2. Integration tests:', function() {
       });
     });
 
+
+    describe("tokenfield:activatedtoken", function() {
+      before(function() {
+        TFT.template = '<input type="text" class="tokenize" value="red,green,blue" />'
+      });
+
+      after(function() {
+        delete TFT.template;
+      });
+
+      it("must be triggered when a token is clicked", function (done) {
+        var self = this;
+
+        this.$field.on('tokenfield:activatedtoken', function (e) {
+          e.attrs.must.be.an.object();
+          e.attrs.label.must.eql('red');
+          e.attrs.value.must.eql('red');
+          e.relatedTarget.must.be.an.object();
+
+          self.$wrapper.find(e.relatedTarget).must.have.length(1);
+
+          done();
+        });
+
+        this.$wrapper.find('.token:contains(red)').click();
+      });
+
+      it("must be triggered for next token on right arrow", function (done) {
+        var self = this;
+
+        this.$field.on('tokenfield:activatedtoken', function (e) {
+          e.attrs.label.must.eql('green');
+
+          done();
+        });
+
+        this.$wrapper.find('.token')
+            .filter(':has(.token-label:contains(red))').addClass('active');
+
+        this.$copyHelper.focus()
+                          .simulate("keydown", { keyCode: 39});
+      });
+
+      it("must be triggered for previous token on left arrow", function (done) {
+        var self = this;
+
+        this.$field.on('tokenfield:activatedtoken', function (e) {
+          e.attrs.label.must.eql('green');
+
+          done();
+        });
+
+        this.$wrapper.find('.token')
+            .filter(':has(.token-label:contains(blue))').addClass('active');
+
+        this.$copyHelper.focus()
+                          .simulate("keydown", { keyCode: 37});
+      });
+    });
+
     describe("tokenfield:edittoken", function() {
       before(function() {
         TFT.template = '<input type="text" class="tokenize" value="red,green,blue" />'
