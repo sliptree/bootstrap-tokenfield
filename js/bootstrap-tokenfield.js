@@ -259,11 +259,11 @@
           parseInt($token.css('border-left-width'), 10) -
           parseInt($token.css('border-right-width'), 10) -
           parseInt($token.css('padding-left'), 10) -
-          parseInt($token.css('padding-right'), 10)
+          parseInt($token.css('padding-right'), 10) -
           parseInt($tokenLabel.css('border-left-width'), 10) -
           parseInt($tokenLabel.css('border-right-width'), 10) -
           parseInt($tokenLabel.css('padding-left'), 10) -
-          parseInt($tokenLabel.css('padding-right'), 10)
+          parseInt($tokenLabel.css('padding-right'), 10) -
           parseInt($tokenLabel.css('margin-left'), 10) -
           parseInt($tokenLabel.css('margin-right'), 10)
       }
