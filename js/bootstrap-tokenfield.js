@@ -200,7 +200,7 @@
 
     constructor: Tokenfield
 
-  , createToken: function (attrs, triggerChange) {
+  , createToken: function (attrs, triggerChange, triggerEvents) {
       var _self = this
 
       if (typeof attrs === 'string') {
@@ -214,6 +214,10 @@
          triggerChange = true
       }
 
+      if (typeof triggerEvents=== 'undefined') {
+         triggerEvents = true
+      }
+
       // Normalize label and value
       attrs.value = $.trim(attrs.value.toString());
       attrs.label = attrs.label && attrs.label.length ? $.trim(attrs.label) : attrs.value
@@ -225,11 +229,12 @@
       if (this.options.limit && this.getTokens().length >= this.options.limit) return
 
       // Allow changing token data before creating it
-      var createEvent = $.Event('tokenfield:createtoken', { attrs: attrs })
-      this.$element.trigger(createEvent)
-
-      // Bail out if there if attributes are empty or event was defaultPrevented
-      if (!createEvent.attrs || createEvent.isDefaultPrevented()) return
+      if (triggerEvents) {
+          var createEvent = $.Event('tokenfield:createtoken', { attrs: attrs })
+          this.$element.trigger(createEvent)
+          // Bail out if there if attributes are empty or event was defaultPrevented
+          if (!createEvent.attrs || createEvent.isDefaultPrevented()) return
+      }
 
       var $token = $('<div class="token" />')
             .append('<span class="token-label" />')
@@ -301,10 +306,12 @@
 
       // Trigger createdtoken event on the original field
       // indicating that the token is now in the DOM
-      this.$element.trigger($.Event('tokenfield:createdtoken', {
-        attrs: attrs,
-        relatedTarget: $token.get(0)
-      }))
+      if (triggerEvents) {
+          this.$element.trigger($.Event('tokenfield:createdtoken', {
+            attrs: attrs,
+            relatedTarget: $token.get(0)
+          }))
+      }
 
       // Trigger change event on the original field
       if (triggerChange) {
@@ -321,13 +328,17 @@
       return this.$element.get(0)
     }
 
-  , setTokens: function (tokens, add, triggerChange) {
+  , setTokens: function (tokens, add, triggerChange, triggerEvents) {
       if (!add) this.$wrapper.find('.token').remove()
 
       if (!tokens) return
 
       if (typeof triggerChange === 'undefined') {
           triggerChange = true
+      }
+
+      if (typeof triggerEvents === 'undefined') {
+          triggerEvents = true
       }
 
       if (typeof tokens === 'string') {
@@ -341,7 +352,7 @@
 
       var _self = this
       $.each(tokens, function (i, attrs) {
-        _self.createToken(attrs, triggerChange)
+        _self.createToken(attrs, triggerChange, triggerEvents)
       })
 
       return this.$element.get(0)
