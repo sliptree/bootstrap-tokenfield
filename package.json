@@ -51,6 +51,6 @@
     "semver": "^2.2.1"
   },
   "dependencies": {
-    "jquery": "^2.1.0"
+    "jquery": "^3.5.0"
   }
 }
