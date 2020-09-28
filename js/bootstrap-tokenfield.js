@@ -222,7 +222,12 @@
       if (!attrs.value.length || !attrs.label.length || attrs.label.length <= this.options.minLength) return
 
       // Bail out if maximum number of tokens is reached
-      if (this.options.limit && this.getTokens().length >= this.options.limit) return
+      if (this.options.limit && this.getTokens().length >= this.options.limit) {
+         this.$element.trigger($.Event('tokenfield:limittoken', {
+            attrs: attrs
+          }))
+        return
+      }
 
       // Allow changing token data before creating it
       var createEvent = $.Event('tokenfield:createtoken', { attrs: attrs })
