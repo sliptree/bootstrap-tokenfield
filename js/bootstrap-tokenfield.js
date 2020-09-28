@@ -289,7 +289,10 @@
             return _self.toggle( $token )
           }
 
-          _self.activate( $token, e.shiftKey, e.shiftKey )
+          if(_self.singleClick( $token ))
+          {
+            _self.activate( $token, e.shiftKey, e.shiftKey )
+          }
         })
         .on('dblclick', function (e) {
           if (_self._disabled || _self._readonly || !_self.options.allowEditing ) return false
@@ -766,6 +769,29 @@
       $token.toggleClass('active')
       this.$copyHelper.val( this.getTokensList( null, null, true ) ).select()
     }
+
+  , singleClick: function($token) {
+      var current_time = window.performance.now();
+      var click_delta = current_time - this.lastclicktime;
+      var attrs = $token.data('attrs');
+      var options = { attrs: attrs, relatedTarget: $token.get(0) };
+      var clickevent = $.Event('tokenfield:singleclicktoken', options);
+
+      this.clickcount++;
+      this.lastclicktime = window.performance.now();
+
+      // handle normal default action for highlighting w/ double click
+      if(click_delta < 500)
+        return true;
+
+      if (!$token) return false;
+      this.$element.trigger(clickevent);
+
+      if(clickevent.isDefaultPrevented())
+        return false;
+      else
+        return true;
+  }
 
   , edit: function ($token) {
       if (!$token) return
