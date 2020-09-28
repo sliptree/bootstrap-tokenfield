@@ -100,6 +100,9 @@
     if (this.$element.hasClass('input-sm')) this.$wrapper.addClass('input-sm')
     if (this.textDirection === 'rtl') this.$wrapper.addClass('rtl')
 
+    //Create a div for token (used for sortable)
+    this.$tokendiv=$('<div class="tokendiv"/>') .appendTo( this.$wrapper )
+
     // Create a new input
     var id = this.$element.prop('id') || new Date().getTime() + '' + Math.floor((1 + Math.random()) * 100)
     this.$input = $('<input type="'+this.options.inputType+'" class="token-input" autocomplete="off" />')
@@ -192,8 +195,38 @@
       args[0] = $.extend( {}, defaults, args[0] )
 
       this.$input.typeahead.apply( this.$input, args )
-      this.$hint = this.$input.prev('.tt-hint')
       this.typeahead = true
+    }
+
+	var self=this;
+     //aply sortable on token div
+    if (this.options.sortable && $.fn.sortable){ 
+        this.$tokendiv.sortable({ 
+        	distance: 5, 
+        	helper: 'clone',
+			    start: function(event, ui) {
+	            var start_pos = ui.item.index();
+	            ui.item.data('start_pos', start_pos);
+	        },
+			    update: function(event, ui) {
+            var start_pos = ui.item.data('start_pos');
+            var end_pos = ui.item.index();
+
+            //send sortevent
+            var options = { attrs: self.getTokenData(ui.item), oldPosition: start_pos, newPosition: end_pos}
+      			var sortEvent = $.Event('tokenfield:sorttoken', options)
+      			self.$element.trigger( sortEvent )
+
+				    if (sortEvent.isDefaultPrevented()){
+					      $(this).sortable('cancel')
+      			  	return
+				    }
+
+				    //send sorted event
+				    var sortedEvent = $.Event('tokenfield:sortedtoken', options)
+      			self.$element.trigger( sortedEvent )
+        	}
+    	});
     }
   }
 
@@ -237,13 +270,19 @@
             .append('<a href="#" class="close" tabindex="-1">&times;</a>')
             .data('attrs', attrs)
 
-      // Insert token into HTML
-      if (this.$input.hasClass('tt-input')) {
-        // If the input has typeahead enabled, insert token before it's parent
-        this.$input.parent().before( $token )
-      } else {
-        this.$input.before( $token )
+     //Check if the input is inside the label block (edit of a label)
+     //if so insert token before input otherwise insert as last element
+     //of the tokendiv div
+      var notnulleditingtag = this.$input.parents('.tokendiv')
+      if (notnulleditingtag.length && notnulleditingtag[0]===this.$tokendiv[0]){
+          if (this.$input.hasClass('tt-input')) {
+        // If the input has typeahead e$tokenblnabled, insert token before it's parent
+          this.$input.parent().before( $token )
+        } else {
+          this.$input.before( $token )
+        }
       }
+      else  $token.appendTo(this.$tokendiv)
 
       // Temporarily set input width to minimum
       this.$input.css('width', this.options.minWidth + 'px')
@@ -269,9 +308,11 @@
           parseInt($tokenLabel.css('margin-right'), 10)
       }
 
-      $tokenLabel
-        .text(attrs.label)
-        .css('max-width', this.maxTokenWidth)
+      $tokenLabel.css('max-width', this.maxTokenWidth)
+      if (this.options.html)
+        $tokenLabel.html(attrs.label)
+      else
+        $tokenLabel.text(attrs.label)
 
       // Listen to events on token
       $token
@@ -311,16 +352,19 @@
       }
 
       // Update tokenfield dimensions
-      this.update()
+      var _self = this
+      setTimeout(function () {
+        _self.update()
+      }, 0)
 
       // Return original element
       return this.$element.get(0)
     }
 
   , setTokens: function (tokens, add, triggerChange) {
-      if (!tokens) return
-
       if (!add) this.$wrapper.find('.token').remove()
+
+      if (!tokens) return
 
       if (typeof triggerChange === 'undefined') {
           triggerChange = true
@@ -378,6 +422,16 @@
 
   , getInput: function() {
     return this.$input.val()
+  }
+      
+  , setInput: function (val) {
+      if (this.$input.hasClass('tt-input')) {
+          // Typeahead acts weird when simply setting input value to empty,
+          // so we set the query to empty instead
+          this.$input.typeahead('val', val)
+      } else {
+          this.$input.val(val)
+      }
   }
 
   , listen: function () {
@@ -505,7 +559,11 @@
           if (_self.$input.val().length > 0) return
 
           direction += 'All'
-          var $token = _self.$input.hasClass('tt-input') ? _self.$input.parent()[direction]('.token:first') : _self.$input[direction]('.token:first')
+          var $tokendiv = _self.$input.hasClass('tt-input') ? _self.$input.parent()[direction]('.tokendiv') : _self.$input[direction]('.tokendiv')
+          if (!$tokendiv.length) return
+
+          var $token = _self.$tokendiv.find('.token:'+ (direction==='prevAll'? 'last':'first')) 
+
           if (!$token.length) return
 
           _self.preventInputFocus = true
@@ -526,8 +584,13 @@
         if (_self.$input.is(document.activeElement)) {
           if (_self.$input.val().length > 0) return
 
-          var $token = _self.$input.hasClass('tt-input') ? _self.$input.parent()[direction + 'All']('.token:first') : _self.$input[direction + 'All']('.token:first')
+	      direction += 'All'
+          var $tokendiv = _self.$input.hasClass('tt-input') ? _self.$input.parent()[direction]('.tokendiv') : _self.$input[direction]('.tokendiv')
+          if (!$tokendiv.length) return
+
+          var $token = _self.$tokendiv.find('.token:'+ (direction==='prevAll'? 'last':'first')) 
           if (!$token.length) return
+
 
           _self.activate( $token )
         }
@@ -539,7 +602,7 @@
           _self.deactivate( $(this) )
         })
 
-        _self.activate( _self.$wrapper.find('.token:' + position), true, true )
+        _self.activate( _self.$tokendiv.find('.token:' + position), true, true )
         e.preventDefault()
       }
 
@@ -568,7 +631,8 @@
             if (this.$input.val().length || this.lastInputValue.length && this.lastKeyDown === 8) break
 
             this.preventDeactivation = true
-            var $prevToken = this.$input.hasClass('tt-input') ? this.$input.parent().prevAll('.token:first') : this.$input.prevAll('.token:first')
+            //var $prevToken = this.$input.hasClass('tt-input') ? this.$input.parent().prevAll('.token:first') : this.$input.prevAll('.token:first')
+			var $prevToken = this.$tokendiv.find('.token:last')
 
             if (!$prevToken.length) break
 
@@ -644,13 +708,7 @@
       if (tokensBefore == this.getTokensList() && this.$input.val().length)
         return false // No tokens were added, do nothing (prevent form submit)
 
-      if (this.$input.hasClass('tt-input')) {
-        // Typeahead acts weird when simply setting input value to empty,
-        // so we set the query to empty instead
-        this.$input.typeahead('val', '')
-      } else {
-        this.$input.val('')
-      }
+      this.setInput('')
 
       if (this.$input.data( 'edit' )) {
         this.unedit(focus)
@@ -723,12 +781,11 @@
 
       if (multi && this.$firstActiveToken) {
         // Determine first active token and the current tokens indicies
-        // Account for the 1 hidden textarea by subtracting 1 from both
-        var i = this.$firstActiveToken.index() - 2
-          , a = $token.index() - 2
+        var i = this.$firstActiveToken.index() 
+          , a = $token.index()
           , _self = this
 
-        this.$wrapper.find('.token').slice( Math.min(i, a) + 1, Math.max(i, a) ).each( function() {
+        this.$tokendiv.find('.token').slice( Math.min(i, a) + 1, Math.max(i, a) ).each( function() {
           _self.activate( $(this), true )
         })
       }
@@ -813,7 +870,7 @@
     }
 
   , remove: function (e, direction) {
-      if (this.$input.is(document.activeElement) || this._disabled || this._readonly) return
+      if (this._disabled || this._readonly) return
 
       var $token = (e.type === 'click') ? $(e.target).closest('.token') : this.$wrapper.find('.token.active')
 
@@ -881,12 +938,11 @@
         }
 
         this.$input.width( mirrorWidth )
-
-        if (this.$hint) {
-          this.$hint.width( mirrorWidth )
-        }
       }
       else {
+        //temporary reset width to minimal value to get proper results
+        this.$input.width(this.options.minWidth);
+        
         var w = (this.textDirection === 'rtl')
               ? this.$input.offset().left + this.$input.outerWidth() - this.$wrapper.offset().left - parseInt(this.$wrapper.css('padding-left'), 10) - inputPadding - 1
               : this.$wrapper.offset().left + this.$wrapper.width() + parseInt(this.$wrapper.css('padding-left'), 10) - this.$input.offset().left - inputPadding;
@@ -895,10 +951,6 @@
         // dimensions returned by jquery will be NaN -> we default to 100%
         // so placeholder won't be cut off.
         isNaN(w) ? this.$input.width('100%') : this.$input.width(w);
-
-        if (this.$hint) {
-          isNaN(w) ? this.$hint.width('100%') : this.$hint.width(w);
-        }
       }
     }
 
@@ -1010,6 +1062,7 @@
   $.fn.tokenfield.defaults = {
     minWidth: 60,
     minLength: 0,
+    html: true,
     allowEditing: true,
     allowPasting: true,
     limit: 0,
